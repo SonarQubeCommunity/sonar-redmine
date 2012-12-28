@@ -19,18 +19,23 @@
  */
 package org.sonar.plugins.redmine.batch;
 
-import java.util.Map;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
-import org.sonar.plugins.redmine.RedminePlugin;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import org.sonar.plugins.redmine.RedmineMetrics;
+import org.sonar.plugins.redmine.RedminePlugin;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
+
 
 public class RedmineSensorTest {
   
@@ -39,14 +44,16 @@ public class RedmineSensorTest {
 
   private RedmineSensor sensor;
   private Settings settings;
+  private RedmineAdapter redmineAdapter;
 
   @Before
   public void setUp() {
     settings = new Settings();
+    redmineAdapter = new RedmineAdapter();
     settings.setProperty(RedminePlugin.HOST, "http://my.Redmine.server");
     settings.setProperty(RedminePlugin.API_ACCESS_KEY, "api_access_key");
     settings.setProperty(RedminePlugin.PROJECT_KEY, "project_key");
-    sensor = new RedmineSensor(settings);
+    sensor = new RedmineSensor(settings,redmineAdapter);
   }
 
   @Test
@@ -54,65 +61,59 @@ public class RedmineSensorTest {
     assertThat(sensor.toString(),is("Redmine issues sensor"));
   }
 
-  /*@Test
+  @Test
   public void testPresenceOfProperties() throws Exception {
-    assertThat(sensor.missingMandatoryParameters()).isEqualTo(false);
+    assertThat(sensor.missingMandatoryParameters(),is(false));
 
-    settings.removeProperty(RedmineConstants.PASSWORD_PROPERTY);
-    sensor = new RedmineSensor(settings);
-    assertThat(sensor.missingMandatoryParameters()).isEqualTo(true);
+    settings.removeProperty(RedminePlugin.API_ACCESS_KEY);
+    sensor = new RedmineSensor(settings,redmineAdapter);
+    assertThat(sensor.missingMandatoryParameters(),is(true));
 
-    settings.removeProperty(RedmineConstants.USERNAME_PROPERTY);
-    sensor = new RedmineSensor(settings);
-    assertThat(sensor.missingMandatoryParameters()).isEqualTo(true);
+    settings.removeProperty(RedminePlugin.HOST);
+    sensor = new RedmineSensor(settings,redmineAdapter);
+    assertThat(sensor.missingMandatoryParameters(),is(true));
 
-    settings.removeProperty(RedmineConstants.FILTER_PROPERTY);
-    sensor = new RedmineSensor(settings);
-    assertThat(sensor.missingMandatoryParameters()).isEqualTo(true);
+    settings.removeProperty(RedminePlugin.PROJECT_KEY);
+    sensor = new RedmineSensor(settings,redmineAdapter);
+    assertThat(sensor.missingMandatoryParameters(),is(true));
 
-    settings.removeProperty(RedmineConstants.SERVER_URL_PROPERTY);
-    sensor = new RedmineSensor(settings);
-    assertThat(sensor.missingMandatoryParameters()).isEqualTo(true);
   }
 
   @Test
   public void shouldExecuteOnRootProjectWithAllParams() throws Exception {
     Project project = mock(Project.class);
     when(project.isRoot()).thenReturn(true).thenReturn(false);
-
-    assertThat(sensor.shouldExecuteOnProject(project)).isEqualTo(true);
+    assertThat(sensor.shouldExecuteOnProject(project),is(true));
   }
 
   @Test
   public void shouldNotExecuteOnNonRootProject() throws Exception {
-    assertThat(sensor.shouldExecuteOnProject(mock(Project.class))).isEqualTo(false);
+    assertThat(sensor.shouldExecuteOnProject(mock(Project.class)),is(false));
   }
 
   @Test
   public void shouldNotExecuteOnRootProjectifOneParamMissing() throws Exception {
     Project project = mock(Project.class);
     when(project.isRoot()).thenReturn(true).thenReturn(false);
-
-    settings.removeProperty(RedmineConstants.SERVER_URL_PROPERTY);
-    sensor = new RedmineSensor(settings);
-
-    assertThat(sensor.shouldExecuteOnProject(project)).isEqualTo(false);
+    settings.removeProperty(RedminePlugin.HOST);
+    sensor = new RedmineSensor(settings, redmineAdapter);
+    assertThat(sensor.shouldExecuteOnProject(project),is(false));
   }
 
   @Test
   public void testSaveMeasures() {
     SensorContext context = mock(SensorContext.class);
-    String url = "http://localhost/Redmine";
-    String priorityDistribution = "Critical=1";
+    String priorityDistribution = "Normal=2;Urgent=1";
 
-    sensor.saveMeasures(context, url, 1, priorityDistribution);
+    sensor.saveMeasures(context, 3, priorityDistribution);
 
-    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 1.0, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
     verifyNoMoreInteractions(context);
   }
 
  
-  @Test
+  /*@Test
   public void shouldCollectIssuesByPriority() throws Exception {
     RemoteFilter filter = new RemoteFilter();
     filter.setId("1");

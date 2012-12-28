@@ -17,22 +17,25 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine;
+package org.sonar.plugins.redmine.ui;
 
-import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Test;
-import org.sonar.api.measures.Metric;
 
-public class RedmineMetricsTest {
+public class RedmineWidgetTest {
+
+  private RedmineWidget widget = new RedmineWidget();
 
   @Test
-  public void testGetMetrics() throws Exception {
-    List<Metric> metrics = new RedmineMetrics().getMetrics();
-    assertThat(metrics.size(), is(2));
-    for (Metric metric : metrics) {
-      assertThat(metric.getDomain(), is(RedmineMetrics.ISSUES_DOMAIN));
-    }
+  public void templatePathShouldNotbeNull() {
+    assertThat(getClass().getResource(widget.getTemplatePath()), notNullValue());
+  }
+
+  @Test
+  public void testNameAndTitle() throws Exception {
+    assertThat(widget.getId(), is("RedmineWidget"));
+    assertThat(widget.getTitle(), is("RedmineWidget"));
   }
 }

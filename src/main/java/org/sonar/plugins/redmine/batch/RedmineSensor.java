@@ -19,11 +19,7 @@
  */
 package org.sonar.plugins.redmine.batch;
 
-import com.google.common.collect.Maps;
 import com.taskadapter.redmineapi.RedmineException;
-import com.taskadapter.redmineapi.RedmineManager;
-import com.taskadapter.redmineapi.bean.Issue;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -36,14 +32,17 @@ import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.redmine.RedmineMetrics;
 import org.sonar.plugins.redmine.RedminePlugin;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineSensor implements Sensor {
 
   private static final Logger LOG = LoggerFactory.getLogger(RedmineSensor.class);
   private final Settings settings;
+  private final RedmineAdapter redmineAdapter;
 
-  public RedmineSensor(Settings settings) {
+  public RedmineSensor(Settings settings, RedmineAdapter redmineAdapter) {
     this.settings = settings;
+    this.redmineAdapter = redmineAdapter;
   }
 
   private String getHost() {
@@ -66,9 +65,10 @@ public class RedmineSensor implements Sensor {
   }
 
   public void analyse(Project project, SensorContext context) {
-    RedmineManager mgr = new RedmineManager(getHost(), getApiAccessKey());
     try {
-      Map<String, Integer> issuesByPriority = collectIssuesByPriority(mgr);
+      redmineAdapter.connectToHost(getHost(), getApiAccessKey());
+      Map<String, Integer> issuesByPriority =
+              redmineAdapter.collectProjectIssuesByPriority(getProjectKey());
       double totalIssues = 0;
       PropertiesBuilder<String, Integer> distribution = new PropertiesBuilder<String, Integer>();
       for (Map.Entry<String, Integer> entry : issuesByPriority.entrySet()) {
@@ -77,29 +77,13 @@ public class RedmineSensor implements Sensor {
       }
       saveMeasures(context, totalIssues, distribution.buildData());
     } catch (RedmineException ex) {
-      LOG.error("RedMine issues sensor failed to get issues.", ex);
+      LOG.error("RedMine issues sensor failed to get project issues.", ex);
     }
   }
-  
-  protected void saveMeasures(SensorContext context,double totalPrioritiesCount, String priorityDistribution) {
-    Measure issuesMeasure = new Measure(RedmineMetrics.ISSUES, totalPrioritiesCount);
-    issuesMeasure.setData(priorityDistribution);
-    context.saveMeasure(issuesMeasure);
-  }
-  
-  private Map<String, Integer> collectIssuesByPriority(RedmineManager mgr) throws RedmineException {
-    List<Issue> issues = mgr.getIssues(getProjectKey(), null);
-    Map<String, Integer> issuesByPriority = Maps.newHashMap();
 
-    for (Issue issue : issues) {
-      String priority = issue.getPriorityText();
-      if (!issuesByPriority.containsKey(priority)) {
-        issuesByPriority.put(priority, 1);
-      } else {
-        issuesByPriority.put(priority, issuesByPriority.get(priority) + 1);
-      }
-    }
-    return issuesByPriority;
+  protected void saveMeasures(SensorContext context, double totalPrioritiesCount, String priorityDistribution) {
+    context.saveMeasure(new Measure(RedmineMetrics.ISSUES, totalPrioritiesCount));
+    context.saveMeasure(new Measure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution));
   }
 
   protected boolean missingMandatoryParameters() {
