@@ -26,6 +26,8 @@ import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.redmine.batch.RedmineSensor;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
+import org.sonar.plugins.redmine.reviews.RedmineWorkflowBuilder;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
 @Properties({
@@ -62,7 +64,9 @@ public final class RedminePlugin extends SonarPlugin {
             // Batch
             RedmineSensor.class,RedmineAdapter.class,
             // UI
-            RedmineWidget.class
+            RedmineWidget.class,
+            // Reviews
+            RedmineLinkFunction.class,RedmineWorkflowBuilder.class
             );
   }
 }

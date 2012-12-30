@@ -26,13 +26,18 @@ import com.taskadapter.redmineapi.bean.Issue;
 import java.util.List;
 import java.util.Map;
 import org.sonar.api.BatchExtension;
+import org.sonar.api.ServerExtension;
 
-public class RedmineAdapter implements BatchExtension {
+public class RedmineAdapter implements BatchExtension,ServerExtension {
 
   protected RedmineManager redmineMgr;
   
   public final void connectToHost (final String host, final String apiKey){
     redmineMgr = new RedmineManager(host, apiKey);
+  }
+  
+  public final Issue createIssue (final String projectKey, final Issue issue) throws RedmineException{
+    return redmineMgr.createIssue(projectKey, issue);
   }
   
   public final Map<String, Integer> collectProjectIssuesByPriority(
