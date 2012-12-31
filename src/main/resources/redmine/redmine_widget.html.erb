@@ -4,39 +4,37 @@
 
    if issues_measure
 %>
-  <div class="yui-g">
-    <div class="yui-u first">
-      <div class="dashbox">
-        <p class="title"><%= message ('widget.jira.jira_issues') -%></p>
-        <span class="big">
-          <p>
-            <%= format_measure(issues_measure) -%>
-          </p>
-        </span>
-      </div>
-    </div>
-    <div class="yui-u">
-      <div class="dashbox">
-        <p class="title"><%= message('widget.jira.by_priority') -%></p>
-        <table>
-          <% 
-            issues_by_priority_measure.text_value.split(";").each do |priority_with_size|
-              priority_with_size_array = priority_with_size.split("=")
-              priority = message(priority_with_size_array[0].downcase)
-              # if no translation can be found, use the provided name
-              priority = priority_with_size_array[0] unless priority
-          %>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td align="left">
+        <div class="dashbox" >
+          <p class="title"><%= message('widget.redmine.name') -%></p>
+          <p><span class="big"><%= format_measure(issues_measure) -%></span></p>
+        </div>
+      </td>
+      <td valign="top" align="left">
+        <div class="dashbox">
+          <p class="title"><%= message('widget.redmine.by_priority') -%></p>
+            <table>
+            <% 
+              priorities = issues_by_priority_measure.text_value.split(";")
+              priorities.each do |priority_with_issues|
+              priority_with_issues_array = priority_with_issues.split("=")
+            %>
             <tr>
               <td align="left">
-                <%= priority -%>
+                <%= priority_with_issues_array[0] -%>
               </td>
               <td align="right" style="padding-left: 10px;">
-                <%= priority_with_size_array[1] -%>
+                <%= priority_with_issues_array[1] -%>
               </td>
             </tr>
-          <% end %>
-        </table>
-      </div>
-    </div>
-  </div>
+            <% end %>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <% end %>
