@@ -10,7 +10,7 @@
       <td align="left">
         <div class="dashbox" >
           <p class="title"><%= message('widget.redmine.name') -%></p>
-          <p><span class="big"><%= format_measure(issues_measure) -%></span></p>
+          <p><span class="big"><%= format_measure(issues_measure,{:url => issues_measure.url}) -%></span></p>
         </div>
       </td>
       <td valign="top" align="left">

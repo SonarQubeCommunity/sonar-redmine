@@ -35,7 +35,7 @@ public class RedmineWidgetTest {
 
   @Test
   public void testNameAndTitle() throws Exception {
-    assertThat(widget.getId(), is("RedmineWidget"));
+    assertThat(widget.getId(), is("redmine"));
     assertThat(widget.getTitle(), is("RedmineWidget"));
   }
 }

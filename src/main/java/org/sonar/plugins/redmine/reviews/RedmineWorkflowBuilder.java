@@ -23,11 +23,10 @@ import org.sonar.api.ServerExtension;
 import org.sonar.api.workflow.Workflow;
 import static org.sonar.api.workflow.condition.Conditions.*;
 import org.sonar.api.workflow.screen.CommentScreen;
-import org.sonar.plugins.redmine.RedminePlugin;
+import org.sonar.plugins.redmine.RedmineConstants;
 
-public final class RedmineWorkflowBuilder implements ServerExtension {
+public class RedmineWorkflowBuilder implements ServerExtension {
 
-  private static final String LINK_TO_REDMINE_ID = "link-to-redmine";
   private final Workflow workflow;
   private final RedmineLinkFunction linkFunction;
 
@@ -37,16 +36,16 @@ public final class RedmineWorkflowBuilder implements ServerExtension {
   }
 
   public void start() {
-    workflow.addCommand(LINK_TO_REDMINE_ID);
-    workflow.setScreen(LINK_TO_REDMINE_ID, new CommentScreen());
-    workflow.addFunction(LINK_TO_REDMINE_ID, linkFunction);
+    workflow.addCommand(RedmineConstants.LINK_TO_REDMINE_ID);
+    workflow.setScreen(RedmineConstants.LINK_TO_REDMINE_ID, new CommentScreen());
+    workflow.addFunction(RedmineConstants.LINK_TO_REDMINE_ID, linkFunction);
     // conditions for this function
     // - on the review ("IDLE" is the non-persisted status of an non-existing review = when a violation does have a review yet)
-    workflow.addCondition(LINK_TO_REDMINE_ID, not(hasReviewProperty("redmine-issue-id")));
-    workflow.addCondition(LINK_TO_REDMINE_ID, statuses("IDLE", "OPEN", "REOPENED"));
+    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, not(hasReviewProperty(RedmineConstants.ISSUE_ID)));
+    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, statuses("IDLE", "OPEN", "REOPENED"));
     // - on the project
-    workflow.addCondition(LINK_TO_REDMINE_ID, hasProjectProperty(RedminePlugin.HOST));
-    workflow.addCondition(LINK_TO_REDMINE_ID, hasProjectProperty(RedminePlugin.API_ACCESS_KEY));
-    workflow.addCondition(LINK_TO_REDMINE_ID, hasProjectProperty(RedminePlugin.PROJECT_KEY));
+    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineConstants.HOST));
+    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineConstants.API_ACCESS_KEY));
+    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineConstants.PROJECT_KEY));
   }
 }

@@ -21,43 +21,49 @@ package org.sonar.plugins.redmine.reviews;
 
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.bean.Issue;
-import com.taskadapter.redmineapi.bean.Tracker;
+import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.config.Settings;
+import org.sonar.api.i18n.I18n;
 import org.sonar.api.workflow.Comment;
 import org.sonar.api.workflow.MutableReview;
 import org.sonar.api.workflow.Review;
 import org.sonar.api.workflow.WorkflowContext;
 import org.sonar.api.workflow.function.Function;
-import org.sonar.plugins.redmine.RedminePlugin;
+import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.batch.RedmineSettings;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineLinkFunction extends Function implements ServerExtension {
 
-  private final RedmineAdapter redMineAdapter;
+  private final RedmineAdapter redmineAdapter;
+  private final RedmineSettings redmineSettings;
+  private final RedmineIssueFactory issueFactory;
+  private final I18n i18n;
 
-  public RedmineLinkFunction(RedmineAdapter redMineAdapter) {
-    this.redMineAdapter = redMineAdapter;
+  public RedmineLinkFunction(RedmineIssueFactory issueFactory, 
+                            RedmineAdapter redmineAdapter, 
+                            RedmineSettings redmineSettings, 
+                            I18n i18n) {
+    this.redmineAdapter = redmineAdapter;
+    this.redmineSettings = redmineSettings;
+    this.issueFactory = issueFactory;
+    this.i18n = i18n;
   }
 
   @Override
   public void doExecute(MutableReview review, Review initialReview, WorkflowContext context, Map<String, String> parameters) {
     try {
-      Settings settings = context.getProjectSettings();
-      Issue issue = new Issue();
-      issue.setTracker(new Tracker(2, "Feature"));
-      issue.setPriorityId(2);
-      issue.setSubject("Test Subject");
-      issue.setDescription("Test Description");
-      redMineAdapter.connectToHost(settings.getString(RedminePlugin.HOST), settings.getString(RedminePlugin.API_ACCESS_KEY));
-
-      issue = redMineAdapter.createIssue(settings.getString(RedminePlugin.PROJECT_KEY), issue);
+      Issue issue = issueFactory.createRemineIssue();
+      redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
+      issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
       createComment(issue, review, context, parameters);
-      review.setProperty("redmine-issue-id", issue.getId().toString());
+      review.setProperty(RedmineConstants.ISSUE_ID, issue.getId().toString());
     } catch (RedmineException ex) {
-      throw new IllegalStateException("Impossible to create an issue on Redmine. A problem occured with the remote server: " + ex.getMessage(), ex);
+      throw new IllegalStateException(
+              i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(), ex);
     }
   }
 
@@ -74,10 +80,11 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
       message.append(text);
       message.append("\n\n");
     }
-    message.append("Review linked to Redmine issue: ");
-    message.append(context.getProjectSettings().getString(RedminePlugin.HOST));
+    message.append(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_COMMENT, null));
+    message.append(redmineSettings.getHost());
     message.append("/issues/");
     message.append(issue.getId().toString());
     return message.toString();
   }
+
 }

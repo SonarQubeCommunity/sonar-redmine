@@ -25,44 +25,44 @@ import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.redmine.batch.RedmineSensor;
+import org.sonar.plugins.redmine.batch.RedmineSettings;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.reviews.RedmineIssueFactory;
 import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
 import org.sonar.plugins.redmine.reviews.RedmineWorkflowBuilder;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
 @Properties({
-  @Property(key = RedminePlugin.HOST,
+  @Property(key = RedmineConstants.HOST,
             name = "Redmine Host URL",
             description = "Example : http://demo.redmine.org/",
             global = true,
             defaultValue = "",
             project = true,
             module = false),
-  @Property(key = RedminePlugin.API_ACCESS_KEY,
+  @Property(key = RedmineConstants.API_ACCESS_KEY,
             name = "API Access Key",
             description = "You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.",
             type = org.sonar.api.PropertyType.PASSWORD,
             global = true,
             project = true,
             module = false),
-  @Property(key = RedminePlugin.PROJECT_KEY,
+  @Property(key = RedmineConstants.PROJECT_KEY,
             name = "Project Key",
             global = false,
             project = true,
             module = false)
 })
-public final class RedminePlugin extends SonarPlugin {
-
-  public static final String HOST = "sonar.redmine.host";
-  public static final String API_ACCESS_KEY = "sonar.redmine.api-access-key";
-  public static final String PROJECT_KEY = "sonar.redmine.project-key";
+public class RedminePlugin extends SonarPlugin {
 
   public List getExtensions() {
     return ImmutableList.of(
             // Definitions
             RedmineMetrics.class,
             // Batch
-            RedmineSensor.class,RedmineAdapter.class,
+            RedmineSensor.class,RedmineAdapter.class,RedmineSettings.class,
+            // Server
+            RedmineIssueFactory.class,
             // UI
             RedmineWidget.class,
             // Reviews

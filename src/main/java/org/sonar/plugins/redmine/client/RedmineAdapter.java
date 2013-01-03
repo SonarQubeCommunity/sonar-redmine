@@ -32,18 +32,18 @@ public class RedmineAdapter implements BatchExtension,ServerExtension {
 
   protected RedmineManager redmineMgr;
   
-  public final void connectToHost (final String host, final String apiKey){
+  public void connectToHost (final String host, final String apiKey){
     redmineMgr = new RedmineManager(host, apiKey);
   }
   
-  public final Issue createIssue (final String projectKey, final Issue issue) throws RedmineException{
+  public Issue createIssue (final String projectKey, final Issue issue) throws RedmineException{
     return redmineMgr.createIssue(projectKey, issue);
   }
   
-  public final Map<String, Integer> collectProjectIssuesByPriority(
+  public Map<String, Integer> collectProjectIssuesByPriority(
           final String projectKey) 
           throws RedmineException{
-    
+
     List<Issue> issues = redmineMgr.getIssues(projectKey, null);
     Map<String, Integer> issuesByPriority = Maps.newHashMap();
 

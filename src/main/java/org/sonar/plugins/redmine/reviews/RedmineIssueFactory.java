@@ -17,17 +17,29 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine;
+package org.sonar.plugins.redmine.reviews;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import org.junit.Test;
+import com.taskadapter.redmineapi.bean.Issue;
+import com.taskadapter.redmineapi.bean.Tracker;
+import java.util.Locale;
+import org.sonar.api.ServerExtension;
+import org.sonar.api.i18n.I18n;
+import org.sonar.plugins.redmine.RedmineConstants;
 
-public class RedminePluginTest {
-
-  @Test
-  public void testGetExtensions() throws Exception {
-    assertThat(new RedminePlugin().getExtensions().size(),is(8));
+public class RedmineIssueFactory implements ServerExtension{
+  
+  private I18n i18n;
+  public RedmineIssueFactory (I18n i18n){
+    this.i18n = i18n;
   }
-
+  
+  public Issue createRemineIssue() {
+    Issue issue = new Issue();
+    issue.setTracker(new Tracker(2, "Feature"));
+    issue.setPriorityId(2);
+    issue.setSubject(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT, null));
+    issue.setDescription(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION, null));
+    return issue;
+  }
+  
 }

@@ -21,75 +21,66 @@ package org.sonar.plugins.redmine.batch;
 
 import com.taskadapter.redmineapi.RedmineException;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.redmine.RedmineMetrics;
-import org.sonar.plugins.redmine.RedminePlugin;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineSensor implements Sensor {
 
   private static final Logger LOG = LoggerFactory.getLogger(RedmineSensor.class);
-  private final Settings settings;
+  private final RedmineSettings redmineSettings;
   private final RedmineAdapter redmineAdapter;
 
-  public RedmineSensor(Settings settings, RedmineAdapter redmineAdapter) {
-    this.settings = settings;
+  public RedmineSensor(RedmineSettings redmineSettings, RedmineAdapter redmineAdapter) {
+    this.redmineSettings = redmineSettings;
     this.redmineAdapter = redmineAdapter;
   }
 
-  private String getHost() {
-    return settings.getString(RedminePlugin.HOST);
-  }
-
-  private String getApiAccessKey() {
-    return settings.getString(RedminePlugin.API_ACCESS_KEY);
-  }
-
-  private String getProjectKey() {
-    return settings.getString(RedminePlugin.PROJECT_KEY);
-  }
-
   public boolean shouldExecuteOnProject(Project project) {
-    if (missingMandatoryParameters()) {
+    if (redmineSettings.missingMandatoryParameters()) {
       LOG.info("RedMine issues sensor will not run as some parameters are missing.");
     }
-    return project.isRoot() && !missingMandatoryParameters();
+    return project.isRoot() && !redmineSettings.missingMandatoryParameters();
   }
 
   public void analyse(Project project, SensorContext context) {
     try {
-      redmineAdapter.connectToHost(getHost(), getApiAccessKey());
+      redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
       Map<String, Integer> issuesByPriority =
-              redmineAdapter.collectProjectIssuesByPriority(getProjectKey());
+              redmineAdapter.collectProjectIssuesByPriority(redmineSettings.getProjectKey());
       double totalIssues = 0;
       PropertiesBuilder<String, Integer> distribution = new PropertiesBuilder<String, Integer>();
       for (Map.Entry<String, Integer> entry : issuesByPriority.entrySet()) {
         totalIssues += entry.getValue();
         distribution.add(entry.getKey(), entry.getValue());
       }
-      saveMeasures(context, totalIssues, distribution.buildData());
+
+      String url = buildUrl();
+      saveMeasures(context, totalIssues, url, distribution.buildData());
     } catch (RedmineException ex) {
       LOG.error("RedMine issues sensor failed to get project issues.", ex);
     }
   }
 
-  protected void saveMeasures(SensorContext context, double totalPrioritiesCount, String priorityDistribution) {
-    context.saveMeasure(new Measure(RedmineMetrics.ISSUES, totalPrioritiesCount));
-    context.saveMeasure(new Measure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution));
+  private String buildUrl() {
+    StringBuilder urlBuilder = new StringBuilder(redmineSettings.getHost());
+    urlBuilder.append("/projects/");
+    urlBuilder.append(redmineSettings.getProjectKey());
+    return urlBuilder.toString();
   }
 
-  protected boolean missingMandatoryParameters() {
-    return StringUtils.isEmpty(getHost())
-            || StringUtils.isEmpty(getProjectKey())
-            || StringUtils.isEmpty(getApiAccessKey());
+  protected void saveMeasures(SensorContext context, double totalPrioritiesCount, String url, String priorityDistribution) {
+    
+    Measure redmineIssues = new Measure(RedmineMetrics.ISSUES, totalPrioritiesCount);
+    redmineIssues.setUrl(url);
+    context.saveMeasure(redmineIssues);
+    context.saveMeasure(new Measure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution));
   }
 
   @Override
