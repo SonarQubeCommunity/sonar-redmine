@@ -41,6 +41,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
 import org.sonar.api.i18n.I18n;
+import org.sonar.plugins.redmine.RedminePlugin;
 import org.sonar.plugins.redmine.batch.RedmineSettings;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 
@@ -64,10 +65,11 @@ public class RedmineLinkFunctionTest {
 
   @Before
   public void setUpMocks() throws Exception {
-    redmineSettings = new RedmineSettings(new Settings());
-    redmineSettings.setApiAccessKey("api_access_key");
-    redmineSettings.setHost("http://my.Redmine.server");
-    redmineSettings.setProjectKey(projectKey);
+    settings = new Settings();
+    settings.setProperty(RedmineConstants.API_ACCESS_KEY, "api_access_key");
+    settings.setProperty(RedmineConstants.HOST, "http://my.Redmine.server");
+    settings.setProperty(RedmineConstants.PROJECT_KEY, projectKey);
+    redmineSettings = new RedmineSettings(settings);
     
     redmineIssue = new Issue();
     redmineIssue.setId(10);
@@ -93,7 +95,7 @@ public class RedmineLinkFunctionTest {
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "api_access_key");
     when(redmineAdapter.createIssue(projectKey, redmineIssue)).thenReturn(redmineIssue);
 
-    action = new RedmineLinkFunction(redmineIssueFactory,redmineAdapter,redmineSettings,i18n);
+    action = new RedmineLinkFunction(redmineIssueFactory,redmineAdapter,i18n);
   }
 
   @Test
@@ -132,7 +134,7 @@ public class RedmineLinkFunctionTest {
     HashMap<String, String> params = new HashMap<String, String>();
     params.put("text", userComment);
 
-    String commentText = action.generateCommentText(redmineIssue, workflowContext, params);
+    String commentText = action.generateCommentText(redmineIssue, redmineSettings, params);
     assertThat(commentText).isEqualTo(userComment + "\n\nReview linked to Redmine issue: http://my.Redmine.server/issues/10");
   }
 

@@ -39,16 +39,13 @@ import org.sonar.plugins.redmine.client.RedmineAdapter;
 public class RedmineLinkFunction extends Function implements ServerExtension {
 
   private final RedmineAdapter redmineAdapter;
-  private final RedmineSettings redmineSettings;
   private final RedmineIssueFactory issueFactory;
   private final I18n i18n;
 
   public RedmineLinkFunction(RedmineIssueFactory issueFactory, 
                             RedmineAdapter redmineAdapter, 
-                            RedmineSettings redmineSettings, 
                             I18n i18n) {
     this.redmineAdapter = redmineAdapter;
-    this.redmineSettings = redmineSettings;
     this.issueFactory = issueFactory;
     this.i18n = i18n;
   }
@@ -57,6 +54,7 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
   public void doExecute(MutableReview review, Review initialReview, WorkflowContext context, Map<String, String> parameters) {
     try {
       Issue issue = issueFactory.createRemineIssue();
+      RedmineSettings redmineSettings = new RedmineSettings(context.getProjectSettings());
       redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
       issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
       createComment(issue, review, context, parameters);
@@ -70,10 +68,10 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
   protected void createComment(Issue issue, MutableReview review, WorkflowContext context, Map<String, String> parameters) {
     Comment newComment = review.createComment();
     newComment.setUserId(context.getUserId());
-    newComment.setMarkdownText(generateCommentText(issue, context, parameters));
+    newComment.setMarkdownText(generateCommentText(issue, new RedmineSettings(context.getProjectSettings()), parameters));
   }
 
-  protected String generateCommentText(Issue issue, WorkflowContext context, Map<String, String> parameters) {
+  protected String generateCommentText(Issue issue, RedmineSettings redmineSettings, Map<String, String> parameters) {
     StringBuilder message = new StringBuilder();
     String text = parameters.get("text");
     if (!StringUtils.isBlank(text)) {
