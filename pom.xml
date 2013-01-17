@@ -6,6 +6,7 @@
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
     <version>16</version>
+    <relativePath>../parent</relativePath>
   </parent>
 
   <artifactId>sonar-redmine-plugin</artifactId>
@@ -15,6 +16,7 @@
   <name>Sonar Redmine Plugin</name>
   <description>Integrates Sonar with Redmine with various ways</description>
   <inceptionYear>2013</inceptionYear>
+  <url>http://docs.codehaus.org/display/SONAR/Redmine+Plugin</url>
 
   <organization>
     <name>Patroklos PAPAPETROU</name>
@@ -39,6 +41,15 @@
     <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</developerConnection>
     <url>https://github.com/SonarCommunity/sonar-redmine</url>
   </scm>
+
+  <issueManagement>
+    <system>JIRA</system>
+    <url>http://jira.codehaus.org/browse/SONARPLUGINS/component/15780</url>
+  </issueManagement>
+  <ciManagement>
+    <system>Jeninks</system>
+    <url>https://sonarplugins.ci.cloudbees.com/job/redmine</url>
+  </ciManagement>
 
   <properties>
     <sonar.buildVersion>3.1</sonar.buildVersion>
