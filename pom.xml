@@ -27,6 +27,13 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>ppapapetrou</id>
+      <name>Patroklos P.Papapetrou</name>
+      <url>http://gr.linkedin.com/in/ppapapetrou</url>
+    </developer>
+  </developers>
   <scm>
     <connection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</connection>
     <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</developerConnection>
@@ -34,11 +41,9 @@
   </scm>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     <sonar.buildVersion>3.1</sonar.buildVersion>
-    <sonar.pluginName>Sonar Redmine Plugin</sonar.pluginName>
-    <jdk.min.version>1.5</jdk.min.version>
+    <sonar.pluginClass>org.sonar.plugins.redmine.RedminePlugin</sonar.pluginClass>
+    <sonar.pluginName>Redmine</sonar.pluginName>
   </properties>
 
   <dependencies>
@@ -51,7 +56,7 @@
     <dependency>
       <groupId>com.taskadapter</groupId>
       <artifactId>redmine-java-api</artifactId>
-      <version>1.15</version>
+      <version>1.17</version>
       <exclusions>
         <exclusion>
           <artifactId>commons-logging</artifactId>
@@ -77,23 +82,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.sonar</groupId>
-        <artifactId>sonar-packaging-maven-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <pluginClass>org.sonar.plugins.redmine.RedminePlugin</pluginClass>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.2</version>
-        <configuration>
-          <source>${jdk.min.version}</source>
-          <target>${jdk.min.version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
         <!-- UTF-8 bundles are not supported by Java, so they must be converted during build -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>native2ascii-maven-plugin</artifactId>
@@ -107,5 +95,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
