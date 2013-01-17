@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.ServerExtension;
-import org.sonar.api.config.Settings;
 import org.sonar.api.i18n.I18n;
 import org.sonar.api.workflow.Comment;
 import org.sonar.api.workflow.MutableReview;
