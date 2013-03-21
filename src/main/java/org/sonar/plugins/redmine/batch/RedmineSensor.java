@@ -44,7 +44,7 @@ public class RedmineSensor implements Sensor {
 
   public boolean shouldExecuteOnProject(Project project) {
     if (redmineSettings.missingMandatoryParameters()) {
-      LOG.info("RedMine issues sensor will not run as some parameters are missing.");
+      LOG.info("Redmine issues sensor will not run as some parameters are missing.");
     }
     return project.isRoot() && !redmineSettings.missingMandatoryParameters();
   }
@@ -64,7 +64,7 @@ public class RedmineSensor implements Sensor {
       String url = buildUrl();
       saveMeasures(context, totalIssues, url, distribution.buildData());
     } catch (RedmineException ex) {
-      LOG.error("RedMine issues sensor failed to get project issues.", ex);
+      LOG.error("Redmine issues sensor failed to get project issues.", ex);
     }
   }
 

@@ -24,7 +24,7 @@ import org.sonar.api.web.RubyRailsWidget;
 import org.sonar.api.web.WidgetCategory;
 
 
-@WidgetCategory("RedMine")
+@WidgetCategory("Redmine")
 public class RedmineWidget extends AbstractRubyTemplate implements RubyRailsWidget {
 
   public String getId() {
