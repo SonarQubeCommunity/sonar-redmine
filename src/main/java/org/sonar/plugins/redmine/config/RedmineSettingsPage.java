@@ -26,7 +26,7 @@ import org.sonar.api.web.NavigationSection;
 import org.sonar.api.web.Page;
 import org.sonar.plugins.redmine.RedmineLanguageConstants;
 
-@NavigationSection(value = { NavigationSection.PROJECT_CONFIGURATION })
+@NavigationSection(value = { NavigationSection.RESOURCE_CONFIGURATION })
 public class RedmineSettingsPage implements Page {
 
 	private I18n i18n;
