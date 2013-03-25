@@ -30,6 +30,7 @@ import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.redmine.RedmineMetrics;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineSensor implements Sensor {
 

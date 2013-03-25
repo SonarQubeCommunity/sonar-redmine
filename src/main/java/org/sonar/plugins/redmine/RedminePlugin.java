@@ -19,54 +19,85 @@
  */
 package org.sonar.plugins.redmine;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
+
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.redmine.batch.RedmineSensor;
-import org.sonar.plugins.redmine.batch.RedmineSettings;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.config.RedmineSettings;
+import org.sonar.plugins.redmine.config.RedmineSettingsPage;
+import org.sonar.plugins.redmine.exceptions.RedmineGeneralException;
+import org.sonar.plugins.redmine.exceptions.RedmineNotAuthorizedException;
+import org.sonar.plugins.redmine.exceptions.RedmineNotFoundException;
 import org.sonar.plugins.redmine.reviews.RedmineIssueFactory;
 import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
 import org.sonar.plugins.redmine.reviews.RedmineWorkflowBuilder;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
+import com.google.common.collect.ImmutableList;
+import com.taskadapter.redmineapi.NotAuthorizedException;
+import com.taskadapter.redmineapi.NotFoundException;
+import com.taskadapter.redmineapi.RedmineAuthenticationException;
+import com.taskadapter.redmineapi.RedmineException;
+import com.taskadapter.redmineapi.RedmineTransportException;
+
 @Properties({
-  @Property(key = RedmineConstants.HOST,
+  @Property(key = RedmineSettings.HOST,
             name = "Redmine Host URL",
             description = "Example : http://demo.redmine.org/",
             global = true,
             defaultValue = "",
-            project = true,
             module = false),
-  @Property(key = RedmineConstants.API_ACCESS_KEY,
+  @Property(key = RedmineSettings.API_ACCESS_KEY,
             name = "API Access Key",
             description = "You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.",
             type = org.sonar.api.PropertyType.PASSWORD,
             global = true,
-            project = true,
-            module = false),
-  @Property(key = RedmineConstants.PROJECT_KEY,
-            name = "Project Key",
-            global = false,
-            project = true,
             module = false)
 })
 public class RedminePlugin extends SonarPlugin {
 
+	public static RedmineException wrapException(Exception e) {
+		// Work around to be able to catch exceptions in ruby on rails controller
+		// It seems not to be possible to catch exceptions which aren't part of
+		// this plugin
+		if (e instanceof RedmineAuthenticationException) {
+			return new org.sonar.plugins.redmine.exceptions.RedmineAuthenticationException(e.getMessage());
+		} else if (e instanceof RedmineTransportException) {
+			return new org.sonar.plugins.redmine.exceptions.RedmineTransportException(e.getMessage());
+		} else if (e instanceof NotFoundException) {
+			return new RedmineNotFoundException(e.getMessage());
+		} else if (e instanceof NotAuthorizedException) {
+			return new RedmineNotAuthorizedException(e.getMessage());
+		} else if (e instanceof RedmineException) {
+			return new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getMessage());
+		} else {
+			if (e.getCause() != null) {
+				return new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getCause().getLocalizedMessage());
+			} else {
+				return new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getLocalizedMessage());
+			}
+		}
+	}
+	
   public List getExtensions() {
-    return ImmutableList.of(
-            // Definitions
-            RedmineMetrics.class,
-            // Batch
-            RedmineSensor.class,RedmineAdapter.class,RedmineSettings.class,
-            // Server
-            RedmineIssueFactory.class,
-            // UI
-            RedmineWidget.class,
-            // Reviews
-            RedmineLinkFunction.class,RedmineWorkflowBuilder.class
-            );
+		return ImmutableList.of(
+				// Definitions
+				RedmineMetrics.class,
+				// Batch
+				RedmineSensor.class, RedmineAdapter.class, RedmineSettings.class,
+				// Server
+				RedmineIssueFactory.class,
+				// UI
+				RedmineWidget.class, RedmineSettingsPage.class,
+				// Reviews
+				RedmineLinkFunction.class, RedmineWorkflowBuilder.class,
+				// Exceptions
+				RedmineGeneralException.class,
+				org.sonar.plugins.redmine.exceptions.RedmineAuthenticationException.class,
+				org.sonar.plugins.redmine.exceptions.RedmineTransportException.class, RedmineNotFoundException.class, RedmineNotAuthorizedException.class
+				);
   }
 }

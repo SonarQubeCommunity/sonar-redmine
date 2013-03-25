@@ -29,7 +29,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.RedmineLanguageConstants;
 
 public class RedmineWorkflowBuilderTest {
 
@@ -41,9 +41,9 @@ public class RedmineWorkflowBuilderTest {
     RedmineWorkflowBuilder builder = new RedmineWorkflowBuilder(workflow, function);
     builder.start();
 
-    verify(workflow, times(1)).addCommand(RedmineConstants.LINK_TO_REDMINE_ID);
+    verify(workflow, times(1)).addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
     verify(workflow, times(1)).setScreen(anyString(), any(Screen.class));
-    verify(workflow, times(1)).addFunction(RedmineConstants.LINK_TO_REDMINE_ID, function);
+    verify(workflow, times(1)).addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, function);
     verify(workflow, times(5)).addCondition(anyString(), any(Condition.class));
   }
 

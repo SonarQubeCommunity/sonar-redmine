@@ -20,11 +20,12 @@
 package org.sonar.plugins.redmine.batch;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.sonar.api.config.Settings;
-import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineSettingsTest {
 
@@ -46,21 +47,21 @@ public class RedmineSettingsTest {
   
   @Test
   public void missingMandatoryParametersShouldReturnTrueIfApiAccessKeyIsMissing() throws Exception {
-    settings.removeProperty(RedmineConstants.API_ACCESS_KEY);
+    settings.removeProperty(RedmineSettings.API_ACCESS_KEY);
     redmineSettings = new RedmineSettings(settings);
     assertThat(redmineSettings.missingMandatoryParameters(), is(true));
   }
   
   @Test
   public void missingMandatoryParametersShouldReturnTrueIfHostIsMissing() throws Exception {
-    settings.removeProperty(RedmineConstants.HOST);
+    settings.removeProperty(RedmineSettings.HOST);
     redmineSettings = new RedmineSettings(settings);
     assertThat(redmineSettings.missingMandatoryParameters(), is(true));
   }
   
   @Test
   public void missingMandatoryParametersShouldReturnTrueIfProjectKeyIsMissing() throws Exception {
-    settings.removeProperty(RedmineConstants.PROJECT_KEY);
+    settings.removeProperty(RedmineSettings.PROJECT_KEY);
     redmineSettings = new RedmineSettings(settings);
     assertThat(redmineSettings.missingMandatoryParameters(), is(true));
   }

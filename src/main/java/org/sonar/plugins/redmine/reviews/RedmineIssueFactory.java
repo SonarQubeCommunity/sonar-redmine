@@ -19,26 +19,22 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
+import org.sonar.api.ServerExtension;
+
 import com.taskadapter.redmineapi.bean.Issue;
 import com.taskadapter.redmineapi.bean.Tracker;
-import java.util.Locale;
-import org.sonar.api.ServerExtension;
-import org.sonar.api.i18n.I18n;
-import org.sonar.plugins.redmine.RedmineConstants;
 
 public class RedmineIssueFactory implements ServerExtension{
   
-  private I18n i18n;
-  public RedmineIssueFactory (I18n i18n){
-    this.i18n = i18n;
+  public RedmineIssueFactory (){
   }
   
-  public Issue createRemineIssue() {
+  public Issue createRemineIssue(String subject, String description) {
     Issue issue = new Issue();
     issue.setTracker(new Tracker(2, "Feature"));
     issue.setPriorityId(2);
-    issue.setSubject(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT, null));
-    issue.setDescription(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION, null));
+    issue.setSubject(subject);
+    issue.setDescription(description);
     return issue;
   }
   

@@ -19,42 +19,97 @@
  */
 package org.sonar.plugins.redmine.client;
 
+import java.util.List;
+import java.util.Map;
+
+import org.sonar.api.BatchExtension;
+import org.sonar.api.ServerExtension;
+import org.sonar.plugins.redmine.RedminePlugin;
+
 import com.google.common.collect.Maps;
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.Issue;
-import java.util.List;
-import java.util.Map;
-import org.sonar.api.BatchExtension;
-import org.sonar.api.ServerExtension;
+import com.taskadapter.redmineapi.bean.IssuePriority;
+import com.taskadapter.redmineapi.bean.Membership;
+import com.taskadapter.redmineapi.bean.Project;
+import com.taskadapter.redmineapi.bean.User;
 
-public class RedmineAdapter implements BatchExtension,ServerExtension {
+public class RedmineAdapter implements BatchExtension, ServerExtension {
 
-  protected RedmineManager redmineMgr;
-  
-  public void connectToHost (final String host, final String apiKey){
-    redmineMgr = new RedmineManager(host, apiKey);
-  }
-  
-  public Issue createIssue (final String projectKey, final Issue issue) throws RedmineException{
-    return redmineMgr.createIssue(projectKey, issue);
-  }
-  
-  public Map<String, Integer> collectProjectIssuesByPriority(
-          final String projectKey) 
-          throws RedmineException{
+	protected RedmineManager redmineMgr;
 
-    List<Issue> issues = redmineMgr.getIssues(projectKey, null);
-    Map<String, Integer> issuesByPriority = Maps.newHashMap();
+	public void connectToHost(final String host, final String apiKey) throws RedmineException {
+		try {
+			redmineMgr = new RedmineManager(host, apiKey);
+		} catch (Exception e) {
+			throw RedminePlugin.wrapException(e);
+		}
+	}
 
-    for (Issue issue : issues) {
-      String priority = issue.getPriorityText();
-      if (!issuesByPriority.containsKey(priority)) {
-        issuesByPriority.put(priority, 1);
-      } else {
-        issuesByPriority.put(priority, issuesByPriority.get(priority) + 1);
-      }
-    }
-    return issuesByPriority;
-  }
+	public User getCurrentUser() throws RedmineException {
+		try {
+			// It is required to get the user with its id to fetch project memberships
+			return getUser(redmineMgr.getCurrentUser().getId());
+		} catch (RedmineException e) {
+			throw RedminePlugin.wrapException(e);
+		}
+	}
+
+	public Project getProject(String projectKey) throws RedmineException {
+		try {
+			return redmineMgr.getProjectByKey(projectKey);
+		} catch (RedmineException e) {
+			throw RedminePlugin.wrapException(e);
+		}
+	}
+
+	public User getUser(int userId) throws RedmineException {
+		try {
+			return redmineMgr.getUserById(userId);
+		} catch (RedmineException e) {
+			throw RedminePlugin.wrapException(e);
+		}
+	}
+
+	public boolean isMemberOfProject(User u, Project p) {
+		List<Membership> m = u.getMemberships();
+		int projectId = p.getId();
+
+		for (Membership ms : m) {
+			if (ms.getProject().getId() == projectId) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public List<IssuePriority> getIssuePriorities() throws RedmineException {
+		try {
+			return redmineMgr.getIssuePriorities();
+		} catch (RedmineException e) {
+			throw RedminePlugin.wrapException(e);
+		}
+	}
+
+	public Issue createIssue(final String projectKey, final Issue issue) throws RedmineException {
+		return redmineMgr.createIssue(projectKey, issue);
+	}
+
+	public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey) throws RedmineException {
+
+		List<Issue> issues = redmineMgr.getIssues(projectKey, null);
+		Map<String, Integer> issuesByPriority = Maps.newHashMap();
+
+		for (Issue issue : issues) {
+			String priority = issue.getPriorityText();
+			if (!issuesByPriority.containsKey(priority)) {
+				issuesByPriority.put(priority, 1);
+			} else {
+				issuesByPriority.put(priority, issuesByPriority.get(priority) + 1);
+			}
+		}
+		return issuesByPriority;
+	}
 }

@@ -39,6 +39,7 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.redmine.RedmineMetrics;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 
 public class RedmineSensorTest {

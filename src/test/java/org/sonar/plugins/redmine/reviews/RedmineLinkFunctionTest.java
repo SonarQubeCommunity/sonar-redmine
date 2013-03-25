@@ -30,7 +30,7 @@ import org.sonar.api.workflow.Comment;
 import org.sonar.api.workflow.MutableReview;
 import org.sonar.api.workflow.Review;
 import org.sonar.api.workflow.WorkflowContext;
-import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.RedmineLanguageConstants;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -42,8 +42,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
 import org.sonar.api.i18n.I18n;
 import org.sonar.plugins.redmine.RedminePlugin;
-import org.sonar.plugins.redmine.batch.RedmineSettings;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineLinkFunctionTest {
 
@@ -66,17 +66,17 @@ public class RedmineLinkFunctionTest {
   @Before
   public void setUpMocks() throws Exception {
     settings = new Settings();
-    settings.setProperty(RedmineConstants.API_ACCESS_KEY, "api_access_key");
-    settings.setProperty(RedmineConstants.HOST, "http://my.Redmine.server");
-    settings.setProperty(RedmineConstants.PROJECT_KEY, projectKey);
+    settings.setProperty(RedmineSettings.API_ACCESS_KEY, "api_access_key");
+    settings.setProperty(RedmineSettings.HOST, "http://my.Redmine.server");
+    settings.setProperty(RedmineSettings.PROJECT_KEY, projectKey);
     redmineSettings = new RedmineSettings(settings);
     
     redmineIssue = new Issue();
     redmineIssue.setId(10);
 
     i18n = mock(I18n.class);
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_COMMENT, null)).thenReturn("Review linked to Redmine issue: ");
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null)).thenReturn("Impossible to create an issue on Redmine. A problem occured with the remote server: ");
+    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_COMMENT, null)).thenReturn("Review linked to Redmine issue: ");
+    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null)).thenReturn("Impossible to create an issue on Redmine. A problem occured with the remote server: ");
 
     comment = mock(Comment.class);
 
@@ -89,7 +89,7 @@ public class RedmineLinkFunctionTest {
     when(workflowContext.getProjectSettings()).thenReturn(settings);
     
     redmineIssueFactory = mock(RedmineIssueFactory.class);
-    when(redmineIssueFactory.createRemineIssue()).thenReturn(redmineIssue);
+    when(redmineIssueFactory.createRemineIssue(review.getMessage(), review.getRuleName())).thenReturn(redmineIssue);
     
     redmineAdapter = mock(RedmineAdapter.class);
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "api_access_key");
@@ -103,10 +103,10 @@ public class RedmineLinkFunctionTest {
     
     action.doExecute(mutableReview, review, workflowContext, new HashMap<String, String>());
 
-    verify(redmineIssueFactory).createRemineIssue();
+    verify(redmineIssueFactory).createRemineIssue(review.getMessage(), review.getRuleName());
     verify(redmineAdapter).createIssue(projectKey, redmineIssue);
     verify(mutableReview).createComment();
-    verify(mutableReview).setProperty(RedmineConstants.ISSUE_ID, "10");
+    verify(mutableReview).setProperty(RedmineLanguageConstants.ISSUE_ID, "10");
   }
 
   @Test

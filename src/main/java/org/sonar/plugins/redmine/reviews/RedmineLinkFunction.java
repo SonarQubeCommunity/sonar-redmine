@@ -23,17 +23,21 @@ import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.bean.Issue;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.i18n.I18n;
+import org.sonar.api.resources.File;
 import org.sonar.api.workflow.Comment;
 import org.sonar.api.workflow.MutableReview;
 import org.sonar.api.workflow.Review;
 import org.sonar.api.workflow.WorkflowContext;
 import org.sonar.api.workflow.function.Function;
-import org.sonar.plugins.redmine.RedmineConstants;
-import org.sonar.plugins.redmine.batch.RedmineSettings;
+import org.sonar.plugins.redmine.RedmineLanguageConstants;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineLinkFunction extends Function implements ServerExtension {
 
@@ -52,15 +56,23 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
   @Override
   public void doExecute(MutableReview review, Review initialReview, WorkflowContext context, Map<String, String> parameters) {
     try {
-      Issue issue = issueFactory.createRemineIssue();
+    	StringBuilder sb = new StringBuilder();
+    	for (Entry<String, String> entry : parameters.entrySet()) {
+				sb.append(entry.getKey());
+				sb.append("-> ");
+				sb.append(entry.getValue());
+				sb.append("\n");
+			}
+    	
+      Issue issue = issueFactory.createRemineIssue(review.getMessage(), sb.toString());
       RedmineSettings redmineSettings = new RedmineSettings(context.getProjectSettings());
       redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
       issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
       createComment(issue, review, context, parameters);
-      review.setProperty(RedmineConstants.ISSUE_ID, issue.getId().toString());
+      review.setProperty(RedmineLanguageConstants.ISSUE_ID, issue.getId().toString());
     } catch (RedmineException ex) {
       throw new IllegalStateException(
-              i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(), ex);
+              i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(), ex);
     }
   }
 
@@ -77,7 +89,7 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
       message.append(text);
       message.append("\n\n");
     }
-    message.append(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_COMMENT, null));
+    message.append(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_COMMENT, null));
     message.append(redmineSettings.getHost());
     message.append("/issues/");
     message.append(issue.getId().toString());

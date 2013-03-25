@@ -32,7 +32,7 @@ import org.sonar.api.i18n.I18n;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.RedmineLanguageConstants;
 
 
 public class RedmineIssueFactoryTest {
@@ -41,16 +41,16 @@ public class RedmineIssueFactoryTest {
   @Before
   public void setUpMocks() throws Exception {
     i18n = mock(I18n.class);
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT, null)).thenReturn("New Subject");
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION, null)).thenReturn("New Description");
+    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT, null)).thenReturn("New Subject");
+    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION, null)).thenReturn("New Description");
     
-    redmineIssueFactory = new RedmineIssueFactory(i18n);
+    redmineIssueFactory = new RedmineIssueFactory();
   }
   
   @Test
   public void shouldReturnValidIssue(){
     
-    Issue issue = redmineIssueFactory.createRemineIssue();
+    Issue issue = redmineIssueFactory.createRemineIssue("", "");
     assertThat(issue).isNotNull();
     assertThat(issue.getSubject()).as("New Subject");
     assertThat(issue.getDescription()).as("New Description");
