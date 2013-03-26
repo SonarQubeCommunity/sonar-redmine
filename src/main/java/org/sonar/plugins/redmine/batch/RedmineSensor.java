@@ -76,7 +76,6 @@ public class RedmineSensor implements Sensor {
 	}
 
 	protected void saveMeasures(SensorContext context, double totalPrioritiesCount, String url, String priorityDistribution) {
-
 		Measure redmineIssues = new Measure(RedmineMetrics.ISSUES, totalPrioritiesCount);
 		redmineIssues.setUrl(url);
 		context.saveMeasure(redmineIssues);
