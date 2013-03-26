@@ -26,7 +26,7 @@ import org.sonar.api.config.Settings;
 
 public class RedmineSettings implements BatchExtension, ServerExtension {
 	public static final String HOST = "sonar.redmine.host";
-	
+
 	public static final String API_ACCESS_KEY = "sonar.redmine.api-access-key";
 	public static final String PROJECT_KEY = "sonar.redmine.project-key";
 
@@ -50,7 +50,7 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
 	public String getProjectKey() {
 		return settings.getString(PROJECT_KEY);
 	}
-	
+
 	public int getPriorityID() {
 		return settings.getInt(PRIORITY_ID);
 	}
@@ -70,7 +70,7 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
 	public void setProjectKey(String projectKey) {
 		settings.setProperty(PROJECT_KEY, projectKey);
 	}
-	
+
 	public void setPriorityID(int priorityID) {
 		settings.setProperty(PRIORITY_ID, priorityID);
 	}
@@ -80,7 +80,6 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
 	}
 
 	public boolean missingMandatoryParameters() {
-		return StringUtils.isEmpty(getHost()) || StringUtils.isEmpty(getProjectKey()) || StringUtils.isEmpty(getApiAccessKey()) ||
-				getPriorityID() == 0 || getTrackerID() == 0;
+		return StringUtils.isEmpty(getHost()) || StringUtils.isEmpty(getProjectKey()) || StringUtils.isEmpty(getApiAccessKey()) || getPriorityID() == 0 || getTrackerID() == 0;
 	}
 }

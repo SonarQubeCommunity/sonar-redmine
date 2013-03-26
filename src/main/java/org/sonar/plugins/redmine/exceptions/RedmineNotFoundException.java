@@ -29,7 +29,7 @@ public class RedmineNotFoundException extends RedmineException implements Server
 	public RedmineNotFoundException() {
 		super("");
 	}
-	
+
 	public RedmineNotFoundException(String msg) {
 		super(msg);
 	}

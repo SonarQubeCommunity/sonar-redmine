@@ -23,7 +23,7 @@ public final class RedmineLanguageConstants {
 
 	private RedmineLanguageConstants() {
 	}
-	
+
 	// Review data ids
 	public static final String ISSUES_DOMAIN = "Issues";
 	public static final String ISSUES_KEY = "redmine-issues";
@@ -33,7 +33,7 @@ public final class RedmineLanguageConstants {
 
 	// Metric data ids
 	public static final String ISSUES_BY_PRIORITY_KEY = "redmine-issues-by-priority";
-	
+
 	// Language string ids
 	public static final String LINKED_ISSUE_SUBJECT_TEMPLATE = "redmine.linked_issue.subject.template";
 	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE = "redmine.linked_issue.description.template.with_message";

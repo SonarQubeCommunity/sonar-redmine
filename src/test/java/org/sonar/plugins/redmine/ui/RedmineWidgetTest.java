@@ -26,16 +26,16 @@ import org.junit.Test;
 
 public class RedmineWidgetTest {
 
-  private RedmineWidget widget = new RedmineWidget();
+	private RedmineWidget widget = new RedmineWidget();
 
-  @Test
-  public void templatePathShouldNotbeNull() {
-    assertThat(getClass().getResource(widget.getTemplatePath()), notNullValue());
-  }
+	@Test
+	public void templatePathShouldNotbeNull() {
+		assertThat(getClass().getResource(widget.getTemplatePath()), notNullValue());
+	}
 
-  @Test
-  public void testNameAndTitle() throws Exception {
-    assertThat(widget.getId(), is("redmine"));
-    assertThat(widget.getTitle(), is("RedmineWidget"));
-  }
+	@Test
+	public void testNameAndTitle() throws Exception {
+		assertThat(widget.getId(), is("redmine"));
+		assertThat(widget.getTitle(), is("RedmineWidget"));
+	}
 }

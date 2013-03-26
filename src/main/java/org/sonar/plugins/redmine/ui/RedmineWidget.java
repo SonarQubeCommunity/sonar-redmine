@@ -23,20 +23,19 @@ import org.sonar.api.web.AbstractRubyTemplate;
 import org.sonar.api.web.RubyRailsWidget;
 import org.sonar.api.web.WidgetCategory;
 
-
 @WidgetCategory("Redmine")
 public class RedmineWidget extends AbstractRubyTemplate implements RubyRailsWidget {
 
-  public String getId() {
-    return "redmine";
-  }
+	public String getId() {
+		return "redmine";
+	}
 
-  public String getTitle() {
-    return "RedmineWidget";
-  }
+	public String getTitle() {
+		return "RedmineWidget";
+	}
 
-  @Override
-  protected String getTemplatePath() {
-    return "/org/sonar/redmine/redmine_widget.html.erb";
-  }
+	@Override
+	protected String getTemplatePath() {
+		return "/org/sonar/redmine/redmine_widget.html.erb";
+	}
 }

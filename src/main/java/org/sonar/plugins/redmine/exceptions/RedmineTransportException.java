@@ -27,7 +27,7 @@ public class RedmineTransportException extends RedmineException implements Serve
 	public RedmineTransportException() {
 		super("");
 	}
-	
+
 	public RedmineTransportException(String message) {
 		super(message);
 	}

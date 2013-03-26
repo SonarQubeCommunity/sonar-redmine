@@ -27,7 +27,7 @@ public abstract class RedmineException extends com.taskadapter.redmineapi.Redmin
 	public RedmineException() {
 		super("");
 	}
-	
+
 	public RedmineException(String message) {
 		super(message);
 	}

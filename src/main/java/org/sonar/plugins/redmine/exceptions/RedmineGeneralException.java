@@ -27,7 +27,7 @@ public class RedmineGeneralException extends RedmineException implements ServerE
 	public RedmineGeneralException() {
 		super("");
 	}
-	
+
 	public RedmineGeneralException(String message) {
 		super(message);
 	}

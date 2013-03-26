@@ -32,27 +32,28 @@ import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineWorkflowBuilder implements ServerExtension {
 
-  private final Workflow workflow;
-  private final RedmineLinkFunction linkFunction;
+	private final Workflow workflow;
+	private final RedmineLinkFunction linkFunction;
 
-  public RedmineWorkflowBuilder(Workflow workflow, RedmineLinkFunction linkFunction) {
-    this.workflow = workflow;
-    this.linkFunction = linkFunction;
-  }
+	public RedmineWorkflowBuilder(Workflow workflow, RedmineLinkFunction linkFunction) {
+		this.workflow = workflow;
+		this.linkFunction = linkFunction;
+	}
 
-  public void start() {
-    workflow.addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
-    workflow.setScreen(RedmineLanguageConstants.LINK_TO_REDMINE_ID, new CommentScreen());
-    workflow.addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, linkFunction);
-    // conditions for this function
-    // - on the review ("IDLE" is the non-persisted status of an non-existing review = when a violation does have a review yet)
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, not(hasReviewProperty(RedmineLanguageConstants.ISSUE_ID)));
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, statuses("IDLE", "OPEN", "REOPENED"));
-    // - on the project
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.HOST));
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.API_ACCESS_KEY));
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PROJECT_KEY));
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PRIORITY_ID));
-    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.TRACKER_ID));
-  }
+	public void start() {
+		workflow.addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
+		workflow.setScreen(RedmineLanguageConstants.LINK_TO_REDMINE_ID, new CommentScreen());
+		workflow.addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, linkFunction);
+		// conditions for this function
+		// - on the review ("IDLE" is the non-persisted status of an non-existing
+		// review = when a violation does have a review yet)
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, not(hasReviewProperty(RedmineLanguageConstants.ISSUE_ID)));
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, statuses("IDLE", "OPEN", "REOPENED"));
+		// - on the project
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.HOST));
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.API_ACCESS_KEY));
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PROJECT_KEY));
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PRIORITY_ID));
+		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.TRACKER_ID));
+	}
 }

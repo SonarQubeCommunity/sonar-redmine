@@ -27,7 +27,7 @@ public class RedmineAuthenticationException extends RedmineException implements 
 	public RedmineAuthenticationException() {
 		super("");
 	}
-	
+
 	public RedmineAuthenticationException(String message) {
 		super(message);
 	}

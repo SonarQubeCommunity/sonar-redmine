@@ -31,29 +31,29 @@ import org.sonar.api.workflow.Review;
 import org.sonar.plugins.redmine.RedmineLanguageConstants;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
-public class RedmineIssueFactory implements ServerExtension{
-  private I18n i18n;
+public class RedmineIssueFactory implements ServerExtension {
+	private I18n i18n;
 
-public RedmineIssueFactory (I18n i18n){
-	    this.i18n = i18n;
-  }
-  
-  public Issue createRemineIssue(Review review, RedmineSettings settings, Map<String, String> parameters) {
-    Issue issue = new Issue();
-    
-    issue.setTracker(new Tracker(settings.getTrackerID(), null));
-    issue.setPriorityId(settings.getPriorityID());
-    issue.setSubject(createIssueSubject(review));
-    issue.setDescription(createIssueDescription(review, settings.getString(CoreProperties.SERVER_BASE_URL), parameters.get("text")));
-    
-    return issue;
-  }
+	public RedmineIssueFactory(I18n i18n) {
+		this.i18n = i18n;
+	}
 
-  private String createIssueSubject(Review review) {
+	public Issue createRemineIssue(Review review, RedmineSettings settings, Map<String, String> parameters) {
+		Issue issue = new Issue();
+
+		issue.setTracker(new Tracker(settings.getTrackerID(), null));
+		issue.setPriorityId(settings.getPriorityID());
+		issue.setSubject(createIssueSubject(review));
+		issue.setDescription(createIssueDescription(review, settings.getString(CoreProperties.SERVER_BASE_URL), parameters.get("text")));
+
+		return issue;
+	}
+
+	private String createIssueSubject(Review review) {
 	return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, review.getReviewId(), review.getRuleName()));
   }
-  
-  private String createIssueDescription(Review review, String baseUrl, String comment) {
+
+	private String createIssueDescription(Review review, String baseUrl, String comment) {
 	StringBuilder sb = new StringBuilder();
 	sb.append(baseUrl);
 	sb.append("/project_reviews/view/");

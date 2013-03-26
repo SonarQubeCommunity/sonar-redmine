@@ -29,7 +29,7 @@ public class RedmineNotAuthorizedException extends RedmineException implements S
 	public RedmineNotAuthorizedException() {
 		super("");
 	}
-	
+
 	public RedmineNotAuthorizedException(String message) {
 		super(message);
 	}

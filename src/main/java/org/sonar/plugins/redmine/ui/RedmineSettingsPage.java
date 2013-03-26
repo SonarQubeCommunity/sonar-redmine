@@ -34,7 +34,7 @@ public class RedmineSettingsPage implements Page {
 	public RedmineSettingsPage(I18n i18n) {
 		this.i18n = i18n;
 	}
-	
+
 	public String getId() {
 		return "/redmine_configuration";
 	}

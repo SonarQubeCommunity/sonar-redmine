@@ -41,61 +41,58 @@ import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineLinkFunction extends Function implements ServerExtension {
 
-  private final RedmineAdapter redmineAdapter;
-  private final RedmineIssueFactory issueFactory;
-  private final I18n i18n;
+	private final RedmineAdapter redmineAdapter;
+	private final RedmineIssueFactory issueFactory;
+	private final I18n i18n;
 
-  public RedmineLinkFunction(RedmineIssueFactory issueFactory, 
-                            RedmineAdapter redmineAdapter, 
-                            I18n i18n) {
-    this.redmineAdapter = redmineAdapter;
-    this.issueFactory = issueFactory;
-    this.i18n = i18n;
-  }
+	public RedmineLinkFunction(RedmineIssueFactory issueFactory, RedmineAdapter redmineAdapter, I18n i18n) {
+		this.redmineAdapter = redmineAdapter;
+		this.issueFactory = issueFactory;
+		this.i18n = i18n;
+	}
 
-  @Override
-  public void doExecute(MutableReview review, Review initialReview, WorkflowContext context, Map<String, String> parameters) {
-    try {
-    	StringBuilder sb = new StringBuilder();
-    	for (Entry<String, String> entry : parameters.entrySet()) {
+	@Override
+	public void doExecute(MutableReview review, Review initialReview, WorkflowContext context, Map<String, String> parameters) {
+		try {
+			StringBuilder sb = new StringBuilder();
+			for (Entry<String, String> entry : parameters.entrySet()) {
 				sb.append(entry.getKey());
 				sb.append("-> ");
 				sb.append(entry.getValue());
 				sb.append("\n");
 			}
-    	
-      RedmineSettings redmineSettings = new RedmineSettings(context.getProjectSettings());
-      
-      Issue issue = issueFactory.createRemineIssue(review, redmineSettings, parameters);
-      redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
-      issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
-      
-      createComment(issue, review, context, parameters);
-      review.setProperty(RedmineLanguageConstants.ISSUE_ID, issue.getId().toString());
-    } catch (RedmineException ex) {
-      throw new IllegalStateException(
-              i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(), ex);
-    }
-  }
 
-  protected void createComment(Issue issue, MutableReview review, WorkflowContext context, Map<String, String> parameters) {
-    Comment newComment = review.createComment();
-    newComment.setUserId(context.getUserId());
-    newComment.setMarkdownText(generateCommentText(issue, new RedmineSettings(context.getProjectSettings()), parameters));
-  }
+			RedmineSettings redmineSettings = new RedmineSettings(context.getProjectSettings());
 
-  protected String generateCommentText(Issue issue, RedmineSettings redmineSettings, Map<String, String> parameters) {
-    StringBuilder message = new StringBuilder();
-    String text = parameters.get("text");
-    if (!StringUtils.isBlank(text)) {
-      message.append(text);
-      message.append("\n\n");
-    }
-    message.append(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_COMMENT, null));
-    message.append(redmineSettings.getHost());
-    message.append("/issues/");
-    message.append(issue.getId().toString());
-    return message.toString();
-  }
+			Issue issue = issueFactory.createRemineIssue(review, redmineSettings, parameters);
+			redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
+			issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
+
+			createComment(issue, review, context, parameters);
+			review.setProperty(RedmineLanguageConstants.ISSUE_ID, issue.getId().toString());
+		} catch (RedmineException ex) {
+			throw new IllegalStateException(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(), ex);
+		}
+	}
+
+	protected void createComment(Issue issue, MutableReview review, WorkflowContext context, Map<String, String> parameters) {
+		Comment newComment = review.createComment();
+		newComment.setUserId(context.getUserId());
+		newComment.setMarkdownText(generateCommentText(issue, new RedmineSettings(context.getProjectSettings()), parameters));
+	}
+
+	protected String generateCommentText(Issue issue, RedmineSettings redmineSettings, Map<String, String> parameters) {
+		StringBuilder message = new StringBuilder();
+		String text = parameters.get("text");
+		if (!StringUtils.isBlank(text)) {
+			message.append(text);
+			message.append("\n\n");
+		}
+		message.append(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_COMMENT, null));
+		message.append(redmineSettings.getHost());
+		message.append("/issues/");
+		message.append(issue.getId().toString());
+		return message.toString();
+	}
 
 }
