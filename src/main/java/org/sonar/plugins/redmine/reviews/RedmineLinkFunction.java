@@ -71,7 +71,8 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
 			createComment(issue, review, context, parameters);
 			review.setProperty(RedmineLanguageConstants.ISSUE_ID, issue.getId().toString());
 		} catch (RedmineException ex) {
-			throw new IllegalStateException(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(), ex);
+			throw new IllegalStateException(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null)
+					+ ex.getMessage(), ex);
 		}
 	}
 

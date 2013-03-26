@@ -44,8 +44,20 @@ import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineTransportException;
 
 @Properties({
-		@Property(key = RedmineSettings.HOST, name = "Redmine Host URL", description = "Example : http://demo.redmine.org/", global = true, defaultValue = "", module = false),
-		@Property(key = RedmineSettings.API_ACCESS_KEY, name = "API Access Key", description = "You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.", type = org.sonar.api.PropertyType.PASSWORD, global = true, module = false) })
+		@Property(
+				key = RedmineSettings.HOST,
+				name = "Redmine Host URL",
+				description = "Example : http://demo.redmine.org/",
+				global = true,
+				defaultValue = "",
+				module = false),
+		@Property(
+				key = RedmineSettings.API_ACCESS_KEY,
+				name = "API Access Key",
+				description = "You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.",
+				type = org.sonar.api.PropertyType.PASSWORD,
+				global = true,
+				module = false) })
 public class RedminePlugin extends SonarPlugin {
 
 	public static RedmineException wrapException(Exception e) {
@@ -84,7 +96,7 @@ public class RedminePlugin extends SonarPlugin {
 				// Reviews
 				RedmineLinkFunction.class, RedmineWorkflowBuilder.class,
 				// Exceptions
-				RedmineGeneralException.class, org.sonar.plugins.redmine.exceptions.RedmineAuthenticationException.class, org.sonar.plugins.redmine.exceptions.RedmineTransportException.class,
-				RedmineNotFoundException.class, RedmineNotAuthorizedException.class);
+				RedmineGeneralException.class, org.sonar.plugins.redmine.exceptions.RedmineAuthenticationException.class,
+				org.sonar.plugins.redmine.exceptions.RedmineTransportException.class, RedmineNotFoundException.class, RedmineNotAuthorizedException.class);
 	}
 }
