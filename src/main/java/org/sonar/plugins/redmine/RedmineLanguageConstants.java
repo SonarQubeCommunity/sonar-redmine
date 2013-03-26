@@ -40,5 +40,5 @@ public final class RedmineLanguageConstants {
 	public static final String LINKED_ISSUE_COMMENT = "redmine.linked_issue.comment";
 	public static final String LINKED_ISSUE_REMOTE_SERVER_ERROR = "redmine.linked_issue.remote_server_error";
 
-	public static final String CONFIGURATION_PAGE = "page.redmine.name";
+	public static final String CONFIGURATION_PAGE = "page.redmine_configuration.name";
 }

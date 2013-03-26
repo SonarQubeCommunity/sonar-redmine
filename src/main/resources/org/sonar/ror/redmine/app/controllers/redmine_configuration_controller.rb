@@ -31,7 +31,7 @@ class RedmineConfigurationController < ApplicationController
   @error = { }
   @result = { }
   
-  # GET /redmine_configuration
+  # GET /page.redmine_configuration
   def index
     # Checks if all parameters are given to run connection text automatically
     if ((!@host.empty? or !@ghost.empty?) and (!@api_key.empty? or !@gapi_key.empty?) and !@project_key.empty? and @priority_id > 0 and @tracker_id > 0)
@@ -41,7 +41,7 @@ class RedmineConfigurationController < ApplicationController
     end    
   end
   
-  # POST /redmine_configuration/test
+  # POST /page.redmine_configuration/test
   def test
     run_test
     
@@ -94,13 +94,13 @@ class RedmineConfigurationController < ApplicationController
       # Possible if the class is used in some way see classes in exceptions package
       #    rescue java_facade.getComponentByClassname('redmine', 'com.taskadapter.redmineapi.RedmineAuthenticationException').class => e
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineAuthenticationException').class => e
-      @error[:api_key] = message('redmine_configuration.test.api_key_is_wrong')
+      @error[:api_key] = message('page.redmine_configuration.test.api_key_is_wrong')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineTransportException').class => e
-      @error[:host] = message('redmine_configuration.test.host_or_port_wrong')
+      @error[:host] = message('page.redmine_configuration.test.host_or_port_wrong')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineNotFoundException').class => e
-      @error[:host] = message('redmine_configuration.test.url_error')
+      @error[:host] = message('page.redmine_configuration.test.url_error')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineGeneralException').class => e
       @error[:general] = e
@@ -115,14 +115,14 @@ class RedmineConfigurationController < ApplicationController
       
       # Check if user is assigned to project (admin must be member, too!)
       if !adp.isMemberOfProject(user, project)
-        @error[:project_key] = message('redmine_configuration.test.project_no_member')
+        @error[:project_key] = message('page.redmine_configuration.test.project_no_member')
         return
       end
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineNotFoundException').class => e
-      @error[:project_key] = message('redmine_configuration.test.project_key_invalid')
+      @error[:project_key] = message('page.redmine_configuration.test.project_key_invalid')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineNotAuthorizedException').class => e
-      @error[:project_key] = message('redmine_configuration.test.project_no_access')
+      @error[:project_key] = message('page.redmine_configuration.test.project_no_access')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineGeneralException').class => e
       @error[:general] = e
@@ -146,11 +146,11 @@ class RedmineConfigurationController < ApplicationController
     @error = { } unless !@error.nil?
     
     if params[:host].blank? and @ghost.blank?
-      @error[:host] = message('redmine_configuration.host_is_missing')
+      @error[:host] = message('page.redmine_configuration.error.host_is_missing')
     end
     
     if params[:api_key].blank? and !@gapi_key_available
-      @error[:api_key] = message('redmine_configuration.api_key_is_missing')
+      @error[:api_key] = message('page.redmine_configuration.error.api_key_is_missing')
     end
   end
   
@@ -158,7 +158,7 @@ class RedmineConfigurationController < ApplicationController
     args.each do |arg_item|
       id = arg_item.to_s
       if params[id].blank?
-        @error[id] = message('redmine_configuration.'+id+'_is_missing')
+        @error[id] = message('page.redmine_configuration.error.'+id+'_is_missing')
       end
     end
   end

@@ -15,7 +15,7 @@
 }
 </style>
 
-<h1><%= message('redmine_configuration.page') -%></h1>
+<h1><%= message('page.redmine_configuration.page') -%></h1>
 
 <br />
 
@@ -47,7 +47,7 @@
 		if (r.status == 'error') {
 			handleErrors();
 		} else if (r.status == 'success') {
-			$('infomsg').update('<%= message('redmine_configuration.settings_saved') -%>');
+			$('infomsg').update('<%= message('page.redmine_configuration.settings.saved') -%>');
 			$('info').show();
 			Element.hide.delay(5, 'info');
 		}
@@ -183,7 +183,7 @@
     opacity: 0.75;           /* fx, safari, opera */
     border-top:1px solid #ddd;
     border-bottom:1px solid #ddd;">
-  <p><h2><%= image_tag 'loading.gif' -%> <%= message('redmine_configuration.loading_settings') -%></h2></p>
+  <p><h2><%= image_tag 'loading.gif' -%> <%= message('page.redmine_configuration.settings.loading') -%></h2></p>
 </div>
 
 <% form_remote_tag :url => {:action => 'save'},
@@ -197,43 +197,43 @@
   <table class="data form marginbottom10">
     <thead>
     <tr>
-      <th colspan="3"><span><%= message('redmine_configuration.general') -%></span></th>
+      <th colspan="3"><span><%= message('page.redmine_configuration.settings.general') -%></span></th>
     </tr>
     </thead>
     <tbody>
     <tr class="even">
-      <td colspan="3"><span><%= message('redmine_configuration.host.settings') -%></span></td>
+      <td colspan="3"><span><%= message('page.redmine_configuration.settings.redmine_access') -%></span></td>
     </tr>
     <tr class="odd">
-      <td class="keyCell"><label for="host"><%= message('redmine_configuration.host') -%>:</label></td>
+      <td class="keyCell"><label for="host"><%= message('page.redmine_configuration.settings.host') -%>:</label></td>
       <td>
       	<div><%= text_field_tag 'host', @host %></div>
-		<div class="note"><%= message('redmine_configuration.host.global') -%>: <%= @ghost.empty? ? message('redmine_configuration.host.global.not_set') : @ghost %></div>
+		<div class="note"><%= message('page.redmine_configuration.settings.host.global') -%>: <%= @ghost.empty? ? message('page.redmine_configuration.settings.host.global.not_set') : @ghost %></div>
 		<div class="error" id="host_error" style="display:none;" />
 	  </td>
-      <td class="comments"><%= message('redmine_configuration.host.description') -%></td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.host.description') -%></td>
     </tr>
     <tr class="even">
-      <td class="keyCell"><label for="api_key"><%= message('redmine_configuration.api_key') -%>:</label></td>
+      <td class="keyCell"><label for="api_key"><%= message('page.redmine_configuration.settings.api_key') -%>:</label></td>
       <td>
       	<%= text_field_tag 'api_key', @api_key %>
-		<div class="note"><% if !@ghost.empty? and @gapi_key_available %><%= message('redmine_configuration.api_key.global_is_set') -%><% else %><%= message('redmine_configuration.api_key.global_is_not_set') -%><% end %></div>
-		<div class="note" id="api_key_user_div" style="display:none;"><%= message('redmine_configuration.api_key.user') -%>: <span id="api_key_user"></span></div>
+		<div class="note"><% if !@ghost.empty? and @gapi_key_available %><%= message('page.redmine_configuration.settings.api_key.global.is_set') -%><% else %><%= message('page.redmine_configuration.settings.api_key.global.not_set') -%><% end %></div>
+		<div class="note" id="api_key_user_div" style="display:none;"><%= message('page.redmine_configuration.settings.api_key.user') -%>: <span id="api_key_user"></span></div>
 		<div class="error" id="api_key_error" style="display:none;" />
 	  </td>
-      <td class="comments"><%= message('redmine_configuration.api_key.description') -%></td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.api_key.description') -%></td>
     </tr>
     <tr class="odd">
-      <td colspan="3"><span><%= message('redmine_configuration.project.settings') -%></span></td>
+      <td colspan="3"><span><%= message('page.redmine_configuration.settings.project') -%></span></td>
     </tr>
     <tr class="even">
-      <td class="keyCell"><label for="project_key"><%= message('redmine_configuration.project_key') -%>:</label></td>
+      <td class="keyCell"><label for="project_key"><%= message('page.redmine_configuration.settings.project_key') -%>:</label></td>
       <td>
       	<%= text_field_tag 'project_key', @project_key %>
-		<div class="note" id="project_key_project_div" style="display:none;"><%= message('redmine_configuration.project_key.project') -%>: <span id="project_key_project"></span></div>
+		<div class="note" id="project_key_project_div" style="display:none;"><%= message('page.redmine_configuration.settings.project_key.project') -%>: <span id="project_key_project"></span></div>
 		<div class="error" id="project_key_error" style="display:none;" />
 	  </td>
-      <td class="comments"><%= message('redmine_configuration.project_key.description') -%></td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.project_key.description') -%></td>
     </tr>
     </tbody>
     <tfoot>
@@ -241,7 +241,7 @@
       <td colspan="3">
 		  <div>
 		    <%= submit_to_remote "submit_test",
-		                         message('redmine_configuration.test'),
+		                         message('page.redmine_configuration.settings.test'),
 		                         :url => {:action => 'test'},
 		                         :html => {:id => "submit_test"},
 		                         :before => "this.disable(); startTest();",
@@ -258,26 +258,26 @@
   <table class="data form marginbottom10">
     <thead>
     <tr>
-      <th colspan="3"><span><%= message('redmine_configuration.issue') -%></span></th>
+      <th colspan="3"><span><%= message('page.redmine_configuration.settings.issue') -%></span></th>
     </tr>
     </thead>
     <tfoot>
     <tr>
       <td colspan="3">
-        <%= submit_tag message('redmine_configuration.save_settings'), :id => 'submit_save', :disabled => true %>
+        <%= submit_tag message('page.redmine_configuration.settings.save'), :id => 'submit_save', :disabled => true %>
       </td>
     </tr>
     </tfoot>
     <tbody>
     <tr class="even">
-      <td class="keyCell"><label for="to_address"><%= message('redmine_configuration.priority_id') -%>:</label></td>
+      <td class="keyCell"><label for="to_address"><%= message('page.redmine_configuration.settings.priority_id') -%>:</label></td>
       <td><%= select_tag "priority_id", "<option value='0'>-</option>", :disabled => true, :onchange => "checkSelection()" %></td>
-      <td class="comments"><%= message('redmine_configuration.priority_id.description') -%></td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.priority_id.description') -%></td>
     </tr>
     <tr class="odd">
-      <td class="keyCell"><label for="subject"><%= message('redmine_configuration.tracker_id') -%>:</label></td>
+      <td class="keyCell"><label for="subject"><%= message('page.redmine_configuration.settings.tracker_id') -%>:</label></td>
       <td><%= select_tag "tracker_id", "<option value='0'>-</option>", :disabled => true, :onchange => "checkSelection()" %></td>
-      <td class="comments"><%= message('redmine_configuration.tracker_id.description') -%></td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.tracker_id.description') -%></td>
     </tr>
     </tbody>
   </table>
