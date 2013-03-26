@@ -52,5 +52,7 @@ public class RedmineWorkflowBuilder implements ServerExtension {
     workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.HOST));
     workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.API_ACCESS_KEY));
     workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PROJECT_KEY));
+    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PRIORITY_ID));
+    workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.TRACKER_ID));
   }
 }

@@ -50,6 +50,14 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
 	public String getProjectKey() {
 		return settings.getString(PROJECT_KEY);
 	}
+	
+	public int getPriorityID() {
+		return settings.getInt(PRIORITY_ID);
+	}
+
+	public int getTrackerID() {
+		return settings.getInt(TRACKER_ID);
+	}
 
 	public void setHost(String host) {
 		settings.setProperty(HOST, host);
@@ -62,8 +70,17 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
 	public void setProjectKey(String projectKey) {
 		settings.setProperty(PROJECT_KEY, projectKey);
 	}
+	
+	public void setPriorityID(int priorityID) {
+		settings.setProperty(PRIORITY_ID, priorityID);
+	}
+
+	public void setTrackerID(int trackerID) {
+		settings.setProperty(TRACKER_ID, trackerID);
+	}
 
 	public boolean missingMandatoryParameters() {
-		return StringUtils.isEmpty(getHost()) || StringUtils.isEmpty(getProjectKey()) || StringUtils.isEmpty(getApiAccessKey());
+		return StringUtils.isEmpty(getHost()) || StringUtils.isEmpty(getProjectKey()) || StringUtils.isEmpty(getApiAccessKey()) ||
+				getPriorityID() == 0 || getTrackerID() == 0;
 	}
 }

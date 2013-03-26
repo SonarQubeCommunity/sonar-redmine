@@ -19,23 +19,50 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
-import org.sonar.api.ServerExtension;
+import java.util.Locale;
+import java.util.Map;
 
 import com.taskadapter.redmineapi.bean.Issue;
 import com.taskadapter.redmineapi.bean.Tracker;
 
+import org.sonar.api.CoreProperties;
+import org.sonar.api.i18n.I18n;
+import org.sonar.api.workflow.Review;
+import org.sonar.plugins.redmine.RedmineLanguageConstants;
+import org.sonar.plugins.redmine.config.RedmineSettings;
+
 public class RedmineIssueFactory implements ServerExtension{
-  
-  public RedmineIssueFactory (){
+  private I18n i18n;
+
+public RedmineIssueFactory (I18n i18n){
+	    this.i18n = i18n;
   }
   
-  public Issue createRemineIssue(String subject, String description) {
+  public Issue createRemineIssue(Review review, RedmineSettings settings, Map<String, String> parameters) {
     Issue issue = new Issue();
-    issue.setTracker(new Tracker(2, "Feature"));
-    issue.setPriorityId(2);
-    issue.setSubject(subject);
-    issue.setDescription(description);
+    
+    issue.setTracker(new Tracker(settings.getTrackerID(), null));
+    issue.setPriorityId(settings.getPriorityID());
+    issue.setSubject(createIssueSubject(review));
+    issue.setDescription(createIssueDescription(review, settings.getString(CoreProperties.SERVER_BASE_URL), parameters.get("text")));
+    
     return issue;
   }
+
+  private String createIssueSubject(Review review) {
+	return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, review.getReviewId(), review.getRuleName()));
+  }
   
+  private String createIssueDescription(Review review, String baseUrl, String comment) {
+	StringBuilder sb = new StringBuilder();
+	sb.append(baseUrl);
+	sb.append("/project_reviews/view/");
+	sb.append(review.getReviewId());
+	  
+	if (StringUtils.isNotBlank(comment)) {
+		return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, review.getMessage(), comment, sb.toString()));  
+	} else {
+		return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, review.getMessage(), sb.toString()));  
+	}
+  }
 }

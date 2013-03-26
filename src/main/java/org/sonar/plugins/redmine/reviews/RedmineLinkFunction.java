@@ -64,10 +64,12 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
 				sb.append("\n");
 			}
     	
-      Issue issue = issueFactory.createRemineIssue(review.getMessage(), sb.toString());
       RedmineSettings redmineSettings = new RedmineSettings(context.getProjectSettings());
+      
+      Issue issue = issueFactory.createRemineIssue(review, redmineSettings, parameters);
       redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
       issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
+      
       createComment(issue, review, context, parameters);
       review.setProperty(RedmineLanguageConstants.ISSUE_ID, issue.getId().toString());
     } catch (RedmineException ex) {

@@ -35,8 +35,10 @@ public final class RedmineLanguageConstants {
 	public static final String ISSUES_BY_PRIORITY_KEY = "redmine-issues-by-priority";
 	
 	// Language string ids
-	public static final String LINKED_ISSUE_SUBJECT = "redmine.linked_issue.subject";
-	public static final String LINKED_ISSUE_DESCRIPTION = "redmine.linked_issue.description";
+	public static final String LINKED_ISSUE_SUBJECT_TEMPLATE = "redmine.linked_issue.subject.template";
+	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE = "redmine.linked_issue.description.template.with_message";
+	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE = "redmine.linked_issue.description.template.without_message";
+
 	public static final String LINKED_ISSUE_COMMENT = "redmine.linked_issue.comment";
 	public static final String LINKED_ISSUE_REMOTE_SERVER_ERROR = "redmine.linked_issue.remote_server_error";
 
