@@ -27,13 +27,13 @@ import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.redmine.batch.RedmineSensor;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
-import org.sonar.plugins.redmine.config.RedmineSettingsPage;
 import org.sonar.plugins.redmine.exceptions.RedmineGeneralException;
 import org.sonar.plugins.redmine.exceptions.RedmineNotAuthorizedException;
 import org.sonar.plugins.redmine.exceptions.RedmineNotFoundException;
 import org.sonar.plugins.redmine.reviews.RedmineIssueFactory;
 import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
 import org.sonar.plugins.redmine.reviews.RedmineWorkflowBuilder;
+import org.sonar.plugins.redmine.ui.RedmineSettingsPage;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
 import com.google.common.collect.ImmutableList;
