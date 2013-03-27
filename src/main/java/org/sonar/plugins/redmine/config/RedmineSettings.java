@@ -80,7 +80,6 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
 	}
 
 	public boolean missingMandatoryParameters() {
-		return StringUtils.isEmpty(getHost()) || StringUtils.isEmpty(getProjectKey()) || StringUtils.isEmpty(getApiAccessKey()) || getPriorityID() == 0
-				|| getTrackerID() == 0;
+		return StringUtils.isEmpty(getHost()) || StringUtils.isEmpty(getProjectKey()) || StringUtils.isEmpty(getApiAccessKey());
 	}
 }
