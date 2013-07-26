@@ -29,6 +29,7 @@ import org.sonar.api.i18n.I18n;
 import org.sonar.plugins.redmine.RedmineLanguageConstants;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -49,15 +50,15 @@ public class RedmineIssueFactoryTest {
     rSettings = mock(RedmineSettings.class);
     review = mock(Review.class);
 
-    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, null)).thenReturn("New Subject");
-    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, null)).thenReturn("New Description");
+    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "")).thenReturn("New Subject");
+    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "")).thenReturn("New Description");
 
     redmineIssueFactory = new RedmineIssueFactory(i18n, settings);
   }
 
   @Test
   public void shouldReturnValidIssue() {
-    Issue issue = redmineIssueFactory.createRedmineIssue(review, rSettings, null);
+    Issue issue = redmineIssueFactory.createRedmineIssue(review, rSettings, new HashMap<String, String>());
 
     assertThat(issue).isNotNull();
     assertThat(issue.getSubject()).as("New Subject");

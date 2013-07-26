@@ -43,80 +43,82 @@ import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineSensorTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
-	private RedmineSensor sensor;
-	private RedmineSettings redmineSettings;
-	private RedmineAdapter redmineAdapter;
-	private String url;
+  private RedmineSensor sensor;
+  private RedmineSettings redmineSettings;
+  private RedmineAdapter redmineAdapter;
+  private String url;
 
-	@Before
-	public void setUp() throws RedmineException {
-		redmineSettings = new RedmineSettings(new Settings());
-		redmineAdapter = mock(RedmineAdapter.class);
-		Map<String, Integer> issuesByPriority = new HashMap<String, Integer>();
-		issuesByPriority.put("Normal", 2);
-		issuesByPriority.put("Urgent", 1);
-		doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "project_key");
-		when(redmineAdapter.collectProjectIssuesByPriority("project_key")).thenReturn(issuesByPriority);
-		redmineSettings.setHost("http://my.Redmine.server");
-		redmineSettings.setApiAccessKey("api_access_key");
-		redmineSettings.setProjectKey("project_key");
-		sensor = new RedmineSensor(redmineSettings, redmineAdapter);
-		url = "http://my.Redmine.server/projects/project_key";
-	}
+  @Before
+  public void setUp() throws RedmineException {
+    redmineSettings = new RedmineSettings(new Settings());
+    redmineAdapter = mock(RedmineAdapter.class);
+    Map<String, Integer> issuesByPriority = new HashMap<String, Integer>();
+    issuesByPriority.put("Normal", 2);
+    issuesByPriority.put("Urgent", 1);
+    doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "project_key");
+    when(redmineAdapter.collectProjectIssuesByPriority("project_key")).thenReturn(issuesByPriority);
+    redmineSettings.setHost("http://my.Redmine.server");
+    redmineSettings.setApiAccessKey("api_access_key");
+    redmineSettings.setProjectKey("project_key");
+    redmineSettings.setTrackerID(1);
+    redmineSettings.setPriorityID(1);
+    sensor = new RedmineSensor(redmineSettings, redmineAdapter);
+    url = "http://my.Redmine.server/projects/project_key";
+  }
 
-	@Test
-	public void testToString() throws Exception {
-		assertThat(sensor.toString(), is("Redmine issues sensor"));
-	}
+  @Test
+  public void testToString() throws Exception {
+    assertThat(sensor.toString(), is("Redmine issues sensor"));
+  }
 
-	@Test
-	public void shouldExecuteOnRootProjectWithAllParams() throws Exception {
-		Project project = mock(Project.class);
-		when(project.isRoot()).thenReturn(true).thenReturn(false);
-		assertThat(sensor.shouldExecuteOnProject(project), is(true));
-	}
+  @Test
+  public void shouldExecuteOnRootProjectWithAllParams() throws Exception {
+    Project project = mock(Project.class);
+    when(project.isRoot()).thenReturn(true).thenReturn(false);
+    assertThat(sensor.shouldExecuteOnProject(project), is(true));
+  }
 
-	@Test
-	public void shouldNotExecuteOnNonRootProject() throws Exception {
-		assertThat(sensor.shouldExecuteOnProject(mock(Project.class)), is(false));
-	}
+  @Test
+  public void shouldNotExecuteOnNonRootProject() throws Exception {
+    assertThat(sensor.shouldExecuteOnProject(mock(Project.class)), is(false));
+  }
 
-	@Test
-	public void shouldNotExecuteOnRootProjectifOneParamMissing() throws Exception {
-		Project project = mock(Project.class);
-		when(project.isRoot()).thenReturn(true).thenReturn(false);
-		redmineSettings.setHost(null);
-		sensor = new RedmineSensor(redmineSettings, redmineAdapter);
-		assertThat(sensor.shouldExecuteOnProject(project), is(false));
-	}
+  @Test
+  public void shouldNotExecuteOnRootProjectifOneParamMissing() throws Exception {
+    Project project = mock(Project.class);
+    when(project.isRoot()).thenReturn(true).thenReturn(false);
+    redmineSettings.setHost(null);
+    sensor = new RedmineSensor(redmineSettings, redmineAdapter);
+    assertThat(sensor.shouldExecuteOnProject(project), is(false));
+  }
 
-	@Test
-	public void testSaveMeasures() {
-		SensorContext context = mock(SensorContext.class);
-		String priorityDistribution = "Normal=2;Urgent=1";
+  @Test
+  public void testSaveMeasures() {
+    SensorContext context = mock(SensorContext.class);
+    String priorityDistribution = "Normal=2;Urgent=1";
 
-		sensor.saveMeasures(context, 3, url, priorityDistribution);
+    sensor.saveMeasures(context, 3, url, priorityDistribution);
 
-		verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
-		verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
-		verifyNoMoreInteractions(context);
-	}
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
+    verifyNoMoreInteractions(context);
+  }
 
-	@Test
-	public void testAnalyze() {
-		SensorContext context = mock(SensorContext.class);
-		Project project = mock(Project.class);
-		RedmineSensor spy = spy(sensor);
-		spy.analyse(project, context);
-		String priorityDistribution = "Normal=2;Urgent=1";
+  @Test
+  public void testAnalyze() {
+    SensorContext context = mock(SensorContext.class);
+    Project project = mock(Project.class);
+    RedmineSensor spy = spy(sensor);
+    spy.analyse(project, context);
+    String priorityDistribution = "Normal=2;Urgent=1";
 
-		verify(spy).saveMeasures(context, 3.0, url, priorityDistribution);
-		verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
-		verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
-		verifyNoMoreInteractions(context);
-	}
+    verify(spy).saveMeasures(context, 3.0, url, priorityDistribution);
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
+    verifyNoMoreInteractions(context);
+  }
 
 }

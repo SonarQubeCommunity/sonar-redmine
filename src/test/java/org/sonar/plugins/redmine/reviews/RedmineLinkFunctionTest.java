@@ -89,7 +89,7 @@ public class RedmineLinkFunctionTest {
     when(workflowContext.getProjectSettings()).thenReturn(settings);
 
     redmineIssueFactory = mock(RedmineIssueFactory.class);
-    when(redmineIssueFactory.createRedmineIssue(review, redmineSettings, null)).thenReturn(redmineIssue);
+    when(redmineIssueFactory.createRedmineIssue(review, redmineSettings, new HashMap<String, String>())).thenReturn(redmineIssue);
 
     redmineAdapter = mock(RedmineAdapter.class);
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "api_access_key");
@@ -100,10 +100,9 @@ public class RedmineLinkFunctionTest {
 
   @Test
   public void shouldExecute() throws Exception {
-
     action.doExecute(mutableReview, review, workflowContext, new HashMap<String, String>());
 
-    verify(redmineIssueFactory).createRedmineIssue(review, redmineSettings, null);
+    verify(redmineIssueFactory).createRedmineIssue(review, redmineSettings, new HashMap<String, String>());
     verify(redmineAdapter).createIssue(projectKey, redmineIssue);
     verify(mutableReview).createComment();
     verify(mutableReview).setProperty(RedmineLanguageConstants.ISSUE_ID, "10");
