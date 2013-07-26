@@ -53,7 +53,7 @@ public class RedmineLinkFunction extends Function implements ServerExtension {
     try {
       RedmineSettings redmineSettings = new RedmineSettings(context.getProjectSettings());
 
-      Issue issue = issueFactory.createRemineIssue(review, redmineSettings, parameters);
+      Issue issue = issueFactory.createRedmineIssue(review, redmineSettings, parameters);
       redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
       issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
 

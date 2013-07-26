@@ -19,6 +19,12 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.sonar.api.config.Settings;
+
+import org.sonar.api.ServerExtension;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -32,37 +38,39 @@ import org.sonar.plugins.redmine.RedmineLanguageConstants;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineIssueFactory implements ServerExtension {
-	private I18n i18n;
+  private I18n i18n;
+  private Settings settings;
 
-	public RedmineIssueFactory(I18n i18n) {
-		this.i18n = i18n;
-	}
-
-	public Issue createRemineIssue(Review review, RedmineSettings settings, Map<String, String> parameters) {
-		Issue issue = new Issue();
-
-		issue.setTracker(new Tracker(settings.getTrackerID(), null));
-		issue.setPriorityId(settings.getPriorityID());
-		issue.setSubject(createIssueSubject(review));
-		issue.setDescription(createIssueDescription(review, settings.getString(CoreProperties.SERVER_BASE_URL), parameters.get("text")));
-
-		return issue;
-	}
-
-	private String createIssueSubject(Review review) {
-	return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, review.getReviewId(), review.getRuleName()));
+  public RedmineIssueFactory(I18n i18n, Settings settings) {
+    this.i18n = i18n;
+    this.settings = settings;
   }
 
-	private String createIssueDescription(Review review, String baseUrl, String comment) {
-	StringBuilder sb = new StringBuilder();
-	sb.append(baseUrl);
-	sb.append("/project_reviews/view/");
-	sb.append(review.getReviewId());
-	  
-	if (StringUtils.isNotBlank(comment)) {
-		return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, review.getMessage(), comment, sb.toString()));  
-	} else {
-		return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, review.getMessage(), sb.toString()));  
-	}
+  public Issue createRedmineIssue(Review review, RedmineSettings rSettings, Map<String, String> parameters) {
+    Issue issue = new Issue();
+
+    issue.setTracker(new Tracker(rSettings.getTrackerID(), null));
+    issue.setPriorityId(rSettings.getPriorityID());
+    issue.setSubject(createIssueSubject(review));
+    issue.setDescription(createIssueDescription(review, settings.getString(CoreProperties.SERVER_BASE_URL), parameters.get("text")));
+
+    return issue;
+  }
+
+  private String createIssueSubject(Review review) {
+    return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, review.getReviewId().toString(), review.getRuleName());
+  }
+
+  private String createIssueDescription(Review review, String baseUrl, String comment) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(baseUrl);
+    sb.append("/project_reviews/view/");
+    sb.append(review.getReviewId());
+
+    if (StringUtils.isNotBlank(comment)) {
+      return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, review.getMessage(), comment, sb.toString());
+    } else {
+      return i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, review.getMessage(), sb.toString());
+    }
   }
 }
