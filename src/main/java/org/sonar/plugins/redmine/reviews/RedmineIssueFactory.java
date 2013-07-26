@@ -19,27 +19,119 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
+import com.taskadapter.redmineapi.RedmineException;
+import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.Issue;
 import com.taskadapter.redmineapi.bean.Tracker;
+
+import java.util.List;
 import java.util.Locale;
+
+import org.sonar.api.CoreProperties;
 import org.sonar.api.ServerExtension;
+import org.sonar.api.config.Settings;
 import org.sonar.api.i18n.I18n;
 import org.sonar.plugins.redmine.RedmineConstants;
-
+import org.sonar.plugins.redmine.RedmineProperty;
+import org.sonar.api.rules.RulePriority;
+import org.sonar.api.utils.SonarException;
+import com.taskadapter.redmineapi.bean.IssuePriority;
 public class RedmineIssueFactory implements ServerExtension{
+	 private static List<IssuePriority> plist;
+	    private static List<Tracker> tlist;
+	    private Integer priorityId;
+	    private Integer trackerId;
+
+	    protected static RedmineManager redmineMgr;
   
   private I18n i18n;
   public RedmineIssueFactory (I18n i18n){
     this.i18n = i18n;
   }
   
-  public Issue createRemineIssue() {
-    Issue issue = new Issue();
-    issue.setTracker(new Tracker(2, "Feature"));
-    issue.setPriorityId(2);
-    issue.setSubject(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT, null));
-    issue.setDescription(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION, null));
-    return issue;
+  public Issue createRedmineIssue(org.sonar.api.issue.Issue sonarIssue,Settings settings) {
+    Issue redmineIssue = new Issue();
+    
+	Object redmineMgr;
+	redmineIssue.setPriorityId(mapRedminePriorityToId(
+            sonarSeverityToRedminePriority(RulePriority.valueOf(sonarIssue.severity()),settings),redmineMgr));
+    redmineIssue.setSubject(generateIssueSummary(sonarIssue));
+    redmineIssue.setTracker(new Tracker(
+            setTrackerId(settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE),redmineMgr),
+            settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE))
+            );	
+
+
+    redmineIssue.setDescription(generateIssueDescription(sonarIssue,settings));
+    return redmineIssue;
+  }
+  protected String generateIssueSummary(org.sonar.api.issue.Issue sonarIssue) {
+      StringBuilder summary = new StringBuilder("Sonar Issue #");
+      summary.append(sonarIssue.message());
+      return summary.toString();
+
+}
+  protected String generateIssueDescription(org.sonar.api.issue.Issue sonarIssue,Settings settings) throws RedmineException{
+      StringBuilder description = new StringBuilder("Issue detail:\n");
+   
+      description.append(sonarIssue.key());
+      description.append(" - ");
+      description.append(sonarIssue.ruleKey());
+
+      description.append("\n\n");
+      description.append("\n\nCheck it on Sonar: ");
+      description.append(CoreProperties.SERVER_BASE_URL_DEFAULT_VALUE);
+      description.append("/issue/show/");
+      description.append(sonarIssue.key());
+      
+     
+      return description.toString();
+
+}
+  protected String sonarSeverityToRedminePriority(RulePriority sonarSeverity,Settings settings) {
+      final String redminePriority;
+      switch(sonarSeverity){
+         case INFO:
+             redminePriority = settings.getString(RedmineConstants.REDMINE_INFO_PRIORITY_ID);
+             break;   
+         case MINOR:
+             redminePriority = settings.getString(RedmineConstants.REDMINE_MINOR_PRIORITY_ID);
+             break;   
+         case MAJOR:
+             redminePriority = settings.getString(RedmineConstants.REDMINE_MAJOR_PRIORITY_ID);
+             break;
+         case CRITICAL:
+             redminePriority = settings.getString(RedmineConstants.REDMINE_CRITICAL_PRIORITY_ID);
+             break;
+         case BLOCKER:
+             redminePriority = settings.getString(RedmineConstants.REDMINE_BLOCKER_PRIORITY_ID);
+             break;
+         default:
+                 throw new SonarException("Unable to convert review severity to REDMINE priority: " + sonarSeverity);
+
+
+
+          }
+      return redminePriority;
+
+}
+  protected Integer mapRedminePriorityToId(String redminePriority,RedmineManager redmineMgr){
+      plist = RedmineProperty.getPriorityValueFromRedmine(redmineMgr);
+      for (IssuePriority s :plist) {
+                 if(redminePriority.equals(s.getName())){ 
+                         priorityId = s.getId();}
+                }
+        return priorityId;
+
+  }
+  protected Integer setTrackerId(String issueType,RedmineManager redmineMgr){
+      tlist = RedmineProperty.getIssueTypeFromRedmine(redmineMgr);
+      for (Tracker t : tlist) {
+          if(issueType.equals(t.getName())){
+              trackerId = t.getId();
+           }
+        }
+         return trackerId;
   }
   
 }

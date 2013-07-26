@@ -20,16 +20,20 @@
 package org.sonar.plugins.redmine;
 
 import com.google.common.collect.ImmutableList;
+import com.taskadapter.redmineapi.RedmineManager;
+
 import java.util.List;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
+import org.sonar.api.PropertyType;
 import org.sonar.api.SonarPlugin;
+import org.sonar.api.config.PropertyDefinition;
 import org.sonar.plugins.redmine.batch.RedmineSensor;
 import org.sonar.plugins.redmine.batch.RedmineSettings;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.reviews.RedmineIssueFactory;
 import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
-import org.sonar.plugins.redmine.reviews.RedmineWorkflowBuilder;
+import org.sonar.plugins.redmine.reviews.RedmineActionDefinition;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
 @Properties({
@@ -55,8 +59,52 @@ import org.sonar.plugins.redmine.ui.RedmineWidget;
 })
 public class RedminePlugin extends SonarPlugin {
 
-  public List getExtensions() {
+  private RedmineManager redmineMgr;
+
+public List getExtensions() {
     return ImmutableList.of(
+    		 //Settings Properties
+            PropertyDefinition.builder(RedmineConstants.REDMINE_INFO_PRIORITY_ID)
+            .name("Redmine priority id for INFO")
+            .type(PropertyType.SINGLE_SELECT_LIST)
+            .description("Redmine priority id used to create issues for Sonar violations with severity INFO.")
+            .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getPriorityValueFromRedmine(redmineMgr)))
+            .build(),
+
+            PropertyDefinition.builder(RedmineConstants.REDMINE_MINOR_PRIORITY_ID)
+            .name("Redmine priority id for MINOR")
+            .type(PropertyType.SINGLE_SELECT_LIST)
+            .description("Redmine priority id used to create issues for Sonar violations with severity MINOR.")
+            .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getPriorityValueFromRedmine(redmineMgr)))
+            .build(),
+
+            PropertyDefinition.builder(RedmineConstants.REDMINE_MAJOR_PRIORITY_ID)
+            .name("Redmine priority id for MAJOR")
+            .type(PropertyType.SINGLE_SELECT_LIST)
+            .description("Redmine priority id used to create issues for Sonar violations with severity MAJOR.")
+            .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getPriorityValueFromRedmine(redmineMgr)))
+            .build(),
+
+            PropertyDefinition.builder(RedmineConstants.REDMINE_CRITICAL_PRIORITY_ID)
+            .name("Redmine priority id for CRITICAL")
+            .type(PropertyType.SINGLE_SELECT_LIST)
+            .description("Redmine priority id used to create issues for Sonar violations with severity CRITICAL.")
+            .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getPriorityValueFromRedmine(redmineMgr)))
+            .build(),
+
+            PropertyDefinition.builder(RedmineConstants.REDMINE_BLOCKER_PRIORITY_ID)
+           .name("Redmine priority id for BLOCKER")              
+            .type(PropertyType.SINGLE_SELECT_LIST)
+           .description("Redmine priority id used to create issues for Sonar violations with severity BLOCKER.")
+            .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getPriorityValueFromRedmine(redmineMgr)))
+            .build(),
+
+           PropertyDefinition.builder(RedmineConstants.REDMINE_ISSUE_TYPE)
+           .name("Type of Redmine issue")
+           .type(PropertyType.SINGLE_SELECT_LIST)
+            .description("Redmine issue type used to create issues for Sonar violations. Default is Feature.")
+           .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getIssueTypeFromRedmine(redmineMgr)))
+            .build(),
             // Definitions
             RedmineMetrics.class,
             // Batch
@@ -66,7 +114,7 @@ public class RedminePlugin extends SonarPlugin {
             // UI
             RedmineWidget.class,
             // Reviews
-            RedmineLinkFunction.class,RedmineWorkflowBuilder.class
+            RedmineLinkFunction.class,RedmineActionDefinition.class
             );
   }
 }

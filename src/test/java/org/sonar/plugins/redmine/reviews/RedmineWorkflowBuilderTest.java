@@ -38,7 +38,7 @@ public class RedmineWorkflowBuilderTest {
     Workflow workflow = mock(Workflow.class);
     RedmineLinkFunction function = mock(RedmineLinkFunction.class);
 
-    RedmineWorkflowBuilder builder = new RedmineWorkflowBuilder(workflow, function);
+    RedmineActionDefinition builder = new RedmineActionDefinition(workflow, function);
     builder.start();
 
     verify(workflow, times(1)).addCommand(RedmineConstants.LINK_TO_REDMINE_ID);

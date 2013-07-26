@@ -26,7 +26,14 @@ public final class RedmineConstants {
   public static final String HOST = "sonar.redmine.host";
   public static final String API_ACCESS_KEY = "sonar.redmine.api-access-key";
   public static final String PROJECT_KEY = "sonar.redmine.project-key";
-
+  
+  public static final String REDMINE_INFO_PRIORITY_ID = "sonar.redmine.info.priority.id";
+  public static final String REDMINE_MINOR_PRIORITY_ID = "sonar.redmine.minor.priority.id";
+  public static final String REDMINE_MAJOR_PRIORITY_ID = "sonar.redmine.major.priority.id";
+  public static final String REDMINE_CRITICAL_PRIORITY_ID = "sonar.redmine.critical.priority.id";
+  public static final String REDMINE_BLOCKER_PRIORITY_ID = "sonar.redmine.blocker.priority.id";
+  public static final String REDMINE_ISSUE_TYPE_ID = "sonar.redmine.issue.type.id";
+  public static final String REDMINE_ISSUE_TYPE = "sonar.redmine.issue.type";
   
   public static final String ISSUES_DOMAIN = "Issues";
   public static final String ISSUES_KEY = "redmine-issues";
