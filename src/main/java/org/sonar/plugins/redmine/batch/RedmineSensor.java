@@ -20,7 +20,6 @@
 package org.sonar.plugins.redmine.batch;
 
 import com.taskadapter.redmineapi.RedmineException;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -31,6 +30,8 @@ import org.sonar.api.resources.Project;
 import org.sonar.plugins.redmine.RedmineMetrics;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
+
+import java.util.Map;
 
 public class RedmineSensor implements Sensor {
 

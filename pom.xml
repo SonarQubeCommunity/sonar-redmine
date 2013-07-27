@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
-    <version>16</version>
+    <version>17</version>
   </parent>
 
   <artifactId>sonar-redmine-plugin</artifactId>
@@ -55,7 +55,7 @@
   </ciManagement>
 
   <properties>
-    <sonar.buildVersion>3.6-SNAPSHOT</sonar.buildVersion>
+    <sonar.buildVersion>3.6</sonar.buildVersion>
     <sonar.pluginClass>org.sonar.plugins.redmine.RedminePlugin</sonar.pluginClass>
     <sonar.pluginName>Redmine</sonar.pluginName>
   </properties>

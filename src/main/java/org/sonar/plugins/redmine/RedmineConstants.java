@@ -19,23 +19,24 @@
  */
 package org.sonar.plugins.redmine;
 
-public final class RedmineLanguageConstants {
+public final class RedmineConstants {
 
-	private RedmineLanguageConstants() {
+	private RedmineConstants() {
 	}
+
+	public static final String LINK_TO_REDMINE_ID = "link-to-redmine";
 
 	// Review data ids
 	public static final String ISSUES_DOMAIN = "Issues";
 	public static final String ISSUES_KEY = "redmine-issues";
 	public static final String ISSUE_ID = "redmine-issue-id";
 
-	public static final String LINK_TO_REDMINE_ID = "link-to-redmine";
-
 	// Metric data ids
 	public static final String ISSUES_BY_PRIORITY_KEY = "redmine-issues-by-priority";
 
 	// Language string ids
 	public static final String LINKED_ISSUE_SUBJECT_TEMPLATE = "redmine.linked_issue.subject.template";
+	public static final String LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE = "redmine.linked_issue.subject.template.no_rule";
 	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE = "redmine.linked_issue.description.template.with_message";
 	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE = "redmine.linked_issue.description.template.without_message";
 

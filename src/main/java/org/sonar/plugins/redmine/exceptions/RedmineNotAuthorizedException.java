@@ -21,8 +21,6 @@ package org.sonar.plugins.redmine.exceptions;
 
 import org.sonar.api.ServerExtension;
 
-import com.taskadapter.redmineapi.NotAuthorizedException;
-
 public class RedmineNotAuthorizedException extends RedmineException implements ServerExtension {
 	private static final long serialVersionUID = -2781485698264169268L;
 

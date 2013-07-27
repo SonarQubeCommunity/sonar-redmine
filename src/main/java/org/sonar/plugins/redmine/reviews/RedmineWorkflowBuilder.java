@@ -19,41 +19,27 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
-import static org.sonar.api.workflow.condition.Conditions.hasProjectProperty;
-import static org.sonar.api.workflow.condition.Conditions.hasReviewProperty;
-import static org.sonar.api.workflow.condition.Conditions.not;
-import static org.sonar.api.workflow.condition.Conditions.statuses;
-
 import org.sonar.api.ServerExtension;
-import org.sonar.api.workflow.Workflow;
-import org.sonar.api.workflow.screen.CommentScreen;
-import org.sonar.plugins.redmine.RedmineLanguageConstants;
-import org.sonar.plugins.redmine.config.RedmineSettings;
+import org.sonar.api.issue.action.Actions;
+import org.sonar.api.issue.condition.HasIssuePropertyCondition;
+import org.sonar.api.issue.condition.IsUnResolved;
+import org.sonar.api.issue.condition.NotCondition;
+import org.sonar.plugins.redmine.RedmineConstants;
 
 public class RedmineWorkflowBuilder implements ServerExtension {
 
-	private final Workflow workflow;
 	private final RedmineLinkFunction linkFunction;
+	private Actions actions;
 
-	public RedmineWorkflowBuilder(Workflow workflow, RedmineLinkFunction linkFunction) {
-		this.workflow = workflow;
+	public RedmineWorkflowBuilder(Actions actions, RedmineLinkFunction linkFunction) {
+		this.actions = actions;
 		this.linkFunction = linkFunction;
 	}
 
 	public void start() {
-		workflow.addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
-		workflow.setScreen(RedmineLanguageConstants.LINK_TO_REDMINE_ID, new CommentScreen());
-		workflow.addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, linkFunction);
-		// conditions for this function
-		// - on the review ("IDLE" is the non-persisted status of an non-existing
-		// review = when a violation does have a review yet)
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, not(hasReviewProperty(RedmineLanguageConstants.ISSUE_ID)));
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, statuses("IDLE", "OPEN", "REOPENED"));
-		// - on the project
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.HOST));
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.API_ACCESS_KEY));
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PROJECT_KEY));
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.PRIORITY_ID));
-		workflow.addCondition(RedmineLanguageConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineSettings.TRACKER_ID));
+		actions
+				.add(RedmineConstants.LINK_TO_REDMINE_ID)
+				.setConditions(new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUE_ID)), new IsUnResolved())
+				.setFunctions(linkFunction);
 	}
 }

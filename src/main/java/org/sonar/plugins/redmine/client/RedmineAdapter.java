@@ -19,13 +19,6 @@
  */
 package org.sonar.plugins.redmine.client;
 
-import java.util.List;
-import java.util.Map;
-
-import org.sonar.api.BatchExtension;
-import org.sonar.api.ServerExtension;
-import org.sonar.plugins.redmine.RedminePlugin;
-
 import com.google.common.collect.Maps;
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
@@ -34,6 +27,12 @@ import com.taskadapter.redmineapi.bean.IssuePriority;
 import com.taskadapter.redmineapi.bean.Membership;
 import com.taskadapter.redmineapi.bean.Project;
 import com.taskadapter.redmineapi.bean.User;
+import org.sonar.api.BatchExtension;
+import org.sonar.api.ServerExtension;
+import org.sonar.plugins.redmine.RedminePlugin;
+
+import java.util.List;
+import java.util.Map;
 
 public class RedmineAdapter implements BatchExtension, ServerExtension {
 

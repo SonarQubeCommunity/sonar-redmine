@@ -20,24 +20,25 @@
 package org.sonar.plugins.redmine;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metrics;
 
+import java.util.List;
+
 public class RedmineMetrics implements Metrics {
 
-	public static final Metric ISSUES = new Metric.Builder(RedmineLanguageConstants.ISSUES_KEY, "Redmine Issues", Metric.ValueType.INT)
+	public static final Metric ISSUES = new Metric.Builder(RedmineConstants.ISSUES_KEY, "Redmine Issues", Metric.ValueType.INT)
 			.setDescription("Number of Redmine Issues")
 			.setDirection(Metric.DIRECTION_NONE)
 			.setQualitative(false)
-			.setDomain(RedmineLanguageConstants.ISSUES_DOMAIN)
+			.setDomain(RedmineConstants.ISSUES_DOMAIN)
 			.create();
 
-	public static final Metric ISSUES_BY_PRIORITY = new Metric.Builder(RedmineLanguageConstants.ISSUES_BY_PRIORITY_KEY, "Redmine Issues by priority",
+	public static final Metric ISSUES_BY_PRIORITY = new Metric.Builder(RedmineConstants.ISSUES_BY_PRIORITY_KEY, "Redmine Issues by priority",
 			Metric.ValueType.DATA)
 			.setDescription("Number of Redmine issues by priority")
 			.setQualitative(false)
-			.setDomain(RedmineLanguageConstants.ISSUES_DOMAIN)
+			.setDomain(RedmineConstants.ISSUES_DOMAIN)
 			.create();
 
 	public List<Metric> getMetrics() {

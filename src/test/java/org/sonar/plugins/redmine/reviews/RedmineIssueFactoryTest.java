@@ -19,6 +19,8 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
+import org.sonar.plugins.redmine.RedmineConstants;
+
 import org.sonar.api.workflow.Review;
 
 import com.taskadapter.redmineapi.bean.Issue;
@@ -50,8 +52,8 @@ public class RedmineIssueFactoryTest {
     rSettings = mock(RedmineSettings.class);
     review = mock(Review.class);
 
-    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "")).thenReturn("New Subject");
-    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "")).thenReturn("New Description");
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "")).thenReturn("New Subject");
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "")).thenReturn("New Description");
 
     redmineIssueFactory = new RedmineIssueFactory(i18n, settings);
   }

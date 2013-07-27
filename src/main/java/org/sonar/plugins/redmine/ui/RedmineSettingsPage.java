@@ -19,27 +19,28 @@
  */
 package org.sonar.plugins.redmine.ui;
 
-import java.util.Locale;
+import org.sonar.plugins.redmine.RedmineConstants;
 
 import org.sonar.api.i18n.I18n;
 import org.sonar.api.web.NavigationSection;
 import org.sonar.api.web.Page;
-import org.sonar.plugins.redmine.RedmineLanguageConstants;
+
+import java.util.Locale;
 
 @NavigationSection(value = { NavigationSection.RESOURCE_CONFIGURATION })
 public class RedmineSettingsPage implements Page {
 
-	private I18n i18n;
+  private I18n i18n;
 
-	public RedmineSettingsPage(I18n i18n) {
-		this.i18n = i18n;
-	}
+  public RedmineSettingsPage(I18n i18n) {
+    this.i18n = i18n;
+  }
 
-	public String getId() {
-		return "/redmine_configuration";
-	}
+  public String getId() {
+    return "/redmine_configuration";
+  }
 
-	public String getTitle() {
-		return i18n.message(Locale.getDefault(), RedmineLanguageConstants.CONFIGURATION_PAGE, null);
-	}
+  public String getTitle() {
+    return i18n.message(Locale.getDefault(), RedmineConstants.CONFIGURATION_PAGE, null);
+  }
 }

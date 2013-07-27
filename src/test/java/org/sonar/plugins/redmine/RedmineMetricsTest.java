@@ -27,12 +27,12 @@ import org.sonar.api.measures.Metric;
 
 public class RedmineMetricsTest {
 
-	@Test
-	public void testGetMetrics() throws Exception {
-		List<Metric> metrics = new RedmineMetrics().getMetrics();
-		assertThat(metrics.size(), is(2));
-		for (Metric metric : metrics) {
-			assertThat(metric.getDomain(), is(RedmineLanguageConstants.ISSUES_DOMAIN));
-		}
-	}
+  @Test
+  public void testGetMetrics() throws Exception {
+    List<Metric> metrics = new RedmineMetrics().getMetrics();
+    assertThat(metrics.size(), is(2));
+    for (Metric metric : metrics) {
+      assertThat(metric.getDomain(), is(RedmineConstants.ISSUES_DOMAIN));
+    }
+  }
 }
