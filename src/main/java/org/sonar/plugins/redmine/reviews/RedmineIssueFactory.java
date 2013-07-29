@@ -49,20 +49,23 @@ public class RedmineIssueFactory implements ServerExtension{
     this.i18n = i18n;
   }
   
-  public Issue createRedmineIssue(org.sonar.api.issue.Issue sonarIssue,Settings settings) {
+  public Issue createRedmineIssue(org.sonar.api.issue.Issue sonarIssue,Settings settings) throws RedmineException {
     Issue redmineIssue = new Issue();
-    
-	Object redmineMgr;
-	redmineIssue.setPriorityId(mapRedminePriorityToId(
-            sonarSeverityToRedminePriority(RulePriority.valueOf(sonarIssue.severity()),settings),redmineMgr));
-    redmineIssue.setSubject(generateIssueSummary(sonarIssue));
-    redmineIssue.setTracker(new Tracker(
-            setTrackerId(settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE),redmineMgr),
-            settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE))
-            );	
+        redmineIssue.setPriorityId(mapRedminePriorityToId(
+                          sonarSeverityToRedminePriority(RulePriority.valueOf(sonarIssue.severity()),settings),redmineMgr));
+        redmineIssue.setSubject(generateIssueSummary(sonarIssue));
+        redmineIssue.setTracker(new Tracker(
+                          setTrackerId(settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE),redmineMgr),
+                          settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE))
+                          );	
 
 
-    redmineIssue.setDescription(generateIssueDescription(sonarIssue,settings));
+        redmineIssue.setDescription(generateIssueDescription(sonarIssue,settings));
+
+        
+
+
+   
     return redmineIssue;
   }
   protected String generateIssueSummary(org.sonar.api.issue.Issue sonarIssue) {
