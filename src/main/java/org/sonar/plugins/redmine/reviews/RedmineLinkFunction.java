@@ -23,8 +23,6 @@ import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.Issue;
 import java.util.Locale;
-import java.util.Map;
-import org.apache.commons.lang.StringUtils;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.config.Settings;
 import org.sonar.api.i18n.I18n;
@@ -51,12 +49,12 @@ public class RedmineLinkFunction implements Function, ServerExtension {
   }
 
   public void execute(Context context) {
-	  checkConditions(context.projectSettings());
-	  try {
+      checkConditions(context.projectSettings());
+      try {
           createRedmineIssue(context);
     } catch (RedmineException e) {
         e.printStackTrace();
-	}
+   }
   }
   private void createRedmineIssue(Context context) throws RedmineException{
       Issue issue = issueFactory.createRedmineIssue(context.issue(),context.projectSettings());

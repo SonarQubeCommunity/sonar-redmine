@@ -33,23 +33,19 @@ public class RedmineActionDefinition implements ServerExtension {
 	private static final String LINK_TO_REDMINE_ID = "link-to-redmine";
 	private final Actions actions;
 	private final RedmineLinkFunction linkFunction;
+        public RedmineActionDefinition(Actions actions, RedmineLinkFunction linkFunction) {
+            this.actions = actions;
+            this.linkFunction = linkFunction;
+        }
 
-  public RedmineActionDefinition(Actions actions, RedmineLinkFunction linkFunction) {
-	  this.actions = actions;
-	  this.linkFunction = linkFunction;
-  }
-
-  public void start() {
-	  actions.add(LINK_TO_REDMINE_ID)
-		 .setConditions(
-				  new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUES_KEY)),
-				  new HasStatus("IDLE","OPEN","REOPENED"),
-				 
-				  new IsUnResolved()
-				
-				  
-				  )
+        public void start() {
+            actions.add(LINK_TO_REDMINE_ID)
+                    .setConditions(
+                        new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUES_KEY)),
+                        new HasStatus("IDLE","OPEN","REOPENED"),
+                        new IsUnResolved()
+			)
 		 
-		 .setFunctions(linkFunction);
+                    .setFunctions(linkFunction);
   }
 }

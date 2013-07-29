@@ -23,10 +23,7 @@ import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.Issue;
 import com.taskadapter.redmineapi.bean.Tracker;
-
 import java.util.List;
-import java.util.Locale;
-
 import org.sonar.api.CoreProperties;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.config.Settings;
@@ -36,37 +33,33 @@ import org.sonar.plugins.redmine.RedmineProperty;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.api.utils.SonarException;
 import com.taskadapter.redmineapi.bean.IssuePriority;
-public class RedmineIssueFactory implements ServerExtension{
-	 private static List<IssuePriority> plist;
-	    private static List<Tracker> tlist;
-	    private Integer priorityId;
-	    private Integer trackerId;
 
-	    protected static RedmineManager redmineMgr;
+public class RedmineIssueFactory implements ServerExtension{
+    private static List<IssuePriority> plist;
+    private static List<Tracker> tlist;
+    private Integer priorityId;
+    private Integer trackerId;
+    protected static RedmineManager redmineMgr;
+    private I18n i18n;
+    public RedmineIssueFactory (I18n i18n){
+        this.i18n = i18n;
+    }
   
-  private I18n i18n;
-  public RedmineIssueFactory (I18n i18n){
-    this.i18n = i18n;
-  }
-  
-  public Issue createRedmineIssue(org.sonar.api.issue.Issue sonarIssue,Settings settings) throws RedmineException {
-    Issue redmineIssue = new Issue();
+    public Issue createRedmineIssue(org.sonar.api.issue.Issue sonarIssue,Settings settings) throws RedmineException {
+        Issue redmineIssue = new Issue();
         redmineIssue.setPriorityId(mapRedminePriorityToId(
-                          sonarSeverityToRedminePriority(RulePriority.valueOf(sonarIssue.severity()),settings),redmineMgr));
+                          sonarSeverityToRedminePriority(RulePriority.valueOf(sonarIssue.severity()),settings),
+                          redmineMgr)
+                );
         redmineIssue.setSubject(generateIssueSummary(sonarIssue));
         redmineIssue.setTracker(new Tracker(
                           setTrackerId(settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE),redmineMgr),
                           settings.getString(RedmineConstants.REDMINE_ISSUE_TYPE))
-                          );	
+                );	
 
 
         redmineIssue.setDescription(generateIssueDescription(sonarIssue,settings));
-
-        
-
-
-   
-    return redmineIssue;
+        return redmineIssue;
   }
   protected String generateIssueSummary(org.sonar.api.issue.Issue sonarIssue) {
       StringBuilder summary = new StringBuilder("Sonar Issue #");
@@ -76,12 +69,9 @@ public class RedmineIssueFactory implements ServerExtension{
 }
   protected String generateIssueDescription(org.sonar.api.issue.Issue sonarIssue,Settings settings) throws RedmineException{
       StringBuilder description = new StringBuilder("Issue detail:\n");
-   
       description.append(sonarIssue.key());
       description.append(" - ");
       description.append(sonarIssue.ruleKey());
-
-      description.append("\n\n");
       description.append("\n\nCheck it on Sonar: ");
       description.append(CoreProperties.SERVER_BASE_URL_DEFAULT_VALUE);
       description.append("/issue/show/");
@@ -121,10 +111,10 @@ public class RedmineIssueFactory implements ServerExtension{
   protected Integer mapRedminePriorityToId(String redminePriority,RedmineManager redmineMgr){
       plist = RedmineProperty.getPriorityValueFromRedmine(redmineMgr);
       for (IssuePriority s :plist) {
-                 if(redminePriority.equals(s.getName())){ 
-                         priorityId = s.getId();}
-                }
-        return priorityId;
+          if(redminePriority.equals(s.getName())){
+              priorityId = s.getId();}
+            }
+      return priorityId;
 
   }
   protected Integer setTrackerId(String issueType,RedmineManager redmineMgr){
@@ -134,7 +124,7 @@ public class RedmineIssueFactory implements ServerExtension{
               trackerId = t.getId();
            }
         }
-         return trackerId;
+      return trackerId;
   }
   
 }

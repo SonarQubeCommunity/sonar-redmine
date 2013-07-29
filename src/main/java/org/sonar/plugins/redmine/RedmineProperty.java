@@ -33,7 +33,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sonar.api.ServerExtension;
-import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
+
 
 
 /**
@@ -41,6 +41,7 @@ import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
  * @author gurpinars
  */
 public class RedmineProperty implements ServerExtension{
+    
     private static ArrayList<String> strList;
     private static List<IssuePriority> plist;
     private static List<Tracker> tlist;
@@ -48,7 +49,7 @@ public class RedmineProperty implements ServerExtension{
     
     
   
-   public static List<IssuePriority> getPriorityValueFromRedmine(RedmineManager redmineMgr){
+    public static List<IssuePriority> getPriorityValueFromRedmine(RedmineManager redmineMgr){
       
        try {
            Properties configuration = getConfiguration();
@@ -65,7 +66,7 @@ public class RedmineProperty implements ServerExtension{
           } catch (IOException ex) {
             Logger.getLogger(RedminePlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-   return plist;
+       return plist;
   }
    public static List<Tracker> getIssueTypeFromRedmine(RedmineManager redmineMgr){
        try {
@@ -109,10 +110,7 @@ public class RedmineProperty implements ServerExtension{
                 strList.add(index, s.getName());
                 index++;
             }
-        
-        
-    
-    }
+        }
         return strList;
     
 }

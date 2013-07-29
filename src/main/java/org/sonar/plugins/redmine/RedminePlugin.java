@@ -93,17 +93,17 @@ public List getExtensions() {
             .build(),
 
             PropertyDefinition.builder(RedmineConstants.REDMINE_BLOCKER_PRIORITY_ID)
-           .name("Redmine priority id for BLOCKER")              
+            .name("Redmine priority id for BLOCKER")              
             .type(PropertyType.SINGLE_SELECT_LIST)
-           .description("Redmine priority id used to create issues for Sonar violations with severity BLOCKER.")
+            .description("Redmine priority id used to create issues for Sonar violations with severity BLOCKER.")
             .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getPriorityValueFromRedmine(redmineMgr)))
             .build(),
 
-           PropertyDefinition.builder(RedmineConstants.REDMINE_ISSUE_TYPE)
-           .name("Type of Redmine issue")
-           .type(PropertyType.SINGLE_SELECT_LIST)
+            PropertyDefinition.builder(RedmineConstants.REDMINE_ISSUE_TYPE)
+            .name("Type of Redmine issue")
+            .type(PropertyType.SINGLE_SELECT_LIST)
             .description("Redmine issue type used to create issues for Sonar violations. Default is Feature.")
-           .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getIssueTypeFromRedmine(redmineMgr)))
+            .options(RedmineProperty.convertObjListToStrList(RedmineProperty.getIssueTypeFromRedmine(redmineMgr)))
             .build(),
             // Definitions
             RedmineMetrics.class,
