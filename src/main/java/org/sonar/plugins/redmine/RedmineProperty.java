@@ -52,17 +52,9 @@ public class RedmineProperty implements ServerExtension{
     public static List<IssuePriority> getPriorityValueFromRedmine(RedmineManager redmineMgr){
       
        try {
-           Properties configuration = getConfiguration();
-           String host = configuration.getProperty("property.sonar.redmine.host");
-           String apiKey = configuration.getProperty("property.sonar.redmine.api-access-key");
-           
-           redmineMgr = new RedmineManager(host,apiKey);
-           try {
-               plist = redmineMgr.getIssuePriorities();
-               } catch (RedmineException e) {
+           plist = connectToHost().getIssuePriorities();
+          } catch (RedmineException e) {
                    e.printStackTrace();
-              }
-
           } catch (IOException ex) {
             Logger.getLogger(RedminePlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,20 +62,10 @@ public class RedmineProperty implements ServerExtension{
   }
    public static List<Tracker> getIssueTypeFromRedmine(RedmineManager redmineMgr){
        try {
-           Properties configuration = getConfiguration();
-           String host = configuration.getProperty("property.sonar.redmine.host");
-           String apiKey = configuration.getProperty("property.sonar.redmine.api-access-key");
-         
-      
-           
-           redmineMgr = new RedmineManager(host,apiKey);
-           try {
-               tlist = redmineMgr.getTrackers();
+          tlist = connectToHost().getTrackers();
 	} catch (RedmineException e) {
             e.printStackTrace();
-	}
-    
-       }catch (IOException ex) {
+	}catch (IOException ex) {
             Logger.getLogger(RedminePlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
        return tlist;
@@ -114,5 +96,11 @@ public class RedmineProperty implements ServerExtension{
         return strList;
     
 }
+    private static RedmineManager connectToHost() throws IOException{
+        Properties configuration = getConfiguration();
+        String host = configuration.getProperty("property.sonar.redmine.host");
+        String apiKey = configuration.getProperty("property.sonar.redmine.api-access-key");
+        return new RedmineManager(host,apiKey);
+    }
 
 }
