@@ -39,10 +39,10 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.redmine.RedmineMetrics;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
-
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineSensorTest {
-  
+
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
@@ -61,28 +61,29 @@ public class RedmineSensorTest {
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "project_key");
     when(redmineAdapter.collectProjectIssuesByPriority("project_key")).thenReturn(issuesByPriority);
     redmineSettings.setHost("http://my.Redmine.server");
-    redmineSettings.setApiAccessKey( "api_access_key");
+    redmineSettings.setApiAccessKey("api_access_key");
     redmineSettings.setProjectKey("project_key");
-    sensor = new RedmineSensor(redmineSettings,redmineAdapter);
+    redmineSettings.setTrackerID(1);
+    redmineSettings.setPriorityID(1);
+    sensor = new RedmineSensor(redmineSettings, redmineAdapter);
     url = "http://my.Redmine.server/projects/project_key";
   }
 
   @Test
   public void testToString() throws Exception {
-    assertThat(sensor.toString(),is("Redmine issues sensor"));
+    assertThat(sensor.toString(), is("Redmine issues sensor"));
   }
-
 
   @Test
   public void shouldExecuteOnRootProjectWithAllParams() throws Exception {
     Project project = mock(Project.class);
     when(project.isRoot()).thenReturn(true).thenReturn(false);
-    assertThat(sensor.shouldExecuteOnProject(project),is(true));
+    assertThat(sensor.shouldExecuteOnProject(project), is(true));
   }
 
   @Test
   public void shouldNotExecuteOnNonRootProject() throws Exception {
-    assertThat(sensor.shouldExecuteOnProject(mock(Project.class)),is(false));
+    assertThat(sensor.shouldExecuteOnProject(mock(Project.class)), is(false));
   }
 
   @Test
@@ -91,7 +92,7 @@ public class RedmineSensorTest {
     when(project.isRoot()).thenReturn(true).thenReturn(false);
     redmineSettings.setHost(null);
     sensor = new RedmineSensor(redmineSettings, redmineAdapter);
-    assertThat(sensor.shouldExecuteOnProject(project),is(false));
+    assertThat(sensor.shouldExecuteOnProject(project), is(false));
   }
 
   @Test

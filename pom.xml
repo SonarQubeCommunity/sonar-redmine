@@ -5,8 +5,7 @@
   <parent>
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
-    <version>16</version>
-    <relativePath>../parent</relativePath>
+    <version>17</version>
   </parent>
 
   <artifactId>sonar-redmine-plugin</artifactId>
@@ -35,6 +34,10 @@
       <name>Patroklos P.Papapetrou</name>
       <url>http://gr.linkedin.com/in/ppapapetrou</url>
     </developer>
+    <developer>
+      <id>cschulz</id>
+      <name>Christian Schulz</name>
+    </developer>
   </developers>
   <scm>
     <connection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</connection>
@@ -52,7 +55,7 @@
   </ciManagement>
 
   <properties>
-    <sonar.buildVersion>3.1</sonar.buildVersion>
+    <sonar.buildVersion>3.6</sonar.buildVersion>
     <sonar.pluginClass>org.sonar.plugins.redmine.RedminePlugin</sonar.pluginClass>
     <sonar.pluginName>Redmine</sonar.pluginName>
   </properties>
@@ -67,7 +70,7 @@
     <dependency>
       <groupId>com.taskadapter</groupId>
       <artifactId>redmine-java-api</artifactId>
-      <version>1.17</version>
+      <version>1.19</version>
       <exclusions>
         <exclusion>
           <artifactId>commons-logging</artifactId>

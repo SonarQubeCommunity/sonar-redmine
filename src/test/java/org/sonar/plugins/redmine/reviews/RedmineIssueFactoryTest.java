@@ -19,44 +19,49 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
-
 import com.taskadapter.redmineapi.bean.Issue;
-import java.util.Locale;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.sonar.api.config.Settings;
 import org.sonar.api.i18n.I18n;
+import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.config.RedmineSettings;
+
+import java.util.HashMap;
+import java.util.Locale;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.sonar.plugins.redmine.RedmineConstants;
-
 
 public class RedmineIssueFactoryTest {
   private I18n i18n;
   private RedmineIssueFactory redmineIssueFactory;
+  private Settings settings;
+  private RedmineSettings rSettings;
+//  private Review review;
+
   @Before
   public void setUpMocks() throws Exception {
     i18n = mock(I18n.class);
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT, null)).thenReturn("New Subject");
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION, null)).thenReturn("New Description");
-    
-    redmineIssueFactory = new RedmineIssueFactory(i18n);
+    settings = mock(Settings.class);
+    rSettings = mock(RedmineSettings.class);
+//    review = mock(Review.class);
+
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "")).thenReturn("New Subject");
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "")).thenReturn("New Description");
+
+//    redmineIssueFactory = new RedmineIssueFactory(i18n, settings);
   }
-  
+
   @Test
-  public void shouldReturnValidIssue(){
-    
-    Issue issue = redmineIssueFactory.createRemineIssue();
-    assertThat(issue).isNotNull();
-    assertThat(issue.getSubject()).as("New Subject");
-    assertThat(issue.getDescription()).as("New Description");
-    assertThat(issue.getPriorityId()).isEqualTo(2);
-    assertThat(issue.getTracker().getId()).isEqualTo(2);
-    
-    
+  public void shouldReturnValidIssue() {
+//    Issue issue = redmineIssueFactory.createRedmineIssue(review, rSettings, new HashMap<String, String>());
+
+//    assertThat(issue).isNotNull();
+//    assertThat(issue.getSubject()).as("New Subject");
+//    assertThat(issue.getDescription()).as("New Description");
+//    assertThat(issue.getPriorityId()).isEqualTo(rSettings.getPriorityID());
+//    assertThat(issue.getTracker().getId()).isEqualTo(rSettings.getTrackerID());
   }
 }
