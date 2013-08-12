@@ -20,32 +20,26 @@
 package org.sonar.plugins.redmine.reviews;
 
 import org.sonar.api.ServerExtension;
-import org.sonar.api.workflow.Workflow;
-import static org.sonar.api.workflow.condition.Conditions.*;
-import org.sonar.api.workflow.screen.CommentScreen;
+import org.sonar.api.issue.action.Actions;
+import org.sonar.api.issue.condition.HasIssuePropertyCondition;
+import org.sonar.api.issue.condition.IsUnResolved;
+import org.sonar.api.issue.condition.NotCondition;
 import org.sonar.plugins.redmine.RedmineConstants;
 
 public class RedmineWorkflowBuilder implements ServerExtension {
 
-  private final Workflow workflow;
-  private final RedmineLinkFunction linkFunction;
+	private final RedmineLinkFunction linkFunction;
+	private Actions actions;
 
-  public RedmineWorkflowBuilder(Workflow workflow, RedmineLinkFunction linkFunction) {
-    this.workflow = workflow;
-    this.linkFunction = linkFunction;
-  }
+	public RedmineWorkflowBuilder(Actions actions, RedmineLinkFunction linkFunction) {
+		this.actions = actions;
+		this.linkFunction = linkFunction;
+	}
 
-  public void start() {
-    workflow.addCommand(RedmineConstants.LINK_TO_REDMINE_ID);
-    workflow.setScreen(RedmineConstants.LINK_TO_REDMINE_ID, new CommentScreen());
-    workflow.addFunction(RedmineConstants.LINK_TO_REDMINE_ID, linkFunction);
-    // conditions for this function
-    // - on the review ("IDLE" is the non-persisted status of an non-existing review = when a violation does have a review yet)
-    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, not(hasReviewProperty(RedmineConstants.ISSUE_ID)));
-    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, statuses("IDLE", "OPEN", "REOPENED"));
-    // - on the project
-    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineConstants.HOST));
-    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineConstants.API_ACCESS_KEY));
-    workflow.addCondition(RedmineConstants.LINK_TO_REDMINE_ID, hasProjectProperty(RedmineConstants.PROJECT_KEY));
-  }
+	public void start() {
+		actions
+				.add(RedmineConstants.LINK_TO_REDMINE_ID)
+				.setConditions(new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUE_ID)), new IsUnResolved())
+				.setFunctions(linkFunction);
+	}
 }

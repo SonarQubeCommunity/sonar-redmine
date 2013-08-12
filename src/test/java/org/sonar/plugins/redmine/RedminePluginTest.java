@@ -27,7 +27,7 @@ public class RedminePluginTest {
 
   @Test
   public void testGetExtensions() throws Exception {
-    assertThat(new RedminePlugin().getExtensions().size(),is(8));
+    assertThat(new RedminePlugin().getExtensions().size(), is(14));
   }
 
 }

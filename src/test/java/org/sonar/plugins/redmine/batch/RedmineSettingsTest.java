@@ -20,49 +20,50 @@
 package org.sonar.plugins.redmine.batch;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.sonar.api.config.Settings;
-import org.sonar.plugins.redmine.RedmineConstants;
+import org.sonar.plugins.redmine.config.RedmineSettings;
 
 public class RedmineSettingsTest {
 
-  RedmineSettings redmineSettings;
-  Settings settings = new Settings();
+	RedmineSettings redmineSettings;
+	Settings settings = new Settings();
 
-  @Before
-  public void setUp() {
-    redmineSettings = new RedmineSettings(settings);
-    redmineSettings.setHost("host");
-    redmineSettings.setApiAccessKey("apiAccessKey");
-    redmineSettings.setProjectKey("projectKey");
-  }
+	@Before
+	public void setUp() {
+		redmineSettings = new RedmineSettings(settings);
+		redmineSettings.setHost("host");
+		redmineSettings.setApiAccessKey("apiAccessKey");
+		redmineSettings.setProjectKey("projectKey");
+	}
 
-  @Test
-  public void missingMandatoryParametersShouldReturnFalse() throws Exception {
-    assertThat(redmineSettings.missingMandatoryParameters(), is(false));
-  }
-  
-  @Test
-  public void missingMandatoryParametersShouldReturnTrueIfApiAccessKeyIsMissing() throws Exception {
-    settings.removeProperty(RedmineConstants.API_ACCESS_KEY);
-    redmineSettings = new RedmineSettings(settings);
-    assertThat(redmineSettings.missingMandatoryParameters(), is(true));
-  }
-  
-  @Test
-  public void missingMandatoryParametersShouldReturnTrueIfHostIsMissing() throws Exception {
-    settings.removeProperty(RedmineConstants.HOST);
-    redmineSettings = new RedmineSettings(settings);
-    assertThat(redmineSettings.missingMandatoryParameters(), is(true));
-  }
-  
-  @Test
-  public void missingMandatoryParametersShouldReturnTrueIfProjectKeyIsMissing() throws Exception {
-    settings.removeProperty(RedmineConstants.PROJECT_KEY);
-    redmineSettings = new RedmineSettings(settings);
-    assertThat(redmineSettings.missingMandatoryParameters(), is(true));
-  }
-  
+	@Test
+	public void missingMandatoryParametersShouldReturnFalse() throws Exception {
+		assertThat(redmineSettings.missingMandatoryParameters(), is(false));
+	}
+
+	@Test
+	public void missingMandatoryParametersShouldReturnTrueIfApiAccessKeyIsMissing() throws Exception {
+		settings.removeProperty(RedmineSettings.API_ACCESS_KEY);
+		redmineSettings = new RedmineSettings(settings);
+		assertThat(redmineSettings.missingMandatoryParameters(), is(true));
+	}
+
+	@Test
+	public void missingMandatoryParametersShouldReturnTrueIfHostIsMissing() throws Exception {
+		settings.removeProperty(RedmineSettings.HOST);
+		redmineSettings = new RedmineSettings(settings);
+		assertThat(redmineSettings.missingMandatoryParameters(), is(true));
+	}
+
+	@Test
+	public void missingMandatoryParametersShouldReturnTrueIfProjectKeyIsMissing() throws Exception {
+		settings.removeProperty(RedmineSettings.PROJECT_KEY);
+		redmineSettings = new RedmineSettings(settings);
+		assertThat(redmineSettings.missingMandatoryParameters(), is(true));
+	}
+
 }

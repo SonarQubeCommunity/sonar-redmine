@@ -21,21 +21,27 @@ package org.sonar.plugins.redmine;
 
 public final class RedmineConstants {
 
-  private RedmineConstants() {
-  }
-  public static final String HOST = "sonar.redmine.host";
-  public static final String API_ACCESS_KEY = "sonar.redmine.api-access-key";
-  public static final String PROJECT_KEY = "sonar.redmine.project-key";
+	private RedmineConstants() {
+	}
 
-  
-  public static final String ISSUES_DOMAIN = "Issues";
-  public static final String ISSUES_KEY = "redmine-issues";
-  public static final String ISSUES_BY_PRIORITY_KEY = "redmine-issues-by-priority";
-  public static final String ISSUE_ID = "redmine-issue-id";
-  public static final String LINKED_ISSUE_SUBJECT = "redmine.linked_issue.subject";
-  public static final String LINKED_ISSUE_DESCRIPTION = "redmine.linked_issue.description";
-  public static final String LINKED_ISSUE_COMMENT = "redmine.linked_issue.comment";
-  public static final String LINKED_ISSUE_REMOTE_SERVER_ERROR = "redmine.linked_issue.remote_server_error";
-  public static final String LINK_TO_REDMINE_ID = "link-to-redmine";
-   
+	public static final String LINK_TO_REDMINE_ID = "link-to-redmine";
+
+	// Review data ids
+	public static final String ISSUES_DOMAIN = "Issues";
+	public static final String ISSUES_KEY = "redmine-issues";
+	public static final String ISSUE_ID = "redmine-issue-id";
+
+	// Metric data ids
+	public static final String ISSUES_BY_PRIORITY_KEY = "redmine-issues-by-priority";
+
+	// Language string ids
+	public static final String LINKED_ISSUE_SUBJECT_TEMPLATE = "redmine.linked_issue.subject.template";
+	public static final String LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE = "redmine.linked_issue.subject.template.no_rule";
+	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE = "redmine.linked_issue.description.template.with_message";
+	public static final String LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE = "redmine.linked_issue.description.template.without_message";
+
+	public static final String LINKED_ISSUE_COMMENT = "redmine.linked_issue.comment";
+	public static final String LINKED_ISSUE_REMOTE_SERVER_ERROR = "redmine.linked_issue.remote_server_error";
+
+	public static final String CONFIGURATION_PAGE = "page.redmine_configuration.name";
 }
