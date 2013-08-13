@@ -19,11 +19,13 @@
  */
 package org.sonar.plugins.redmine;
 
-import java.util.List;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import org.junit.Test;
 import org.sonar.api.measures.Metric;
+
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class RedmineMetricsTest {
 

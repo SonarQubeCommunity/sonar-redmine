@@ -19,15 +19,14 @@
  */
 package org.sonar.plugins.redmine.ui;
 
-import org.sonar.plugins.redmine.RedmineConstants;
-
 import org.sonar.api.i18n.I18n;
 import org.sonar.api.web.NavigationSection;
 import org.sonar.api.web.Page;
+import org.sonar.plugins.redmine.RedmineConstants;
 
 import java.util.Locale;
 
-@NavigationSection(value = { NavigationSection.RESOURCE_CONFIGURATION })
+@NavigationSection(value = {NavigationSection.RESOURCE_CONFIGURATION})
 public class RedmineSettingsPage implements Page {
 
   private I18n i18n;

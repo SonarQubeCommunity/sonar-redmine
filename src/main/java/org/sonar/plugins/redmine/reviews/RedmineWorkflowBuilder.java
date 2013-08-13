@@ -28,18 +28,18 @@ import org.sonar.plugins.redmine.RedmineConstants;
 
 public class RedmineWorkflowBuilder implements ServerExtension {
 
-	private final RedmineLinkFunction linkFunction;
-	private Actions actions;
+  private final RedmineLinkFunction linkFunction;
+  private Actions actions;
 
-	public RedmineWorkflowBuilder(Actions actions, RedmineLinkFunction linkFunction) {
-		this.actions = actions;
-		this.linkFunction = linkFunction;
-	}
+  public RedmineWorkflowBuilder(Actions actions, RedmineLinkFunction linkFunction) {
+    this.actions = actions;
+    this.linkFunction = linkFunction;
+  }
 
-	public void start() {
-		actions
-				.add(RedmineConstants.LINK_TO_REDMINE_ID)
-				.setConditions(new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUE_ID)), new IsUnResolved())
-				.setFunctions(linkFunction);
-	}
+  public void start() {
+    actions
+        .add(RedmineConstants.LINK_TO_REDMINE_ID)
+        .setConditions(new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUE_ID)), new IsUnResolved())
+        .setFunctions(linkFunction);
+  }
 }
