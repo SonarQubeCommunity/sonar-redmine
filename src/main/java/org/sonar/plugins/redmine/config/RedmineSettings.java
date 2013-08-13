@@ -25,7 +25,7 @@ import org.sonar.api.ServerExtension;
 import org.sonar.api.config.Settings;
 
 public class RedmineSettings implements BatchExtension, ServerExtension {
-  public static final String HOST = "sonar.redmine.host";
+  public static final String URL = "sonar.redmine.url";
 
   public static final String API_ACCESS_KEY = "sonar.redmine.api-access-key";
   public static final String PROJECT_KEY = "sonar.redmine.project-key";
@@ -40,7 +40,7 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
   }
 
   public String getHost() {
-    return settings.getString(HOST);
+    return settings.getString(URL);
   }
 
   public String getApiAccessKey() {
@@ -60,7 +60,7 @@ public class RedmineSettings implements BatchExtension, ServerExtension {
   }
 
   public void setHost(String host) {
-    settings.setProperty(HOST, host);
+    settings.setProperty(URL, host);
   }
 
   public void setApiAccessKey(String apiAccessKey) {

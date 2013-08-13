@@ -44,19 +44,14 @@ import java.util.List;
 
 @Properties({
   @Property(
-    key = RedmineSettings.HOST,
-    name = "Redmine Host URL",
-    description = "Example : http://demo.redmine.org/",
-    global = true,
-    defaultValue = "",
-    module = false),
+    key = RedmineSettings.URL,
+    name = "Redmine URL",
+    description = "Example: http://demo.redmine.org/"),
   @Property(
     key = RedmineSettings.API_ACCESS_KEY,
     name = "API Access Key",
     description = "You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.",
-    type = org.sonar.api.PropertyType.PASSWORD,
-    global = true,
-    module = false)})
+    type = org.sonar.api.PropertyType.PASSWORD)})
 public class RedminePlugin extends SonarPlugin {
 
   public static RedmineException wrapException(Exception e) {

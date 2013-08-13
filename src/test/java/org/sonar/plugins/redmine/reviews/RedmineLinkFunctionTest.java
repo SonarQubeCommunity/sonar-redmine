@@ -61,7 +61,7 @@ public class RedmineLinkFunctionTest {
   public void setUpMocks() throws Exception {
     settings = new Settings();
     settings.setProperty(RedmineSettings.API_ACCESS_KEY, "api_access_key");
-    settings.setProperty(RedmineSettings.HOST, "http://my.Redmine.server");
+    settings.setProperty(RedmineSettings.URL, "http://my.Redmine.server");
     settings.setProperty(RedmineSettings.PROJECT_KEY, projectKey);
     redmineSettings = new RedmineSettings(settings);
 

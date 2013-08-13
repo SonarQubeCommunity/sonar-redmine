@@ -54,7 +54,7 @@ public class RedmineSettingsTest {
 
   @Test
   public void missingMandatoryParametersShouldReturnTrueIfHostIsMissing() throws Exception {
-    settings.removeProperty(RedmineSettings.HOST);
+    settings.removeProperty(RedmineSettings.URL);
     redmineSettings = new RedmineSettings(settings);
     assertThat(redmineSettings.missingMandatoryParameters(), is(true));
   }

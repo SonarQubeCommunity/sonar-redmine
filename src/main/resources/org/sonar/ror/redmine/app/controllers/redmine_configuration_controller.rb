@@ -34,7 +34,7 @@ class RedmineConfigurationController < ApplicationController
   # GET /page.redmine_configuration
   def index
     # Checks if all parameters are given to run connection text automatically
-    if ((!@host.empty? or !@ghost.empty?) and (!@api_key.empty? or !@gapi_key.empty?) and !@project_key.empty? and @priority_id > 0 and @tracker_id > 0)
+    if ((!@purl.empty? or !@gurl.empty?) and (!@api_key.empty? or !@gapi_key.empty?) and !@project_key.empty? and @priority_id > 0 and @tracker_id > 0)
       @run_test = true
     else
       @run_test = false
@@ -49,7 +49,7 @@ class RedmineConfigurationController < ApplicationController
   end
 
   def save
-    Property.set(configuration::HOST, params[:host], @resource.id)
+    Property.set(configuration::URL, params[:purl], @resource.id)
     Property.set(configuration::API_ACCESS_KEY, params[:api_key], @resource.id)
     Property.set(configuration::PROJECT_KEY, params[:project_key], @resource.id)
 
@@ -66,11 +66,11 @@ class RedmineConfigurationController < ApplicationController
     user = nil
     trackers = nil
 
-    host = nil
-    if !params[:host].empty?
-      host = params[:host]
-    elsif !@ghost.empty?
-      host = @ghost
+    purl = nil
+    if !params[:purl].empty?
+      purl = params[:purl]
+    elsif !@gurl.empty?
+      purl = @gurl
     end
 
     api_key = nil
@@ -82,9 +82,9 @@ class RedmineConfigurationController < ApplicationController
 
     adp = java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.client.RedmineAdapter')
     begin
-      adp.connectToHost(host, api_key)
+      adp.connectToHost(purl, api_key)
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineGeneralException').class => e
-      @error[:host] = e.getMessage
+      @error[:purl] = e
       return
     end
 
@@ -97,10 +97,10 @@ class RedmineConfigurationController < ApplicationController
       @error[:api_key] = message('page.redmine_configuration.test.api_key_is_wrong')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineTransportException').class => e
-      @error[:host] = message('page.redmine_configuration.test.host_or_port_wrong')
+      @error[:url] = message('page.redmine_configuration.test.host_or_port_wrong')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineNotFoundException').class => e
-      @error[:host] = message('page.redmine_configuration.test.url_error')
+      @error[:url] = message('page.redmine_configuration.test.url_error')
       return
     rescue java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.exceptions.RedmineGeneralException').class => e
       @error[:general] = e
@@ -147,8 +147,8 @@ class RedmineConfigurationController < ApplicationController
   def check_mandotory_parameters
     @error = { } unless !@error.nil?
 
-    if params[:host].blank? and @ghost.blank?
-      @error[:host] = message('page.redmine_configuration.error.host_is_missing')
+    if params[:purl].blank? and @gurl.blank?
+      @error[:purl] = message('page.redmine_configuration.error.url_is_missing')
     end
 
     if params[:api_key].blank? and !@gapi_key_available
@@ -166,8 +166,8 @@ class RedmineConfigurationController < ApplicationController
   end
 
   def load_properties
-    @host = Property.value(configuration::HOST, @resource.id, "")
-    @ghost = Property.value(configuration::HOST, nil, "")
+    @purl = Property.value(configuration::URL, @resource.id, "")
+    @gurl = Property.value(configuration::URL, nil, "")
 
     @api_key = Property.value(configuration::API_ACCESS_KEY, @resource.id, "")
     @gapi_key = Property.value(configuration::API_ACCESS_KEY, nil, "")

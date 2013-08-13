@@ -206,19 +206,19 @@
       <td colspan="3"><span><%= message('page.redmine_configuration.settings.redmine_access') -%></span></td>
     </tr>
     <tr class="odd">
-      <td class="keyCell"><label for="host"><%= message('page.redmine_configuration.settings.host') -%>:</label></td>
+      <td class="keyCell"><label for="purl"><%= message('page.redmine_configuration.settings.url') -%>:</label></td>
       <td>
-        <div><%= text_field_tag 'host', @host %></div>
-    <div class="note"><%= message('page.redmine_configuration.settings.host.global') -%>: <%= @ghost.empty? ? message('page.redmine_configuration.settings.host.global.not_set') : @ghost %></div>
-    <div class="error" id="host_error" style="display:none;" />
+        <div><%= text_field_tag 'purl', @purl %></div>
+    <div class="note"><%= message('page.redmine_configuration.settings.url.global') -%>: <%= @gurl.empty? ? message('page.redmine_configuration.settings.url.global.not_set') : @gurl %></div>
+    <div class="error" id="url_error" style="display:none;" />
     </td>
-      <td class="comments"><%= message('page.redmine_configuration.settings.host.description') -%></td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.url.description') -%></td>
     </tr>
     <tr class="even">
       <td class="keyCell"><label for="api_key"><%= message('page.redmine_configuration.settings.api_key') -%>:</label></td>
       <td>
         <%= text_field_tag 'api_key', @api_key %>
-    <div class="note"><% if !@ghost.empty? and @gapi_key_available %><%= message('page.redmine_configuration.settings.api_key.global.is_set') -%><% else %><%= message('page.redmine_configuration.settings.api_key.global.not_set') -%><% end %></div>
+    <div class="note"><% if !@gurl.empty? and @gapi_key_available %><%= message('page.redmine_configuration.settings.api_key.global.is_set') -%><% else %><%= message('page.redmine_configuration.settings.api_key.global.not_set') -%><% end %></div>
     <div class="note" id="api_key_user_div" style="display:none;"><%= message('page.redmine_configuration.settings.api_key.user') -%>: <span id="api_key_user"></span></div>
     <div class="error" id="api_key_error" style="display:none;" />
     </td>
