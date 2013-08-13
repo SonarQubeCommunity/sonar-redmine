@@ -114,6 +114,8 @@ class RedmineConfigurationController < ApplicationController
       trackers = project.getTrackers
 
       # Check if user is assigned to project (admin must be member, too!)
+      # At the moment there is no possibility to recognize if an user is an admin
+      # or not (Redmine API has no such function)
       if !adp.isMemberOfProject(user, project)
         @error[:project_key] = message('page.redmine_configuration.test.project_no_member')
         return
