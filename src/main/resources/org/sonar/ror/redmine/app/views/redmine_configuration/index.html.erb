@@ -83,6 +83,11 @@
 
       updateSelect('priority_id', r.priorities);
       updateSelect('tracker_id', r.trackers);
+	  
+      selectValueInSelectList('tracker_id', trackerId);
+      selectValueInSelectList('priority_id', priorityId);
+
+      checkSelection();
     }
   }
 
@@ -159,10 +164,6 @@
       onComplete:function(request){
         finishedTest(request);
 
-        selectValueInSelectList('tracker_id', trackerId);
-        selectValueInSelectList('priority_id', priorityId);
-
-        checkSelection();
         $('loading').hide();
       },
       parameters:Form.serialize($('redmineConfigurationForm'))
