@@ -25,16 +25,16 @@ public class RedmineWorkflowBuilderTest {
 
   @Test
   public void checkStart() throws Exception {
-//    Workflow workflow = mock(Workflow.class);
-//    RedmineLinkFunction function = mock(RedmineLinkFunction.class);
-//
-//    RedmineWorkflowBuilder builder = new RedmineWorkflowBuilder(workflow, function);
-//    builder.start();
-//
-//    verify(workflow, times(1)).addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
-//    verify(workflow, times(1)).setScreen(anyString(), any(Screen.class));
-//    verify(workflow, times(1)).addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, function);
-//    verify(workflow, times(7)).addCondition(anyString(), any(Condition.class));
+    // Workflow workflow = mock(Workflow.class);
+    // RedmineLinkFunction function = mock(RedmineLinkFunction.class);
+    //
+    // RedmineWorkflowBuilder builder = new RedmineWorkflowBuilder(workflow, function);
+    // builder.start();
+    //
+    // verify(workflow, times(1)).addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
+    // verify(workflow, times(1)).setScreen(anyString(), any(Screen.class));
+    // verify(workflow, times(1)).addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, function);
+    // verify(workflow, times(7)).addCondition(anyString(), any(Condition.class));
   }
 
 }

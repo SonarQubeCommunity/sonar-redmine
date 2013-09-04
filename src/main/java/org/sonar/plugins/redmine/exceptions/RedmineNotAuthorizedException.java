@@ -22,14 +22,14 @@ package org.sonar.plugins.redmine.exceptions;
 import org.sonar.api.ServerExtension;
 
 public class RedmineNotAuthorizedException extends RedmineException implements ServerExtension {
-	private static final long serialVersionUID = -2781485698264169268L;
+  private static final long serialVersionUID = -2781485698264169268L;
 
-	public RedmineNotAuthorizedException() {
-		super("");
-	}
+  public RedmineNotAuthorizedException() {
+    super("");
+  }
 
-	public RedmineNotAuthorizedException(String message) {
-		super(message);
-	}
+  public RedmineNotAuthorizedException(String message) {
+    super(message);
+  }
 
 }

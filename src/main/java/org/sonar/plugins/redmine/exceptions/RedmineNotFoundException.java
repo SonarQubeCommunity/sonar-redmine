@@ -22,13 +22,13 @@ package org.sonar.plugins.redmine.exceptions;
 import org.sonar.api.ServerExtension;
 
 public class RedmineNotFoundException extends RedmineException implements ServerExtension {
-	private static final long serialVersionUID = 4667268374277767938L;
+  private static final long serialVersionUID = 4667268374277767938L;
 
-	public RedmineNotFoundException() {
-		super("");
-	}
+  public RedmineNotFoundException() {
+    super("");
+  }
 
-	public RedmineNotFoundException(String msg) {
-		super(msg);
-	}
+  public RedmineNotFoundException(String msg) {
+    super(msg);
+  }
 }
