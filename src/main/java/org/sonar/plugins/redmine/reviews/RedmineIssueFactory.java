@@ -33,58 +33,58 @@ import org.sonar.plugins.redmine.config.RedmineSettings;
 import java.util.Locale;
 
 public class RedmineIssueFactory implements ServerExtension {
-	private I18n i18n;
-	private Settings settings;
-	private RuleFinder ruleFinder;
-	private Rule rule;
+  private I18n i18n;
+  private Settings settings;
+  private RuleFinder ruleFinder;
+  private Rule rule;
 
-	public RedmineIssueFactory(I18n i18n, Settings settings, RuleFinder ruleFinder) {
-		this.i18n = i18n;
-		this.settings = settings;
-		this.ruleFinder = ruleFinder;
-	}
+  public RedmineIssueFactory(I18n i18n, Settings settings, RuleFinder ruleFinder) {
+    this.i18n = i18n;
+    this.settings = settings;
+    this.ruleFinder = ruleFinder;
+  }
 
-	public com.taskadapter.redmineapi.bean.Issue createRedmineIssue(Issue i, RedmineSettings rSettings) {
-		com.taskadapter.redmineapi.bean.Issue issue = new com.taskadapter.redmineapi.bean.Issue();
+  public com.taskadapter.redmineapi.bean.Issue createRedmineIssue(Issue i, RedmineSettings rSettings) {
+    com.taskadapter.redmineapi.bean.Issue issue = new com.taskadapter.redmineapi.bean.Issue();
 
-		rule = ruleFinder.findByKey(i.ruleKey());
+    rule = ruleFinder.findByKey(i.ruleKey());
 
-		issue.setTracker(new Tracker(rSettings.getTrackerID(), null));
-		issue.setPriorityId(rSettings.getPriorityID());
-		issue.setSubject(createIssueSubject(i));
-		issue.setDescription(createIssueDescription(i, settings.getString(CoreProperties.SERVER_BASE_URL)));
+    issue.setTracker(new Tracker(rSettings.getTrackerID(), null));
+    issue.setPriorityId(rSettings.getPriorityID());
+    issue.setSubject(createIssueSubject(i));
+    issue.setDescription(createIssueDescription(i, settings.getString(CoreProperties.SERVER_BASE_URL)));
 
-		return issue;
-	}
+    return issue;
+  }
 
-	private String createIssueSubject(Issue issue) {
-		if (rule != null) {
-			return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, issue.key(), rule.getName());
-		} else {
-			return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, issue.key());
-		}
-	}
+  private String createIssueSubject(Issue issue) {
+    if (rule != null) {
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, issue.key(), rule.getName());
+    } else {
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, issue.key());
+    }
+  }
 
-	private String createIssueDescription(Issue issue, String baseUrl) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(baseUrl);
-		sb.append("/issue/show/");
-		sb.append(issue.key());
+  private String createIssueDescription(Issue issue, String baseUrl) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(baseUrl);
+    sb.append("/issue/show/");
+    sb.append(issue.key());
 
-		// if (StringUtils.isNotBlank(comment)) {
-		// return i18n.message(Locale.getDefault(),
-		// RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
-		// review.getMessage(), comment, sb.toString());
-		// } else {
-		// return i18n.message(Locale.getDefault(),
-		// RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE,
-		// review.getMessage(), sb.toString());
-		// }
-		if (rule != null) {
-			return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
-					rule.getKey() + " - " + rule.getName(), sb.toString());
-		} else {
-			return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, sb.toString());
-		}
-	}
+    // if (StringUtils.isNotBlank(comment)) {
+    // return i18n.message(Locale.getDefault(),
+    // RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
+    // review.getMessage(), comment, sb.toString());
+    // } else {
+    // return i18n.message(Locale.getDefault(),
+    // RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE,
+    // review.getMessage(), sb.toString());
+    // }
+    if (rule != null) {
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
+          rule.getKey() + " - " + rule.getName(), sb.toString());
+    } else {
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, sb.toString());
+    }
+  }
 }

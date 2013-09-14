@@ -31,40 +31,40 @@ import org.sonar.plugins.redmine.config.RedmineSettings;
 import java.util.Locale;
 
 public class RedmineLinkFunction implements Function, ServerExtension {
-	private final RedmineAdapter redmineAdapter;
-	private final RedmineIssueFactory issueFactory;
-	private final I18n i18n;
+  private final RedmineAdapter redmineAdapter;
+  private final RedmineIssueFactory issueFactory;
+  private final I18n i18n;
 
-	public RedmineLinkFunction(RedmineIssueFactory issueFactory, RedmineAdapter redmineAdapter, I18n i18n) {
-		this.redmineAdapter = redmineAdapter;
-		this.issueFactory = issueFactory;
-		this.i18n = i18n;
-	}
+  public RedmineLinkFunction(RedmineIssueFactory issueFactory, RedmineAdapter redmineAdapter, I18n i18n) {
+    this.redmineAdapter = redmineAdapter;
+    this.issueFactory = issueFactory;
+    this.i18n = i18n;
+  }
 
-	public void execute(Context context) {
-		try {
-			RedmineSettings redmineSettings = new RedmineSettings(context.projectSettings());
+  public void execute(Context context) {
+    try {
+      RedmineSettings redmineSettings = new RedmineSettings(context.projectSettings());
 
-			Issue issue = issueFactory.createRedmineIssue(context.issue(), redmineSettings);
-			redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
-			issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
+      Issue issue = issueFactory.createRedmineIssue(context.issue(), redmineSettings);
+      redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
+      issue = redmineAdapter.createIssue(redmineSettings.getProjectKey(), issue);
 
-			context.addComment(generateCommentText(issue, redmineSettings));
-			context.setAttribute(RedmineConstants.ISSUE_ID, issue.getId().toString());
-		} catch (RedmineException ex) {
-			throw new IllegalStateException(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(),
-					ex);
-		}
-	}
+      context.addComment(generateCommentText(issue, redmineSettings));
+      context.setAttribute(RedmineConstants.ISSUE_ID, issue.getId().toString());
+    } catch (RedmineException ex) {
+      throw new IllegalStateException(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null) + ex.getMessage(),
+          ex);
+    }
+  }
 
-	protected String generateCommentText(Issue issue, RedmineSettings redmineSettings) {
-		StringBuilder message = new StringBuilder();
+  protected String generateCommentText(Issue issue, RedmineSettings redmineSettings) {
+    StringBuilder message = new StringBuilder();
 
-		message.append(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_COMMENT, null));
-		message.append(redmineSettings.getHost());
-		message.append("/issues/");
-		message.append(issue.getId().toString());
+    message.append(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_COMMENT, null));
+    message.append(redmineSettings.getHost());
+    message.append("/issues/");
+    message.append(issue.getId().toString());
 
-		return message.toString();
-	}
+    return message.toString();
+  }
 }

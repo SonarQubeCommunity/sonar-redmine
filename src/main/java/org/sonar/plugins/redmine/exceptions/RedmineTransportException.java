@@ -22,13 +22,13 @@ package org.sonar.plugins.redmine.exceptions;
 import org.sonar.api.ServerExtension;
 
 public class RedmineTransportException extends RedmineException implements ServerExtension {
-	private static final long serialVersionUID = -5025946103400818537L;
+  private static final long serialVersionUID = -5025946103400818537L;
 
-	public RedmineTransportException() {
-		super("");
-	}
+  public RedmineTransportException() {
+    super("");
+  }
 
-	public RedmineTransportException(String message) {
-		super(message);
-	}
+  public RedmineTransportException(String message) {
+    super(message);
+  }
 }

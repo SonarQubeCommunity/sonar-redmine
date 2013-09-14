@@ -15,168 +15,169 @@
 }
 </style>
 
-<h1><%= message('page.redmine_configuration.page') -%></h1>
+<h1><%= message('page.redmine_configuration.name') -%></h1>
 
 <br />
 
 <% javascript_tag do -%>
-	var trackerId = <%= @tracker_id %>;
-	var priorityId = <%= @priority_id %>;
-	
-	function clearErrors() {
-		$$('table div[id$="_error"]').each(function(v){
-			v.hide();
-		});
-	}
+  var trackerId = <%= @tracker_id %>;
+  var priorityId = <%= @priority_id %>;
 
-	function startTest() {
-		clearErrors();
-	
-		if (!$('testStatus').visible()) {
-			$('testStatus').show();
-		} else {
-			$('testStatus').update('<%= image_tag 'loading.gif' -%>');
-		}
-		
-		$('api_key_user_div').hide();
-	}
-	
-	function finishedSave(request) {
-		var r = request.responseText.evalJSON(true);
-		
-		if (r.status == 'error') {
-			handleErrors();
-		} else if (r.status == 'success') {
-			$('infomsg').update('<%= message('page.redmine_configuration.settings.saved') -%>');
-			$('info').show();
-			Element.hide.delay(5, 'info');
-		}
-	}
-	
-	function handleErrors(errors) {
-		var errors = new Hash(errors);
-		errors.each(function(pair) {
-			var t = $(pair.key+'_error');
-			
-			if (t != undefined) {
-				t.update(pair.value);
-				t.show();
-			} else if (pair.key == 'general') {
-				$('errormsg').update(pair.value);
-				$('error').show();
-			}
-		});
-	}
-	
-	function finishedTest(request) {
-		var r = request.responseText.evalJSON(true);
-		
-		if (r.status == 'error') {
-			$('testStatus').update('<%= image_tag 'exclamation.png' -%>');
-			
-			handleErrors(new Hash(r.error));
-		} else if (r.status == 'success') {
-			$('testStatus').update('<%= image_tag 'accept.png' -%>');
-			
-			updateInfo('api_key_user', r.user);
-			updateInfo('project_key_project', r.project);
-			
-			updateSelect('priority_id', r.priorities);
-			updateSelect('tracker_id', r.trackers);
-		}
-	}
-	
-	function updateInfo(target, value) {
-		var target = $(target);
-		
-		if (target != undefined) {
-			target.update(value);
-			target.up().show();
-		}
-	}
-	
-	function updateSelect(target, list) {
-		clearList(target);
-		var target = $(target);
+  function clearErrors() {
+    $$('table div[id$="_error"]').each(function(v){
+      v.hide();
+    });
+  }
 
-		var l = new Hash(list);
+  function startTest() {
+    clearErrors();
 
-		l.each(function(pair) {
-			var opt = new Element('option', { value: pair.key, label: pair.value}).insert(pair.value);
-			target.insert(opt);
-		});
-		
-		target.enable();
-	}
-	
-	function clearList(target) {
-		var target = $(target);
-		
-	    target.descendants().each(Element.remove);
-	    
-		var opt = new Element('option', { value: 0, label: '-'}).insert('-');
-		target.insert(opt);
-	}
-	
-	function checkSelection() {
-		if ($('priority_id').value != 0 && $('tracker_id').value != 0) {
-			$('submit_save').enable();
-		} else {
-			$('submit_save').disable();
-		}
-	}
-	
-	function selectValueInSelectList(target, value) {
-		var target = $(target);
-		if (target == undefined) {
-			return;
-		}
-		
-		var found = false;
-		var values = target.options;
-		for (var i = 0; i < values.length; i++) {
-			if (values[i].value == value) {
-				found = true;
-				break;
-			}
-		};
-		
-		if (found) {
-			target.value = value;
-		} else {
-			target.value = 0;
-		}
-	}
-	
-	<% if @run_test %>
-	document.observe("dom:loaded", function() {
-		$('loading').show();
-		
-		startTest();
-		
-		new Ajax.Request('<%= url_for(:action => 'test') %>', {
-			asynchronous:true,
-			onComplete:function(request){
-				finishedTest(request);
+    if (!$('testStatus').visible()) {
+      $('testStatus').show();
+    } else {
+      $('testStatus').update('<%= image_tag 'loading.gif' -%>');
+    }
 
-				selectValueInSelectList('tracker_id', trackerId);
-				selectValueInSelectList('priority_id', priorityId);
-				
-				checkSelection();
-				$('loading').hide();
-			},
-			parameters:Form.serialize($('redmineConfigurationForm'))
-		});
-	});
-	<% end %>
+    $('api_key_user_div').hide();
+  }
+
+  function finishedSave(request) {
+    var r = request.responseText.evalJSON(true);
+
+    if (r.status == 'error') {
+      handleErrors();
+    } else if (r.status == 'success') {
+      $('infomsg').update('<%= message('page.redmine_configuration.settings.saved') -%>');
+      $('info').show();
+      Element.hide.delay(5, 'info');
+    }
+  }
+
+  function handleErrors(errors) {
+    var errors = new Hash(errors);
+    errors.each(function(pair) {
+      var t = $(pair.key+'_error');
+
+      if (t != undefined) {
+        t.update(pair.value);
+        t.show();
+      } else if (pair.key == 'general') {
+        $('errormsg').update(pair.value);
+        $('error').show();
+      }
+    });
+  }
+
+  function finishedTest(request) {
+    var r = request.responseText.evalJSON(true);
+
+    if (r.status == 'error') {
+      $('testStatus').update('<%= image_tag 'exclamation.png' -%>');
+
+      handleErrors(new Hash(r.error));
+    } else if (r.status == 'success') {
+      $('testStatus').update('<%= image_tag 'accept.png' -%>');
+
+      updateInfo('api_key_user', r.user);
+      updateInfo('project_key_project', r.project);
+
+      updateSelect('priority_id', r.priorities);
+      updateSelect('tracker_id', r.trackers);
+	  
+      selectValueInSelectList('tracker_id', trackerId);
+      selectValueInSelectList('priority_id', priorityId);
+
+      checkSelection();
+    }
+  }
+
+  function updateInfo(target, value) {
+    var target = $(target);
+
+    if (target != undefined) {
+      target.update(value);
+      target.up().show();
+    }
+  }
+
+  function updateSelect(target, list) {
+    clearList(target);
+    var target = $(target);
+
+    var l = new Hash(list);
+
+    l.each(function(pair) {
+      var opt = new Element('option', { value: pair.key, label: pair.value}).insert(pair.value);
+      target.insert(opt);
+    });
+
+    target.enable();
+  }
+
+  function clearList(target) {
+    var target = $(target);
+
+      target.descendants().each(Element.remove);
+
+    var opt = new Element('option', { value: 0, label: '-'}).insert('-');
+    target.insert(opt);
+  }
+
+  function checkSelection() {
+    if ($('priority_id').value != 0 && $('tracker_id').value != 0) {
+      $('submit_save').enable();
+    } else {
+      $('submit_save').disable();
+    }
+  }
+
+  function selectValueInSelectList(target, value) {
+    var target = $(target);
+    if (target == undefined) {
+      return;
+    }
+
+    var found = false;
+    var values = target.options;
+    for (var i = 0; i < values.length; i++) {
+      if (values[i].value == value) {
+        found = true;
+        break;
+      }
+    };
+
+    if (found) {
+      target.value = value;
+    } else {
+      target.value = 0;
+    }
+  }
+
+  <% if @run_test %>
+  document.observe("dom:loaded", function() {
+    $('loading').show();
+
+    startTest();
+
+    new Ajax.Request('<%= url_for(:action => 'test') %>', {
+      asynchronous:true,
+      onComplete:function(request){
+        finishedTest(request);
+
+        $('loading').hide();
+      },
+      parameters:Form.serialize($('redmineConfigurationForm'))
+    });
+  });
+  <% end %>
 <% end -%>
 
 <div id="redmineConfigurationFields" style="position:relative;display:block">
 
 <div id="loading" style="display:none; position: absolute;
-	width: 100%; height: 100%;
+  width: 100%; height: 100%;
     text-align:center; background:#fff;
-	padding-top: 50px;
+  padding-top: 50px;
     filter: alpha(opacity=75); /* internet explorer */
     -khtml-opacity: 0.75;      /* khtml, old safari */
     -moz-opacity: 0.75;       /* mozilla, netscape */
@@ -187,12 +188,12 @@
 </div>
 
 <% form_remote_tag :url => {:action => 'save'},
-					 :html => {:id => 'redmineConfigurationForm'},
+           :html => {:id => 'redmineConfigurationForm'},
                      :method => :post,
                      :before => "$('submit_save').disable();",
-					 :complete => "finishedSave(request); $('submit_save').enable();",
+           :complete => "finishedSave(request); $('submit_save').enable();",
                      :script => false do -%>
-  <input type="hidden" name="id" value="<%= params[:id] -%>"/>
+  <input type="hidden" name="resource" value="<%= params[:resource] -%>"/>
 
   <table class="data form marginbottom10">
     <thead>
@@ -205,22 +206,22 @@
       <td colspan="3"><span><%= message('page.redmine_configuration.settings.redmine_access') -%></span></td>
     </tr>
     <tr class="odd">
-      <td class="keyCell"><label for="host"><%= message('page.redmine_configuration.settings.host') -%>:</label></td>
+      <td class="keyCell"><label for="purl"><%= message('page.redmine_configuration.settings.url') -%>:</label></td>
       <td>
-      	<div><%= text_field_tag 'host', @host %></div>
-		<div class="note"><%= message('page.redmine_configuration.settings.host.global') -%>: <%= @ghost.empty? ? message('page.redmine_configuration.settings.host.global.not_set') : @ghost %></div>
-		<div class="error" id="host_error" style="display:none;" />
-	  </td>
-      <td class="comments"><%= message('page.redmine_configuration.settings.host.description') -%></td>
+        <div><%= text_field_tag 'purl', @purl %></div>
+    <div class="note"><%= message('page.redmine_configuration.settings.url.global') -%>: <%= @gurl.empty? ? message('page.redmine_configuration.settings.url.global.not_set') : @gurl %></div>
+    <div class="error" id="url_error" style="display:none;" />
+    </td>
+      <td class="comments"><%= message('page.redmine_configuration.settings.url.description') -%></td>
     </tr>
     <tr class="even">
       <td class="keyCell"><label for="api_key"><%= message('page.redmine_configuration.settings.api_key') -%>:</label></td>
       <td>
-      	<%= text_field_tag 'api_key', @api_key %>
-		<div class="note"><% if !@ghost.empty? and @gapi_key_available %><%= message('page.redmine_configuration.settings.api_key.global.is_set') -%><% else %><%= message('page.redmine_configuration.settings.api_key.global.not_set') -%><% end %></div>
-		<div class="note" id="api_key_user_div" style="display:none;"><%= message('page.redmine_configuration.settings.api_key.user') -%>: <span id="api_key_user"></span></div>
-		<div class="error" id="api_key_error" style="display:none;" />
-	  </td>
+        <%= text_field_tag 'api_key', @api_key %>
+    <div class="note"><% if !@gurl.empty? and @gapi_key_available %><%= message('page.redmine_configuration.settings.api_key.global.is_set') -%><% else %><%= message('page.redmine_configuration.settings.api_key.global.not_set') -%><% end %></div>
+    <div class="note" id="api_key_user_div" style="display:none;"><%= message('page.redmine_configuration.settings.api_key.user') -%>: <span id="api_key_user"></span></div>
+    <div class="error" id="api_key_error" style="display:none;" />
+    </td>
       <td class="comments"><%= message('page.redmine_configuration.settings.api_key.description') -%></td>
     </tr>
     <tr class="odd">
@@ -229,25 +230,25 @@
     <tr class="even">
       <td class="keyCell"><label for="project_key"><%= message('page.redmine_configuration.settings.project_key') -%>:</label></td>
       <td>
-      	<%= text_field_tag 'project_key', @project_key %>
-		<div class="note" id="project_key_project_div" style="display:none;"><%= message('page.redmine_configuration.settings.project_key.project') -%>: <span id="project_key_project"></span></div>
-		<div class="error" id="project_key_error" style="display:none;" />
-	  </td>
+        <%= text_field_tag 'project_key', @project_key %>
+    <div class="note" id="project_key_project_div" style="display:none;"><%= message('page.redmine_configuration.settings.project_key.project') -%>: <span id="project_key_project"></span></div>
+    <div class="error" id="project_key_error" style="display:none;" />
+    </td>
       <td class="comments"><%= message('page.redmine_configuration.settings.project_key.description') -%></td>
     </tr>
     </tbody>
     <tfoot>
     <tr>
       <td colspan="3">
-		  <div>
-		    <%= submit_to_remote "submit_test",
-		                         message('page.redmine_configuration.settings.test'),
-		                         :url => {:action => 'test'},
-		                         :html => {:id => "submit_test"},
-		                         :before => "this.disable(); startTest();",
-								 :complete => "finishedTest(request); $('submit_test').enable();" -%>
-		    <span id="testStatus" style="display: none;"><%= image_tag 'loading.gif' -%></span>
-		  </div>
+      <div>
+        <%= submit_to_remote "submit_test",
+                             message('page.redmine_configuration.settings.test'),
+                             :url => {:action => 'test'},
+                             :html => {:id => "submit_test"},
+                             :before => "this.disable(); startTest();",
+                 :complete => "finishedTest(request); $('submit_test').enable();" -%>
+        <span id="testStatus" style="display: none;"><%= image_tag 'loading.gif' -%></span>
+      </div>
       </td>
     </tr>
     </tfoot>

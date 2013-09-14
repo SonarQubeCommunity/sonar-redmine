@@ -19,7 +19,6 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
-import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.bean.Issue;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,10 +26,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.sonar.api.config.Settings;
 import org.sonar.api.i18n.I18n;
+import org.sonar.api.issue.action.Function.Context;
+import org.sonar.plugins.redmine.RedmineConstants;
 import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -45,10 +47,11 @@ public class RedmineLinkFunctionTest {
   private RedmineIssueFactory redmineIssueFactory;
   private RedmineLinkFunction action;
   private String projectKey = "prKey";
-//  private MutableReview mutableReview;
-//  private Comment comment;
-//  private Review review;
-//  private WorkflowContext workflowContext;
+  // private MutableReview mutableReview;
+  // private Comment comment;
+  // private Review review;
+  // private WorkflowContext workflowContext;
+  private Context context;
   private Issue redmineIssue;
   private Settings settings;
   private RedmineSettings redmineSettings;
@@ -58,7 +61,7 @@ public class RedmineLinkFunctionTest {
   public void setUpMocks() throws Exception {
     settings = new Settings();
     settings.setProperty(RedmineSettings.API_ACCESS_KEY, "api_access_key");
-    settings.setProperty(RedmineSettings.HOST, "http://my.Redmine.server");
+    settings.setProperty(RedmineSettings.URL, "http://my.Redmine.server");
     settings.setProperty(RedmineSettings.PROJECT_KEY, projectKey);
     redmineSettings = new RedmineSettings(settings);
 
@@ -66,22 +69,26 @@ public class RedmineLinkFunctionTest {
     redmineIssue.setId(10);
 
     i18n = mock(I18n.class);
-//    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_COMMENT, null)).thenReturn("Review linked to Redmine issue: ");
-//    when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null)).thenReturn(
-//        "Impossible to create an issue on Redmine. A problem occured with the remote server: ");
 
-//    comment = mock(Comment.class);
-//
-//    mutableReview = mock(MutableReview.class);
-//    when(mutableReview.createComment()).thenReturn(comment);
-//
-//    review = mock(Review.class);
-//
-//    workflowContext = mock(WorkflowContext.class);
-//    when(workflowContext.getProjectSettings()).thenReturn(settings);
+    context = mock(Context.class);
+
+    // when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_COMMENT,
+    // null)).thenReturn("Review linked to Redmine issue: ");
+    // when(i18n.message(Locale.getDefault(), RedmineLanguageConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null)).thenReturn(
+    // "Impossible to create an issue on Redmine. A problem occured with the remote server: ");
+
+    // comment = mock(Comment.class);
+    //
+    // mutableReview = mock(MutableReview.class);
+    // when(mutableReview.createComment()).thenReturn(comment);
+    //
+    // review = mock(Review.class);
+    //
+    // workflowContext = mock(WorkflowContext.class);
+    // when(workflowContext.getProjectSettings()).thenReturn(settings);
 
     redmineIssueFactory = mock(RedmineIssueFactory.class);
-//    when(redmineIssueFactory.createRedmineIssue(review, redmineSettings, new HashMap<String, String>())).thenReturn(redmineIssue);
+    // when(redmineIssueFactory.createRedmineIssue(review, redmineSettings, new HashMap<String, String>())).thenReturn(redmineIssue);
 
     redmineAdapter = mock(RedmineAdapter.class);
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "api_access_key");
@@ -92,31 +99,32 @@ public class RedmineLinkFunctionTest {
 
   @Test
   public void shouldExecute() throws Exception {
-//    action.doExecute(mutableReview, review, workflowContext, new HashMap<String, String>());
-//
-//    verify(redmineIssueFactory).createRedmineIssue(review, redmineSettings, new HashMap<String, String>());
-//    verify(redmineAdapter).createIssue(projectKey, redmineIssue);
-//    verify(mutableReview).createComment();
-//    verify(mutableReview).setProperty(RedmineLanguageConstants.ISSUE_ID, "10");
+    // action.doExecute(mutableReview, review, workflowContext, new HashMap<String, String>());
+    //
+    // verify(redmineIssueFactory).createRedmineIssue(review, redmineSettings, new HashMap<String, String>());
+    // verify(redmineAdapter).createIssue(projectKey, redmineIssue);
+    // verify(mutableReview).createComment();
+    // verify(mutableReview).setProperty(RedmineLanguageConstants.ISSUE_ID, "10");
   }
 
   @Test
   public void shouldFailExecuteIfRemoteProblem() throws Exception {
-    when(redmineAdapter.createIssue(projectKey, redmineIssue)).thenThrow(new RedmineException("Server Error"));
+    Exception e = new IllegalStateException(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_REMOTE_SERVER_ERROR, null));
+    when(redmineAdapter.createIssue(projectKey, redmineIssue)).thenThrow(e);
 
     thrown.expect(IllegalStateException.class);
-    thrown.expectMessage("Impossible to create an issue on Redmine. A problem occured with the remote server: Server Error");
+    thrown.expectMessage("Impossible to create an issue on Redmine. A problem occurred with the remote server:");
 
-//    action.doExecute(mutableCReview, review, workflowContext, new HashMap<String, String>());
+    action.execute(context);
   }
 
   @Test
   public void testCreateComment() throws Exception {
-//    when(workflowContext.getUserId()).thenReturn(45L);
-//    action.createComment(redmineIssue, mutableReview, workflowContext, new HashMap<String, String>());
-//
-//    verify(comment).setUserId(45L);
-//    verify(comment).setMarkdownText("Review linked to Redmine issue: http://my.Redmine.server/issues/10");
+    // when(workflowContext.getUserId()).thenReturn(45L);
+    // action.createComment(redmineIssue, mutableReview, workflowContext, new HashMap<String, String>());
+    //
+    // verify(comment).setUserId(45L);
+    // verify(comment).setMarkdownText("Review linked to Redmine issue: http://my.Redmine.server/issues/10");
   }
 
   @Test
@@ -125,8 +133,8 @@ public class RedmineLinkFunctionTest {
     HashMap<String, String> params = new HashMap<String, String>();
     params.put("text", userComment);
 
-//    String commentText = action.generateCommentText(redmineIssue, redmineSettings, params);
-//    assertThat(commentText).isEqualTo(userComment + "\n\nReview linked to Redmine issue: http://my.Redmine.server/issues/10");
+    // String commentText = action.generateCommentText(redmineIssue, redmineSettings, params);
+    // assertThat(commentText).isEqualTo(userComment + "\n\nReview linked to Redmine issue: http://my.Redmine.server/issues/10");
   }
 
 }

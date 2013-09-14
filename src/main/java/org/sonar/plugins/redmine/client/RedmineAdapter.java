@@ -36,79 +36,79 @@ import java.util.Map;
 
 public class RedmineAdapter implements BatchExtension, ServerExtension {
 
-	protected RedmineManager redmineMgr;
+  protected RedmineManager redmineMgr;
 
-	public void connectToHost(final String host, final String apiKey) throws RedmineException {
-		try {
-			redmineMgr = new RedmineManager(host, apiKey);
-		} catch (Exception e) {
-			throw RedminePlugin.wrapException(e);
-		}
-	}
+  public void connectToHost(final String host, final String apiKey) throws RedmineException {
+    try {
+      redmineMgr = new RedmineManager(host, apiKey);
+    } catch (Exception e) {
+      throw RedminePlugin.wrapException(e);
+    }
+  }
 
-	public User getCurrentUser() throws RedmineException {
-		try {
-			// It is required to get the user with its id to fetch project memberships
-			return getUser(redmineMgr.getCurrentUser().getId());
-		} catch (RedmineException e) {
-			throw RedminePlugin.wrapException(e);
-		}
-	}
+  public User getCurrentUser() throws RedmineException {
+    try {
+      // It is required to get the user with its id to fetch project memberships
+      return getUser(redmineMgr.getCurrentUser().getId());
+    } catch (RedmineException e) {
+      throw RedminePlugin.wrapException(e);
+    }
+  }
 
-	public Project getProject(String projectKey) throws RedmineException {
-		try {
-			return redmineMgr.getProjectByKey(projectKey);
-		} catch (RedmineException e) {
-			throw RedminePlugin.wrapException(e);
-		}
-	}
+  public Project getProject(String projectKey) throws RedmineException {
+    try {
+      return redmineMgr.getProjectByKey(projectKey);
+    } catch (RedmineException e) {
+      throw RedminePlugin.wrapException(e);
+    }
+  }
 
-	public User getUser(int userId) throws RedmineException {
-		try {
-			return redmineMgr.getUserById(userId);
-		} catch (RedmineException e) {
-			throw RedminePlugin.wrapException(e);
-		}
-	}
+  public User getUser(int userId) throws RedmineException {
+    try {
+      return redmineMgr.getUserById(userId);
+    } catch (RedmineException e) {
+      throw RedminePlugin.wrapException(e);
+    }
+  }
 
-	public boolean isMemberOfProject(User u, Project p) {
-		List<Membership> m = u.getMemberships();
-		int projectId = p.getId();
+  public boolean isMemberOfProject(User u, Project p) {
+    List<Membership> m = u.getMemberships();
+    int projectId = p.getId();
 
-		for (Membership ms : m) {
-			if (ms.getProject().getId() == projectId) {
-				return true;
-			}
-		}
+    for (Membership ms : m) {
+      if (ms.getProject().getId() == projectId) {
+        return true;
+      }
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	public List<IssuePriority> getIssuePriorities() throws RedmineException {
-		try {
-			return redmineMgr.getIssuePriorities();
-		} catch (RedmineException e) {
-			throw RedminePlugin.wrapException(e);
-		}
-	}
+  public List<IssuePriority> getIssuePriorities() throws RedmineException {
+    try {
+      return redmineMgr.getIssuePriorities();
+    } catch (RedmineException e) {
+      throw RedminePlugin.wrapException(e);
+    }
+  }
 
-	public Issue createIssue(final String projectKey, final Issue issue) throws RedmineException {
-		return redmineMgr.createIssue(projectKey, issue);
-	}
+  public Issue createIssue(final String projectKey, final Issue issue) throws RedmineException {
+    return redmineMgr.createIssue(projectKey, issue);
+  }
 
-	public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey) throws RedmineException {
+  public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey) throws RedmineException {
 
-		List<Issue> issues = redmineMgr.getIssues(projectKey, null);
-		Map<String, Integer> issuesByPriority = Maps.newHashMap();
+    List<Issue> issues = redmineMgr.getIssues(projectKey, null);
+    Map<String, Integer> issuesByPriority = Maps.newHashMap();
 
-		for (Issue issue : issues) {
-			String priority = issue.getPriorityText();
-			if (!issuesByPriority.containsKey(priority)) {
-				issuesByPriority.put(priority, 1);
-			} else {
-				issuesByPriority.put(priority, issuesByPriority.get(priority) + 1);
-			}
-		}
-		return issuesByPriority;
-	}
+    for (Issue issue : issues) {
+      String priority = issue.getPriorityText();
+      if (!issuesByPriority.containsKey(priority)) {
+        issuesByPriority.put(priority, 1);
+      } else {
+        issuesByPriority.put(priority, issuesByPriority.get(priority) + 1);
+      }
+    }
+    return issuesByPriority;
+  }
 }
