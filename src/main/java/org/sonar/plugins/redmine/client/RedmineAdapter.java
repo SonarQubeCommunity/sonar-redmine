@@ -1,6 +1,6 @@
 /*
  * Sonar Redmine Plugin
- * Copyright (C) 2013 Patroklos PAPAPETROU
+ * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
  * This program is free software; you can redistribute it and/or
