@@ -1,5 +1,5 @@
 /*
- * Sonar Redmine Plugin
+ * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
@@ -71,17 +71,18 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     }
   }
 
-  public boolean isMemberOfProject(User u, Project p) {
-    List<Membership> m = u.getMemberships();
-    int projectId = p.getId();
+  public boolean isMemberOfProject(User user, Project project) {
+    boolean isMemberOfProject = false;
+    List<Membership> memberships = user.getMemberships();
+    int projectId = project.getId();
 
-    for (Membership ms : m) {
-      if (ms.getProject().getId() == projectId) {
-        return true;
+    for (Membership membership : memberships) {
+      if (membership.getProject().getId() == projectId) {
+        isMemberOfProject = true;
       }
     }
 
-    return false;
+    return isMemberOfProject;
   }
 
   public List<IssuePriority> getIssuePriorities() throws RedmineException {
@@ -103,10 +104,10 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
 
     for (Issue issue : issues) {
       String priority = issue.getPriorityText();
-      if (!issuesByPriority.containsKey(priority)) {
-        issuesByPriority.put(priority, 1);
-      } else {
+      if (issuesByPriority.containsKey(priority)) {
         issuesByPriority.put(priority, issuesByPriority.get(priority) + 1);
+      } else {
+        issuesByPriority.put(priority, 1);
       }
     }
     return issuesByPriority;

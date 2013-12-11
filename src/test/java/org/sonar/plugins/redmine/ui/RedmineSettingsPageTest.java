@@ -17,26 +17,40 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
+
 package org.sonar.plugins.redmine.ui;
 
+import java.util.Locale;
 import org.junit.Test;
+import org.junit.Before;
+import org.sonar.api.i18n.I18n;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.fest.assertions.api.Assertions.*;
+import org.sonar.plugins.redmine.RedmineConstants;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+public class RedmineSettingsPageTest {
 
-public class RedmineWidgetTest {
-
-  private RedmineWidget widget = new RedmineWidget();
-
+  private RedmineSettingsPage settingsPage;
+  private I18n i18n;
+  
+  @Before
+  public void init(){
+    i18n = mock(I18n.class);
+    settingsPage = new RedmineSettingsPage(i18n);
+  }
+  
   @Test
-  public void templatePathShouldNotbeNull() {
-    assertThat(getClass().getResource(widget.getTemplatePath()), notNullValue());
+  public void testGetId() {
+    assertThat(settingsPage.getId()).isEqualTo("/redmine_configuration");
   }
 
   @Test
-  public void testNameAndTitle() throws Exception {
-    assertThat(widget.getId(), is("redmine"));
-    assertThat(widget.getTitle(), is("RedmineWidget"));
+  public void testGetTitle() {
+    
+    String title = "title";
+    when(i18n.message(Locale.getDefault(), RedmineConstants.CONFIGURATION_PAGE, null)).thenReturn(title);
+    assertThat(settingsPage.getTitle()).isEqualTo(title);
   }
+  
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -13,8 +13,8 @@
   <packaging>sonar-plugin</packaging>
   <version>0.1-SNAPSHOT</version>
 
-  <name>Sonar Redmine Plugin</name>
-  <description>Integrates Sonar with Redmine with various ways</description>
+  <name>SonarQube Redmine Plugin</name>
+  <description>Integrates SonarQube with Redmine with various ways</description>
   <inceptionYear>2013</inceptionYear>
   <url>http://docs.codehaus.org/display/SONAR/Redmine+Plugin</url>
 
@@ -54,11 +54,19 @@
     <system>Jeninks</system>
     <url>https://sonarplugins.ci.cloudbees.com/job/redmine</url>
   </ciManagement>
-
   <properties>
     <sonar.buildVersion>3.6</sonar.buildVersion>
     <sonar.pluginClass>org.sonar.plugins.redmine.RedminePlugin</sonar.pluginClass>
     <sonar.pluginName>Redmine</sonar.pluginName>
+
+    <powermock.version>1.4.12</powermock.version>
+
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
+    <jacoco.version>0.6.3.201306030806</jacoco.version>
+   
   </properties>
 
   <dependencies>
@@ -92,13 +100,38 @@
       <version>2.0.9</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>   
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+      <classifier>runtime</classifier>
+      <version>${jacoco.version}</version>
+      <scope>test</scope>
+    </dependency>      
+    <dependency>
+      <groupId>org.easytesting</groupId>
+      <artifactId>fest-assert-core</artifactId>
+      <version>2.0M10</version>
+      <scope>test</scope>
+    </dependency>   
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <!-- UTF-8 bundles are not supported by Java, so they must be converted
-          during build -->
+        during build -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>native2ascii-maven-plugin</artifactId>
         <executions>
@@ -109,6 +142,34 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <configuration>
+          <destfile>${sonar.jacoco.reportPath}</destfile>
+          <datafile>${sonar.jacoco.reportPath}</datafile>
+        </configuration>
+        <executions>
+          <execution>
+            <id>jacoco-initialize</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.16</version>
+        <configuration>
+          <systemPropertyVariables>
+            <!-- JaCoCo runtime must know where to dump coverage: -->
+            <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>      
     </plugins>
   </build>
 </project>

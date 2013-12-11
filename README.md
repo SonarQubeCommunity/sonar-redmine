@@ -1,4 +1,4 @@
 sonar-redmine-plugin
 ====================
 
-Sonar Redmine Plugin
+SonarQube Redmine Plugin

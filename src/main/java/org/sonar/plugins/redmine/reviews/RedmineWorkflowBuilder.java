@@ -1,5 +1,5 @@
 /*
- * Sonar Redmine Plugin
+ * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
@@ -37,6 +37,7 @@ public class RedmineWorkflowBuilder implements ServerExtension {
   }
 
   public void start() {
+    
     actions
         .add(RedmineConstants.LINK_TO_REDMINE_ID)
         .setConditions(new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUE_ID)), new IsUnResolved())

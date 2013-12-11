@@ -1,5 +1,5 @@
 /*
- * Sonar Redmine Plugin
+ * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
@@ -30,36 +30,80 @@ import java.util.Locale;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import org.sonar.api.CoreProperties;
+import org.sonar.api.issue.Issue;
+import org.sonar.api.rules.Rule;
+import org.sonar.api.rules.RuleFinder;
+import static org.fest.assertions.api.Assertions.*;
 
 public class RedmineIssueFactoryTest {
   private I18n i18n;
   private RedmineIssueFactory redmineIssueFactory;
   private Settings settings;
-  private RedmineSettings rSettings;
-
-  // private Review review;
-
+  private RedmineSettings redmineSettings;
+  private RuleFinder ruleFinder;
+  private Rule rule = new Rule();
+  private final Issue issue = mock(Issue.class);
+  private static final String ISSUE_KEY = "ISSUE_KEY";
+  private static final String RULE_KEY = "RULE_KEY";
+  private static final String RULE_NAME = "RULE_NAME";
+  private static final String SERVER_BASE_URL = "http://baseurl";
+  private static final String SUBJECT_NO_RULE = "Subject_No_Rule";
+  private static final String DESCRIPTION_NO_RULE = "Description_No_Rule";
+  private static final String SUBJECT_WITH_RULE = "Subject_With_Rule";
+  private static final String DESCRIPTION_WITH_RULE = "Description_With_Rule";
+  private static final String ISSUE_URL = "http://baseurl/issue/show/ISSUE_KEY";
+  private static final Integer PRIORITY_ID = 10;
+  private static final Integer TRACKER_ID = 1;
+  
   @Before
-  public void setUpMocks() throws Exception {
+  public void setUpMocks() {
     i18n = mock(I18n.class);
     settings = mock(Settings.class);
-    rSettings = mock(RedmineSettings.class);
-    // review = mock(Review.class);
+    redmineSettings = mock(RedmineSettings.class);
+    ruleFinder = mock(RuleFinder.class);
+    
+    when(issue.key()).thenReturn(ISSUE_KEY);
+    
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, ISSUE_KEY)).thenReturn(SUBJECT_NO_RULE);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, ISSUE_URL)).thenReturn(DESCRIPTION_NO_RULE);
 
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "")).thenReturn("New Subject");
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "")).thenReturn("New Description");
-
-    // redmineIssueFactory = new RedmineIssueFactory(i18n, settings);
+    when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(rule);
+    
+    when(redmineSettings.getTrackerID()).thenReturn(TRACKER_ID);
+    when(redmineSettings.getPriorityID()).thenReturn(PRIORITY_ID);
+    
+    when(settings.getString(CoreProperties.SERVER_BASE_URL)).thenReturn(SERVER_BASE_URL);
+    
+    redmineIssueFactory = new RedmineIssueFactory(i18n, settings, ruleFinder);
   }
 
   @Test
-  public void shouldReturnValidIssue() {
-    // Issue issue = redmineIssueFactory.createRedmineIssue(review, rSettings, new HashMap<String, String>());
-
-    // assertThat(issue).isNotNull();
-    // assertThat(issue.getSubject()).as("New Subject");
-    // assertThat(issue.getDescription()).as("New Description");
-    // assertThat(issue.getPriorityId()).isEqualTo(rSettings.getPriorityID());
-    // assertThat(issue.getTracker().getId()).isEqualTo(rSettings.getTrackerID());
+  public void shouldCreateRedmineIssueWithNoRule() {
+    when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(null);
+    com.taskadapter.redmineapi.bean.Issue redmineIssue = redmineIssueFactory.createRedmineIssue(issue, redmineSettings);
+    
+    assertThat(redmineIssue.getSubject()).isEqualTo(SUBJECT_NO_RULE);
+    assertThat(redmineIssue.getDescription()).isEqualTo(DESCRIPTION_NO_RULE);
+    assertThat(redmineIssue.getPriorityId()).isEqualTo(PRIORITY_ID);
+    assertThat(redmineIssue.getTracker().getId()).isEqualTo(TRACKER_ID);
   }
+
+  @Test
+  public void shouldCreateRedmineIssueWithRule() {
+    rule.setKey(RULE_KEY);
+    rule.setName(RULE_NAME);
+    
+    when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(rule);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, ISSUE_KEY, RULE_NAME)).thenReturn(SUBJECT_WITH_RULE);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, RULE_KEY + " - " + RULE_NAME, ISSUE_URL)).thenReturn(DESCRIPTION_WITH_RULE);
+
+    com.taskadapter.redmineapi.bean.Issue redmineIssue = redmineIssueFactory.createRedmineIssue(issue, redmineSettings);
+
+    assertThat(redmineIssue.getSubject()).isEqualTo(SUBJECT_WITH_RULE);
+    assertThat(redmineIssue.getDescription()).isEqualTo(DESCRIPTION_WITH_RULE);
+    assertThat(redmineIssue.getPriorityId()).isEqualTo(PRIORITY_ID);
+    assertThat(redmineIssue.getTracker().getId()).isEqualTo(TRACKER_ID);
+  }
+
 }

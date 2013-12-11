@@ -1,5 +1,5 @@
 /*
- * Sonar Redmine Plugin
+ * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
@@ -29,16 +29,18 @@ import java.util.Locale;
 @NavigationSection(value = {NavigationSection.RESOURCE_CONFIGURATION})
 public class RedmineSettingsPage implements Page {
 
-  private I18n i18n;
+  private final I18n i18n;
 
   public RedmineSettingsPage(I18n i18n) {
     this.i18n = i18n;
   }
 
+  @Override
   public String getId() {
     return "/redmine_configuration";
   }
 
+  @Override
   public String getTitle() {
     return i18n.message(Locale.getDefault(), RedmineConstants.CONFIGURATION_PAGE, null);
   }

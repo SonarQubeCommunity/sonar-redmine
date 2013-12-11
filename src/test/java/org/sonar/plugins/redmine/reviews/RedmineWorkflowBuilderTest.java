@@ -1,5 +1,5 @@
 /*
- * Sonar Redmine Plugin
+ * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
@@ -19,22 +19,35 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.sonar.api.issue.action.Actions;
+import static org.mockito.Mockito.mock;
+import static org.fest.assertions.api.Assertions.*;
+import org.sonar.api.issue.action.Action;
 
 public class RedmineWorkflowBuilderTest {
 
+  private RedmineWorkflowBuilder workflowBuilder;
+  private RedmineLinkFunction linkFunction;
+  private final Actions actions = new Actions();
+
+  
+  @Before
+  public void setUp() throws Exception {
+    linkFunction = mock(RedmineLinkFunction.class);
+    workflowBuilder = new RedmineWorkflowBuilder(actions, linkFunction);
+  }
+
   @Test
-  public void checkStart() throws Exception {
-    // Workflow workflow = mock(Workflow.class);
-    // RedmineLinkFunction function = mock(RedmineLinkFunction.class);
-    //
-    // RedmineWorkflowBuilder builder = new RedmineWorkflowBuilder(workflow, function);
-    // builder.start();
-    //
-    // verify(workflow, times(1)).addCommand(RedmineLanguageConstants.LINK_TO_REDMINE_ID);
-    // verify(workflow, times(1)).setScreen(anyString(), any(Screen.class));
-    // verify(workflow, times(1)).addFunction(RedmineLanguageConstants.LINK_TO_REDMINE_ID, function);
-    // verify(workflow, times(7)).addCondition(anyString(), any(Condition.class));
+  public void shouldStart() {
+    workflowBuilder.start();
+    
+    Action action = actions.list().get(0);
+    assertThat(action.key()).isEqualTo("link-to-redmine");
+    assertThat(action.functions().get(0)).isEqualTo(linkFunction);
+    assertThat(action.conditions()).isNotEmpty();    
+    
   }
 
 }

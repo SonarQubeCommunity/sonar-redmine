@@ -1,5 +1,5 @@
 /*
- * Sonar Redmine Plugin
+ * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
  * dev@sonar.codehaus.org
  *
@@ -44,24 +44,24 @@ public class RedmineIssueFactory implements ServerExtension {
     this.ruleFinder = ruleFinder;
   }
 
-  public com.taskadapter.redmineapi.bean.Issue createRedmineIssue(Issue i, RedmineSettings rSettings) {
-    com.taskadapter.redmineapi.bean.Issue issue = new com.taskadapter.redmineapi.bean.Issue();
+  public com.taskadapter.redmineapi.bean.Issue createRedmineIssue(Issue issue, RedmineSettings rSettings) {
+    com.taskadapter.redmineapi.bean.Issue redmineIssue = new com.taskadapter.redmineapi.bean.Issue();
 
-    rule = ruleFinder.findByKey(i.ruleKey());
+    rule = ruleFinder.findByKey(issue.ruleKey());
 
-    issue.setTracker(new Tracker(rSettings.getTrackerID(), null));
-    issue.setPriorityId(rSettings.getPriorityID());
-    issue.setSubject(createIssueSubject(i));
-    issue.setDescription(createIssueDescription(i, settings.getString(CoreProperties.SERVER_BASE_URL)));
+    redmineIssue.setTracker(new Tracker(rSettings.getTrackerID(), null));
+    redmineIssue.setPriorityId(rSettings.getPriorityID());
+    redmineIssue.setSubject(createIssueSubject(issue));
+    redmineIssue.setDescription(createIssueDescription(issue, settings.getString(CoreProperties.SERVER_BASE_URL)));
 
-    return issue;
+    return redmineIssue;
   }
 
   private String createIssueSubject(Issue issue) {
-    if (rule != null) {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, issue.key(), rule.getName());
-    } else {
+    if (rule == null) {
       return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, issue.key());
+    } else {
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, issue.key(), rule.getName());
     }
   }
 
@@ -71,20 +71,11 @@ public class RedmineIssueFactory implements ServerExtension {
     sb.append("/issue/show/");
     sb.append(issue.key());
 
-    // if (StringUtils.isNotBlank(comment)) {
-    // return i18n.message(Locale.getDefault(),
-    // RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
-    // review.getMessage(), comment, sb.toString());
-    // } else {
-    // return i18n.message(Locale.getDefault(),
-    // RedmineLanguageConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE,
-    // review.getMessage(), sb.toString());
-    // }
-    if (rule != null) {
+    if (rule == null) {
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, sb.toString());
+    } else {
       return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
           rule.getKey() + " - " + rule.getName(), sb.toString());
-    } else {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, sb.toString());
     }
   }
 }
