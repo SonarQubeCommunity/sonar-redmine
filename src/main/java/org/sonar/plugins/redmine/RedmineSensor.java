@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine.batch;
+package org.sonar.plugins.redmine;
 
 import com.taskadapter.redmineapi.RedmineException;
 import org.slf4j.Logger;
@@ -27,11 +27,10 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
-import org.sonar.plugins.redmine.RedmineMetrics;
-import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
 import java.util.Map;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineSensor implements Sensor {
 

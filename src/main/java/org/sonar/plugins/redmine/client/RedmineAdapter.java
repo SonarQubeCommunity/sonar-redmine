@@ -29,10 +29,10 @@ import com.taskadapter.redmineapi.bean.Project;
 import com.taskadapter.redmineapi.bean.User;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.ServerExtension;
-import org.sonar.plugins.redmine.RedminePlugin;
 
 import java.util.List;
 import java.util.Map;
+import org.sonar.plugins.redmine.exceptions.ExceptionUtil;
 
 public class RedmineAdapter implements BatchExtension, ServerExtension {
 
@@ -42,7 +42,7 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     try {
       redmineMgr = new RedmineManager(host, apiKey);
     } catch (Exception e) {
-      throw RedminePlugin.wrapException(e);
+      throw ExceptionUtil.wrapException(e);
     }
   }
 
@@ -51,7 +51,7 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
       // It is required to get the user with its id to fetch project memberships
       return getUser(redmineMgr.getCurrentUser().getId());
     } catch (RedmineException e) {
-      throw RedminePlugin.wrapException(e);
+      throw ExceptionUtil.wrapException(e);
     }
   }
 
@@ -59,7 +59,7 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     try {
       return redmineMgr.getProjectByKey(projectKey);
     } catch (RedmineException e) {
-      throw RedminePlugin.wrapException(e);
+      throw ExceptionUtil.wrapException(e);
     }
   }
 
@@ -67,7 +67,7 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     try {
       return redmineMgr.getUserById(userId);
     } catch (RedmineException e) {
-      throw RedminePlugin.wrapException(e);
+      throw ExceptionUtil.wrapException(e);
     }
   }
 
@@ -89,7 +89,7 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     try {
       return redmineMgr.getIssuePriorities();
     } catch (RedmineException e) {
-      throw RedminePlugin.wrapException(e);
+      throw ExceptionUtil.wrapException(e);
     }
   }
 

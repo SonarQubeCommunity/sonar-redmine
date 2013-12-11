@@ -25,10 +25,10 @@ import org.sonar.api.ServerExtension;
 import org.sonar.api.i18n.I18n;
 import org.sonar.api.issue.action.Function;
 import org.sonar.plugins.redmine.RedmineConstants;
-import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
 import java.util.Locale;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineLinkFunction implements Function, ServerExtension {
   private final RedmineAdapter redmineAdapter;

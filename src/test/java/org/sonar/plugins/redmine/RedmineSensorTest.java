@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine.batch;
+package org.sonar.plugins.redmine;
 
 import com.taskadapter.redmineapi.RedmineException;
 import org.junit.Before;
@@ -28,8 +28,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
-import org.sonar.plugins.redmine.RedmineMetrics;
-import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
 import java.util.HashMap;
@@ -44,6 +42,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineSensorTest {
 

@@ -28,7 +28,6 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.i18n.I18n;
 import org.sonar.api.issue.action.Function.Context;
 import org.sonar.plugins.redmine.RedmineConstants;
-import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
 import java.util.HashMap;
@@ -38,6 +37,7 @@ import org.junit.Ignore;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 public class RedmineLinkFunctionTest {
 
@@ -139,4 +139,4 @@ public class RedmineLinkFunctionTest {
     // assertThat(commentText).isEqualTo(userComment + "\n\nReview linked to Redmine issue: http://my.Redmine.server/issues/10");
   }
 
-}
+  }

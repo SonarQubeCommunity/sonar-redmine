@@ -20,16 +20,9 @@
 package org.sonar.plugins.redmine;
 
 import com.google.common.collect.ImmutableList;
-import com.taskadapter.redmineapi.NotAuthorizedException;
-import com.taskadapter.redmineapi.NotFoundException;
-import com.taskadapter.redmineapi.RedmineAuthenticationException;
-import com.taskadapter.redmineapi.RedmineException;
-import com.taskadapter.redmineapi.RedmineTransportException;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.plugins.redmine.batch.RedmineSensor;
-import org.sonar.plugins.redmine.client.RedmineAdapter;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 import org.sonar.plugins.redmine.exceptions.RedmineGeneralException;
 import org.sonar.plugins.redmine.exceptions.RedmineNotAuthorizedException;
@@ -41,6 +34,7 @@ import org.sonar.plugins.redmine.ui.RedmineSettingsPage;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
 import java.util.List;
+import org.sonar.plugins.redmine.client.RedmineAdapter;
 
 @Properties({
   @Property(
@@ -53,33 +47,6 @@ import java.util.List;
     description = "You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.",
     type = org.sonar.api.PropertyType.PASSWORD)})
 public class RedminePlugin extends SonarPlugin {
-
-  public static RedmineException wrapException(Exception e) {
-    // Work around to be able to catch exceptions in ruby on rails controller
-    // It seems not to be possible to catch exceptions which aren't part of
-    // this plugin
-    RedmineException ex;
-    if (e instanceof RedmineAuthenticationException) {
-      ex = new org.sonar.plugins.redmine.exceptions.RedmineAuthenticationException(e.getMessage());
-    } else if (e instanceof RedmineTransportException) {
-      ex = new org.sonar.plugins.redmine.exceptions.RedmineTransportException(e.getMessage());
-    } else if (e instanceof NotFoundException) {
-      ex = new RedmineNotFoundException(e.getMessage());
-    } else if (e instanceof NotAuthorizedException) {
-      ex = new RedmineNotAuthorizedException(e.getMessage());
-    } else if (e instanceof RedmineException) {
-      ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getMessage());
-    } else {
-      if (e.getCause() != null) {
-        ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getCause().getLocalizedMessage());
-      } else {
-        ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getLocalizedMessage());
-      }
-    }
-
-    ex.initCause(e);
-    return ex;
-  }
 
   public List getExtensions() {
     return ImmutableList.of(
