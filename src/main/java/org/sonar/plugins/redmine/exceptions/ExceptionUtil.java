@@ -40,10 +40,10 @@ public class ExceptionUtil {
     } else if (e instanceof com.taskadapter.redmineapi.RedmineException) {
       ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getMessage());
     } else {
-      if (e.getCause() != null) {
-        ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getCause().getLocalizedMessage());
-      } else {
+      if (e.getCause() == null) {
         ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getLocalizedMessage());
+      } else {
+        ex = new org.sonar.plugins.redmine.exceptions.RedmineGeneralException(e.getCause().getLocalizedMessage());
       }
     }
 

@@ -41,6 +41,7 @@ public class RedmineLinkFunction implements Function, ServerExtension {
     this.i18n = i18n;
   }
 
+  @Override
   public void execute(Context context) {
     try {
       RedmineSettings redmineSettings = new RedmineSettings(context.projectSettings());
