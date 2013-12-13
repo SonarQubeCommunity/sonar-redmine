@@ -65,8 +65,8 @@ public class RedmineIssueFactoryTest {
     
     when(issue.key()).thenReturn(ISSUE_KEY);
     
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, ISSUE_KEY)).thenReturn(SUBJECT_NO_RULE);
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, ISSUE_URL)).thenReturn(DESCRIPTION_NO_RULE);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, "", ISSUE_KEY)).thenReturn(SUBJECT_NO_RULE);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "", ISSUE_URL)).thenReturn(DESCRIPTION_NO_RULE);
 
     when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(rule);
     
@@ -95,8 +95,8 @@ public class RedmineIssueFactoryTest {
     rule.setName(RULE_NAME);
     
     when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(rule);
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, ISSUE_KEY, RULE_NAME)).thenReturn(SUBJECT_WITH_RULE);
-    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, RULE_KEY + " - " + RULE_NAME, ISSUE_URL)).thenReturn(DESCRIPTION_WITH_RULE);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "", ISSUE_KEY, RULE_NAME)).thenReturn(SUBJECT_WITH_RULE);
+    when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, "", RULE_KEY + " - " + RULE_NAME, ISSUE_URL)).thenReturn(DESCRIPTION_WITH_RULE);
 
     com.taskadapter.redmineapi.bean.Issue redmineIssue = redmineIssueFactory.createRedmineIssue(issue, redmineSettings);
 

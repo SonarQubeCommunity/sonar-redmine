@@ -59,9 +59,9 @@ public class RedmineIssueFactory implements ServerExtension {
 
   private String createIssueSubject(Issue issue) {
     if (rule == null) {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, issue.key());
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, "", issue.key());
     } else {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, issue.key(), rule.getName());
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "", issue.key(), (rule.getName() == null) ? "" :rule.getName());
     }
   }
 
@@ -72,10 +72,10 @@ public class RedmineIssueFactory implements ServerExtension {
     sb.append(issue.key());
 
     if (rule == null) {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, sb.toString());
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "", sb.toString());
     } else {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE,
-          rule.getKey() + " - " + rule.getName(), sb.toString());
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, "",
+          rule.getKey() + (rule.getName() == null ? "" : " - " + rule.getName()), sb.toString());
     }
   }
 }

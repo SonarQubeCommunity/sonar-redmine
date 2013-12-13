@@ -23,15 +23,8 @@ package org.sonar.plugins.redmine.exceptions;
 import com.taskadapter.redmineapi.NotAuthorizedException;
 import com.taskadapter.redmineapi.NotFoundException;
 import com.taskadapter.redmineapi.RedmineException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
-import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
 public class ExceptionUtilTest {
   
   private static final String MESSAGE = "message";
