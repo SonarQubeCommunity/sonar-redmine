@@ -53,7 +53,7 @@ public class RedmineSensor implements Sensor {
   public void analyse(Project project, SensorContext context) {
     try {
       redmineAdapter.connectToHost(redmineSettings.getHost(), redmineSettings.getApiAccessKey());
-      Map<String, Integer> issuesByPriority = redmineAdapter.collectProjectIssuesByPriority(redmineSettings.getProjectKey());
+      Map<String, Integer> issuesByPriority = redmineAdapter.collectProjectIssuesByPriority(redmineSettings.getProjectKey(), project.getAnalysisDate());
       double totalIssues = 0;
       PropertiesBuilder<String, Integer> distribution = new PropertiesBuilder<String, Integer>();
       for (Map.Entry<String, Integer> entry : issuesByPriority.entrySet()) {

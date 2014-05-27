@@ -62,7 +62,7 @@ public class RedmineSensorTest {
     issuesByPriority.put("Normal", 2);
     issuesByPriority.put("Urgent", 1);
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "project_key");
-    when(redmineAdapter.collectProjectIssuesByPriority("project_key")).thenReturn(issuesByPriority);
+    when(redmineAdapter.collectProjectIssuesByPriority("project_key", null)).thenReturn(issuesByPriority);
     redmineSettings.setHost("http://my.Redmine.server");
     redmineSettings.setApiAccessKey("api_access_key");
     redmineSettings.setProjectKey("project_key");
