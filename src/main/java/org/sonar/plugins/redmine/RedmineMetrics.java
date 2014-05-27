@@ -30,18 +30,33 @@ public class RedmineMetrics implements Metrics {
   public static final Metric ISSUES = new Metric.Builder(RedmineConstants.ISSUES_KEY, "Redmine Issues", Metric.ValueType.INT)
       .setDescription("Number of Redmine Issues")
       .setDirection(Metric.DIRECTION_NONE)
-      .setQualitative(false)
+      .setQualitative(true)
       .setDomain(RedmineConstants.ISSUES_DOMAIN)
       .create();
 
   public static final Metric ISSUES_BY_PRIORITY = new Metric.Builder(RedmineConstants.ISSUES_BY_PRIORITY_KEY, "Redmine Issues by priority",
-      Metric.ValueType.DATA)
+      Metric.ValueType.DISTRIB)
       .setDescription("Number of Redmine issues by priority")
-      .setQualitative(false)
+      .setQualitative(true)
       .setDomain(RedmineConstants.ISSUES_DOMAIN)
       .create();
 
+  public static final Metric ISSUES_BY_DEVELOPER = new Metric.Builder(RedmineConstants.ISSUES_BY_DEVELOPER_KEY, "Redmine Issues by developer",
+      Metric.ValueType.DISTRIB)
+      .setDescription("Number of Redmine issues by developer")
+      .setQualitative(true)
+      .setDomain(RedmineConstants.ISSUES_DOMAIN)
+      .create();
+
+  public static final Metric ISSUES_BY_STATUS = new Metric.Builder(RedmineConstants.ISSUES_BY_STATUS_KEY, "Redmine Issues by status",
+      Metric.ValueType.DISTRIB)
+      .setDescription("Number of Redmine issues by status")
+      .setQualitative(true)
+      .setDomain(RedmineConstants.ISSUES_DOMAIN)
+      .create();
+
+
   public List<Metric> getMetrics() {
-    return ImmutableList.of(ISSUES, ISSUES_BY_PRIORITY);
+    return ImmutableList.of(ISSUES, ISSUES_BY_DEVELOPER, ISSUES_BY_PRIORITY, ISSUES_BY_STATUS);
   }
 }

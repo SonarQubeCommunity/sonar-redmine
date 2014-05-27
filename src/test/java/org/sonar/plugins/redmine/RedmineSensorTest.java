@@ -20,22 +20,30 @@
 package org.sonar.plugins.redmine;
 
 import com.taskadapter.redmineapi.RedmineException;
+import com.taskadapter.redmineapi.bean.Issue;
+import com.taskadapter.redmineapi.bean.User;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
+import org.sonar.api.measures.CountDistributionBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -54,15 +62,31 @@ public class RedmineSensorTest {
   private RedmineAdapter redmineAdapter;
   private String url;
 
+  private Issue createIssue(String developer, String priority, String status)
+  {
+    Issue issue = new Issue();
+    if (developer != null) {
+      User user = new User();
+      user.setFullName(developer);
+      issue.setAssignee(user);
+    }
+    issue.setPriorityText(priority);
+    issue.setStatusName(status);
+    return issue;
+  }
+
   @Before
   public void setUp() throws RedmineException {
     redmineSettings = new RedmineSettings(new Settings());
     redmineAdapter = mock(RedmineAdapter.class);
-    Map<String, Integer> issuesByPriority = new HashMap<String, Integer>();
-    issuesByPriority.put("Normal", 2);
-    issuesByPriority.put("Urgent", 1);
+
+    List<Issue> issues = new ArrayList<Issue>();
+    issues.add(createIssue("Tim Tom", "Normal", "Assigned"));
+    issues.add(createIssue("John Doe", "Normal", "Resolved"));
+    issues.add(createIssue("John Doe", "Urgent", "New"));
+
     doNothing().when(redmineAdapter).connectToHost("http://my.Redmine.server", "project_key");
-    when(redmineAdapter.collectProjectIssuesByPriority("project_key")).thenReturn(issuesByPriority);
+    when(redmineAdapter.collectProjectIssues("project_key")).thenReturn(issues);
     redmineSettings.setHost("http://my.Redmine.server");
     redmineSettings.setApiAccessKey("api_access_key");
     redmineSettings.setProjectKey("project_key");
@@ -101,12 +125,32 @@ public class RedmineSensorTest {
   @Test
   public void testSaveMeasures() {
     SensorContext context = mock(SensorContext.class);
-    String priorityDistribution = "Normal=2;Urgent=1";
 
-    sensor.saveMeasures(context, 3, url, priorityDistribution);
+    CountDistributionBuilder issuesByDeveloper = new CountDistributionBuilder(RedmineMetrics.ISSUES_BY_DEVELOPER);
+    CountDistributionBuilder issuesByPriority = new CountDistributionBuilder(RedmineMetrics.ISSUES_BY_PRIORITY);
+    CountDistributionBuilder issuesByStatus = new CountDistributionBuilder(RedmineMetrics.ISSUES_BY_STATUS);
+
+    String priorityDistribution = "Normal=2;Urgent=1";
+    issuesByPriority.add("Normal");
+    issuesByPriority.add("Normal");
+    issuesByPriority.add("Urgent");
+
+    String developerDistribution = "John Doe=2;Tim Tom=1";
+    issuesByDeveloper.add("John Doe");
+    issuesByDeveloper.add("Tim Tom");
+    issuesByDeveloper.add("John Doe");
+
+    String statusDistribution = "Assigned=1;New=1;Resolved=1";
+    issuesByStatus.add("Assigned");
+    issuesByStatus.add("New");
+    issuesByStatus.add("Resolved");
+
+    sensor.saveMeasures(context, 3, url, issuesByDeveloper, issuesByPriority, issuesByStatus);
 
     verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_DEVELOPER, developerDistribution)));
     verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_STATUS, statusDistribution)));
     verifyNoMoreInteractions(context);
   }
 
@@ -116,11 +160,17 @@ public class RedmineSensorTest {
     Project project = mock(Project.class);
     RedmineSensor spy = spy(sensor);
     spy.analyse(project, context);
-    String priorityDistribution = "Normal=2;Urgent=1";
 
-    verify(spy).saveMeasures(context, 3.0, url, priorityDistribution);
+    String priorityDistribution = "Normal=2;Urgent=1";
+    String developerDistribution = "John Doe=2;Tim Tom=1";
+    String statusDistribution = "Assigned=1;New=1;Resolved=1";
+
+    verify(spy).saveMeasures(eq(context), eq(3.0), eq(url),
+        any(CountDistributionBuilder.class), any(CountDistributionBuilder.class), any(CountDistributionBuilder.class));
     verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES, 3.0)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_DEVELOPER, developerDistribution)));
     verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_PRIORITY, priorityDistribution)));
+    verify(context).saveMeasure(argThat(new IsMeasure(RedmineMetrics.ISSUES_BY_STATUS, statusDistribution)));
     verifyNoMoreInteractions(context);
   }
 
