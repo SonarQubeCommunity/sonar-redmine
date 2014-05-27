@@ -32,7 +32,7 @@ public class RedmineMetricsTest {
   @Test
   public void testGetMetrics() throws Exception {
     List<Metric> metrics = new RedmineMetrics().getMetrics();
-    assertThat(metrics.size(), is(2));
+    assertThat(metrics.size(), is(4));
     for (Metric metric : metrics) {
       assertThat(metric.getDomain(), is(RedmineConstants.ISSUES_DOMAIN));
     }

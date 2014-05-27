@@ -97,9 +97,14 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     return redmineMgr.createIssue(projectKey, issue);
   }
 
+  public List<Issue> collectProjectIssues(final String projectKey) throws RedmineException {
+    List<Issue> issues = redmineMgr.getIssues(projectKey, null);
+    return issues;
+  }
+
   public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey) throws RedmineException {
 
-    List<Issue> issues = redmineMgr.getIssues(projectKey, null);
+    List<Issue> issues = collectProjectIssues(projectKey);
     Map<String, Integer> issuesByPriority = Maps.newHashMap();
 
     for (Issue issue : issues) {

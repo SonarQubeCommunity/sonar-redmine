@@ -1,16 +1,20 @@
 <%
    issues_measure = measure('redmine-issues')
    issues_by_priority_measure = measure('redmine-issues-by-priority')
+   issues_by_status_measure = measure('redmine-issues-by-status')
 
    if issues_measure
 %>
 <table width="100%">
   <tbody>
     <tr>
-      <td align="left">
+      <td width="50%" valign="top" align="left">
         <div class="dashbox" >
           <p class="title"><%= message('widget.redmine.name') -%></p>
-          <p><span class="big"><%= format_measure(issues_measure,{:url => issues_measure.url}) -%></span></p>
+          <p><span class="big">
+            <%= format_measure(issues_measure,{:url => issues_measure.url}) -%>
+            <%= dashboard_configuration.selected_period? ? format_variation(issues_measure) : trend_icon(issues_measure) -%>
+          </span></p>
         </div>
       </td>
       <td valign="top" align="left">
@@ -18,8 +22,7 @@
           <p class="title"><%= message('widget.redmine.by_priority') -%></p>
             <table>
             <% 
-              priorities = issues_by_priority_measure.text_value.split(";")
-              priorities.each do |priority_with_issues|
+              issues_by_priority_measure.data.split(";").each do |priority_with_issues|
               priority_with_issues_array = priority_with_issues.split("=")
             %>
             <tr>
@@ -28,6 +31,32 @@
               </td>
               <td align="right" style="padding-left: 10px;">
                 <%= priority_with_issues_array[1] -%>
+              </td>
+              <td align="left" style="padding-left: 10px;">
+                <span style='width:100%'><ul class='hbar' style='float: right;'><li style='background-color: rgb(119, 119, 119); width: <%= (priority_with_issues_array[1].to_f * 100 / issues_by_priority_measure.value.to_f ).ceil -%>%'>&nbsp;</li></ul></span>
+              </td>
+            </tr>
+            <% end %>
+          </table>
+        </div>
+      </td>
+      <td valign="top" align="left">
+        <div class="dashbox">
+          <p class="title"><%= message('widget.redmine.by_status') -%></p>
+            <table>
+            <%
+              issues_by_status_measure.data.split(";").each do |status_with_issues|
+              status_with_issues_array = status_with_issues.split("=")
+            %>
+            <tr>
+              <td align="left">
+                <%= status_with_issues_array[0] -%>
+              </td>
+              <td align="right" style="padding-left: 10px;">
+                <%= status_with_issues_array[1] -%>
+              </td>
+              <td align="left" style="padding-left: 10px;">
+                <span style='width:100%'><ul class='hbar' style='float: right;'><li style='background-color: rgb(119, 119, 119); width: <%= (status_with_issues_array[1].to_f * 100 / issues_by_status_measure.value.to_f ).ceil -%>%'>&nbsp;</li></ul></span>
               </td>
             </tr>
             <% end %>
