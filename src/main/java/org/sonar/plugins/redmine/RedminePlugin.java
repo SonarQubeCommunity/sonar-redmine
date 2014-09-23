@@ -30,6 +30,7 @@ import org.sonar.plugins.redmine.exceptions.RedmineNotFoundException;
 import org.sonar.plugins.redmine.reviews.RedmineIssueFactory;
 import org.sonar.plugins.redmine.reviews.RedmineLinkFunction;
 import org.sonar.plugins.redmine.reviews.RedmineWorkflowBuilder;
+import org.sonar.plugins.redmine.ui.RedmineDevelopersWidget;
 import org.sonar.plugins.redmine.ui.RedmineSettingsPage;
 import org.sonar.plugins.redmine.ui.RedmineWidget;
 
@@ -57,7 +58,7 @@ public class RedminePlugin extends SonarPlugin {
         // Server
         RedmineIssueFactory.class,
         // UI
-        RedmineWidget.class, RedmineSettingsPage.class,
+        RedmineWidget.class, RedmineDevelopersWidget.class, RedmineSettingsPage.class,
         // Reviews
         RedmineLinkFunction.class, RedmineWorkflowBuilder.class,
         // Exceptions
