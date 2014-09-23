@@ -34,6 +34,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.powermock.api.mockito.PowerMockito;
@@ -206,10 +208,10 @@ public class RedmineAdapterTest {
     when(issue3.getPriorityText()).thenReturn("P1");
     
     List<Issue> issues = ImmutableList.of(issue1, issue2, issue3);
-    
-    when(redmineManager.getIssues(PROJECT_KEY, null)).thenReturn(issues);
+
+    when(redmineManager.getIssues(argThat(hasEntry("project_id", PROJECT_KEY)))).thenReturn(issues);
     redmineAdapter.connectToHost(HOST, APIKEY);
-    Map<String,Integer> issuesPerPriority = redmineAdapter.collectProjectIssuesByPriority(PROJECT_KEY);
+    Map<String,Integer> issuesPerPriority = redmineAdapter.collectProjectIssuesByPriority(PROJECT_KEY, null);
     
     assertThat(issuesPerPriority).hasSize(2).contains(MapEntry.entry("P1", 2)).contains(MapEntry.entry("P2", 1));
   }

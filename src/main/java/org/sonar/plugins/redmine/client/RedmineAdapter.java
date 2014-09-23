@@ -27,11 +27,14 @@ import com.taskadapter.redmineapi.bean.IssuePriority;
 import com.taskadapter.redmineapi.bean.Membership;
 import com.taskadapter.redmineapi.bean.Project;
 import com.taskadapter.redmineapi.bean.User;
+import org.apache.commons.collections.ListUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.ServerExtension;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.sonar.plugins.redmine.exceptions.ExceptionUtil;
 
 public class RedmineAdapter implements BatchExtension, ServerExtension {
@@ -97,9 +100,29 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     return redmineMgr.createIssue(projectKey, issue);
   }
 
-  public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey) throws RedmineException {
+  public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey, final java.util.Date projectDate) throws RedmineException {
 
-    List<Issue> issues = redmineMgr.getIssues(projectKey, null);
+    final String date = projectDate == null
+        ? null
+        : new java.text.SimpleDateFormat("yyyy-MM-dd").format(projectDate);
+
+    //Get open issues first
+    Map<String, String> parameters = new HashMap<String, String>();
+    parameters.put("project_id", projectKey);
+    parameters.put("status_id", "open");
+    if (projectDate != null) {
+      parameters.put("created_on", "<=" + date);
+    }
+    List<Issue> issues = redmineMgr.getIssues(parameters);
+
+    //If a date was specified, also get the issues that have been closed since
+    if (projectDate != null) {
+      parameters.put("status_id", "closed");
+      parameters.put("created_on", "<=" + date);
+      parameters.put("closed_on", ">=" + date);
+      issues = ListUtils.union(issues, redmineMgr.getIssues(parameters));
+    }
+
     Map<String, Integer> issuesByPriority = Maps.newHashMap();
 
     for (Issue issue : issues) {
