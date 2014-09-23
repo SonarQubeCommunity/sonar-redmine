@@ -33,6 +33,8 @@ public final class RedmineConstants {
 
   // Metric data ids
   public static final String ISSUES_BY_PRIORITY_KEY = "redmine-issues-by-priority";
+  public static final String ISSUES_BY_DEVELOPER_KEY = "redmine-issues-by-developer";
+  public static final String ISSUES_BY_STATUS_KEY = "redmine-issues-by-status";
 
   // Language string ids
   public static final String LINKED_ISSUE_SUBJECT_TEMPLATE = "redmine.linked_issue.subject.template";

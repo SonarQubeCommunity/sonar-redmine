@@ -27,14 +27,13 @@ import com.taskadapter.redmineapi.bean.IssuePriority;
 import com.taskadapter.redmineapi.bean.Membership;
 import com.taskadapter.redmineapi.bean.Project;
 import com.taskadapter.redmineapi.bean.User;
-import org.apache.commons.collections.ListUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.HashMap;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.ServerExtension;
 
-import java.util.*;
-
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.collections.ListUtils;
 import org.sonar.plugins.redmine.exceptions.ExceptionUtil;
 
 public class RedmineAdapter implements BatchExtension, ServerExtension {
@@ -100,8 +99,7 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
     return redmineMgr.createIssue(projectKey, issue);
   }
 
-  public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey, final java.util.Date projectDate) throws RedmineException {
-
+  public List<Issue> collectProjectIssues(final String projectKey, final java.util.Date projectDate) throws RedmineException {
     final String date = projectDate == null
         ? null
         : new java.text.SimpleDateFormat("yyyy-MM-dd").format(projectDate);
@@ -122,7 +120,12 @@ public class RedmineAdapter implements BatchExtension, ServerExtension {
       parameters.put("closed_on", ">=" + date);
       issues = ListUtils.union(issues, redmineMgr.getIssues(parameters));
     }
+    return issues;
+  }
 
+  public Map<String, Integer> collectProjectIssuesByPriority(final String projectKey, final java.util.Date projectDate) throws RedmineException {
+
+    List<Issue> issues = collectProjectIssues(projectKey, projectDate);
     Map<String, Integer> issuesByPriority = Maps.newHashMap();
 
     for (Issue issue : issues) {
