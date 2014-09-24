@@ -24,150 +24,146 @@
   var priorityId = <%= @priority_id %>;
 
   function clearErrors() {
-    $$('table div[id$="_error"]').each(function(v){
-      v.hide();
-    });
+    $j('table div[id$="_error"]').hide();
   }
 
   function startTest() {
     clearErrors();
 
-    if (!$('testStatus').visible()) {
-      $('testStatus').show();
+    if (!$j('#testStatus').is(':visible')) {
+      $j('#testStatus').show();
     } else {
-      $('testStatus').update('<%= image_tag 'loading.gif' -%>');
+      $j('#testStatus').html('<%= image_tag 'loading.gif' -%>');
     }
 
-    $('api_key_user_div').hide();
+    $j('#api_key_user_div').hide();
   }
 
   function finishedSave(request) {
-    var r = request.responseText.evalJSON(true);
+    var r = jQuery.parseJSON (request.responseText);
 
     if (r.status == 'error') {
-      handleErrors();
+      handleErrors(r.error);
     } else if (r.status == 'success') {
-      $('infomsg').update('<%= message('page.redmine_configuration.settings.saved') -%>');
-      $('info').show();
+      $j('#infomsg').html('<%= message('page.redmine_configuration.settings.saved') -%>');
+      $j('#info').show();
       Element.hide.delay(5, 'info');
     }
   }
 
   function handleErrors(errors) {
-    var errors = new Hash(errors);
-    errors.each(function(pair) {
-      var t = $(pair.key+'_error');
+    jQuery.each(errors, function(key, value) {
+      var t = $j('#' + key +'_error');
 
       if (t != undefined) {
-        t.update(pair.value);
+        t.html(value);
         t.show();
-      } else if (pair.key == 'general') {
-        $('errormsg').update(pair.value);
-        $('error').show();
+      } else if (key == 'general') {
+        $j('#errormsg').html(value);
+        $j('#error').show();
       }
     });
   }
 
-  function finishedTest(request) {
-    var r = request.responseText.evalJSON(true);
+  function finishedTest(response) {
+    if (response.status == 'error') {
+      $j('#testStatus').html('<%= image_tag 'exclamation.png' -%>');
 
-    if (r.status == 'error') {
-      $('testStatus').update('<%= image_tag 'exclamation.png' -%>');
+      handleErrors(response.error);
+    } else if (response.status == 'success') {
+      $j('#testStatus').html('<%= image_tag 'accept.png' -%>');
 
-      handleErrors(new Hash(r.error));
-    } else if (r.status == 'success') {
-      $('testStatus').update('<%= image_tag 'accept.png' -%>');
+      updateInfo('#api_key_user', response.user);
+      updateInfo('#project_key_project', response.project);
 
-      updateInfo('api_key_user', r.user);
-      updateInfo('project_key_project', r.project);
-
-      updateSelect('priority_id', r.priorities);
-      updateSelect('tracker_id', r.trackers);
+      updateSelect('#priority_id', response.priorities);
+      updateSelect('#tracker_id', response.trackers);
 	  
-      selectValueInSelectList('tracker_id', trackerId);
-      selectValueInSelectList('priority_id', priorityId);
+      selectValueInSelectList('#tracker_id', trackerId);
+      selectValueInSelectList('#priority_id', priorityId);
 
       checkSelection();
     }
   }
 
   function updateInfo(target, value) {
-    var target = $(target);
+    var target = $j(target);
 
     if (target != undefined) {
-      target.update(value);
-      target.up().show();
+      target.html(value);
+      target.parent().show();
     }
   }
 
   function updateSelect(target, list) {
     clearList(target);
-    var target = $(target);
-
-    var l = new Hash(list);
-
-    l.each(function(pair) {
-      var opt = new Element('option', { value: pair.key, label: pair.value}).insert(pair.value);
-      target.insert(opt);
+    var target = $j(target);
+    jQuery.each(list, function(key, value) {
+        target.append('<option value=' + key + '>' + value + '</option>');
     });
 
-    target.enable();
+    target.prop('disabled', false);
   }
 
   function clearList(target) {
-    var target = $(target);
+    var target = $j(target);
 
-      target.descendants().each(Element.remove);
-
-    var opt = new Element('option', { value: 0, label: '-'}).insert('-');
-    target.insert(opt);
+    target.empty()
+    target.append('<option value=0>-</option>');
   }
 
   function checkSelection() {
-    if ($('priority_id').value != 0 && $('tracker_id').value != 0) {
-      $('submit_save').enable();
+    if ($j('#priority_id').value != 0 && $j('#tracker_id').value != 0) {
+      $j('#submit_save').prop('disabled', false);
     } else {
-      $('submit_save').disable();
+      $j('#submit_save').prop('disabled', true);
     }
   }
 
   function selectValueInSelectList(target, value) {
-    var target = $(target);
-    if (target == undefined) {
+    var targetElement = $j(target);
+    if (targetElement == undefined) {
       return;
     }
 
     var found = false;
-    var values = target.options;
-    for (var i = 0; i < values.length; i++) {
-      if (values[i].value == value) {
-        found = true;
-        break;
-      }
-    };
+
+    $j(function() {
+      $j(target + ' option').each(function(i){
+        if ($j(this).val() == value) {
+          found = true || found;
+        }
+      });
+    });
 
     if (found) {
-      target.value = value;
+      targetElement.val(value);
     } else {
-      target.value = 0;
+      targetElement.val(0);
     }
   }
 
   <% if @run_test %>
-  document.observe("dom:loaded", function() {
-    $('loading').show();
+  $j(function() {
+    $j('#loading').show();
 
     startTest();
+<!--$j('#redmineConfigurationForm').serialize()-->
 
-    new Ajax.Request('<%= url_for(:action => 'test') %>', {
-      asynchronous:true,
-      onComplete:function(request){
-        finishedTest(request);
-
-        $('loading').hide();
+    $j.ajax({url:'<%= url_for(:action => 'test') %>',
+      data:$j('#redmineConfigurationForm').serialize(),
+      type: "POST",
+      success:function(request){
+          $j('#loading').hide();
+          finishedTest(request);
       },
-      parameters:Form.serialize($('redmineConfigurationForm'))
+      error: function (xhr, ajaxOptions, thrownError) {
+        $j('#loading').hide();
+        alert(xhr.status);
+        alert(thrownError);
+      }
     });
+    
   });
   <% end %>
 <% end -%>
@@ -190,8 +186,8 @@
 <% form_remote_tag :url => {:action => 'save'},
            :html => {:id => 'redmineConfigurationForm'},
                      :method => :post,
-                     :before => "$('submit_save').disable();",
-           :complete => "finishedSave(request); $('submit_save').enable();",
+                     :before => "$j('#submit_save').prop('disabled', true);",
+           :complete => "finishedSave(request); $j('#submit_save').prop('disabled', false);",
                      :script => false do -%>
   <input type="hidden" name="resource" value="<%= params[:resource] -%>"/>
 
@@ -245,8 +241,8 @@
                              message('page.redmine_configuration.settings.test'),
                              :url => {:action => 'test'},
                              :html => {:id => "submit_test"},
-                             :before => "this.disable(); startTest();",
-                 :complete => "finishedTest(request); $('submit_test').enable();" -%>
+                             :before => "$j('#submit_test').prop('disabled', true); startTest();",
+                             :complete => "finishedTest(jQuery.parseJSON(request.responseText)); $j('#submit_test').prop('disabled', false);" -%>
         <span id="testStatus" style="display: none;"><%= image_tag 'loading.gif' -%></span>
       </div>
       </td>
