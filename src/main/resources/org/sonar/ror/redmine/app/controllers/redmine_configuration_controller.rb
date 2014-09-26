@@ -77,7 +77,7 @@ class RedmineConfigurationController < ApplicationController
     if !params[:api_key].empty?
       api_key = params[:api_key]
     elsif !@gapi_key.empty?
-      api_key = @api_key
+      api_key = @gapi_key
     end
 
     adp = java_facade.getComponentByClassname('redmine', 'org.sonar.plugins.redmine.client.RedmineAdapter')
@@ -151,7 +151,7 @@ class RedmineConfigurationController < ApplicationController
       @error[:purl] = message('page.redmine_configuration.error.url_is_missing')
     end
 
-    if params[:api_key].blank? and !@gapi_key_available
+    if params[:api_key].blank? and @gapi_key.blank?
       @error[:api_key] = message('page.redmine_configuration.error.api_key_is_missing')
     end
   end
@@ -171,7 +171,6 @@ class RedmineConfigurationController < ApplicationController
 
     @api_key = Property.value(configuration::API_ACCESS_KEY, @resource.id, "")
     @gapi_key = Property.value(configuration::API_ACCESS_KEY, nil, "")
-    @gapi_key_available = !@gapi_key.empty? ? true : false
 
     @project_key = Property.value(configuration::PROJECT_KEY, @resource.id, "")
 
