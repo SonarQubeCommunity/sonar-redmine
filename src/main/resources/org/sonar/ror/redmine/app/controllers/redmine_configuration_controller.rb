@@ -16,7 +16,7 @@ class RedmineConfigurationController < ApplicationController
 
   # Checks if all parameters for save are given
   before_filter :only => :save do |c|
-    c.send(:check_parameters, :api_key, :priority_id, :tracker_id)
+    c.send(:check_parameters, :priority_id, :tracker_id)
 
     if !@error.empty?
       render_result
