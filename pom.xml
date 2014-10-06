@@ -10,7 +10,7 @@
 
   <artifactId>sonar-redmine-plugin</artifactId>
   <packaging>sonar-plugin</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
 
   <name>SonarQube Redmine Plugin</name>
   <description>Integrates SonarQube with Redmine with various ways</description>
@@ -43,7 +43,7 @@
     <connection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</connection>
     <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</developerConnection>
     <url>https://github.com/SonarCommunity/sonar-redmine</url>
-    <tag>HEAD</tag>
+    <tag>0.2</tag>
   </scm>
 
   <issueManagement>
