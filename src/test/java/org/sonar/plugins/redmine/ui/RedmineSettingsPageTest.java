@@ -33,13 +33,13 @@ public class RedmineSettingsPageTest {
 
   private RedmineSettingsPage settingsPage;
   private I18n i18n;
-  
+
   @Before
   public void init(){
     i18n = mock(I18n.class);
     settingsPage = new RedmineSettingsPage(i18n);
   }
-  
+
   @Test
   public void testGetId() {
     assertThat(settingsPage.getId()).isEqualTo("/redmine_configuration");
@@ -47,10 +47,10 @@ public class RedmineSettingsPageTest {
 
   @Test
   public void testGetTitle() {
-    
+
     String title = "title";
     when(i18n.message(Locale.getDefault(), RedmineConstants.CONFIGURATION_PAGE, null)).thenReturn(title);
     assertThat(settingsPage.getTitle()).isEqualTo(title);
   }
-  
+
 }

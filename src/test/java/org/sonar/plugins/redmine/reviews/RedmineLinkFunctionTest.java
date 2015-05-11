@@ -77,7 +77,7 @@ public class RedmineLinkFunctionTest {
     when(issueFactory.createRedmineIssue(eq(context.issue()), any(RedmineSettings.class))).thenReturn(redmineIssue);
     when(redmineAdapter.createIssue(PROJECT_KEY, redmineIssue)).thenReturn(redmineIssue);
     when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_COMMENT, null)).thenReturn("Comment: ");
-    
+
   }
 
   @Test
@@ -87,6 +87,6 @@ public class RedmineLinkFunctionTest {
 
     verify(context).addComment("Comment: http://host/issues/1");
     verify(context).setAttribute(RedmineConstants.ISSUE_ID, "1");
-    
+
   }
 }

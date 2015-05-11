@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 import static org.fest.assertions.api.Assertions.*;
 
 public class RedmineSettingsTest {
-  
+
   private final Settings settings = new Settings();
   private final Settings spiedSettings = spy(settings);
   private RedmineSettings redmineSettings;
@@ -36,7 +36,7 @@ public class RedmineSettingsTest {
   private static final String PROJECT_KEY = "PROJECT_KEY";
   private static final Integer PRIORITY_ID = 5;
   private static final Integer TRACKER_ID = 1;
-  
+
   @Before
   public void setUp() {
     settings.setProperty(RedmineSettings.URL,URL);
@@ -44,10 +44,10 @@ public class RedmineSettingsTest {
     settings.setProperty(RedmineSettings.PROJECT_KEY,PROJECT_KEY);
     settings.setProperty(RedmineSettings.PRIORITY_ID,PRIORITY_ID);
     settings.setProperty(RedmineSettings.TRACKER_ID,TRACKER_ID);
-    
+
     redmineSettings = new RedmineSettings(spiedSettings);
   }
- 
+
   @Test
   public void shouldGetHost() {
     assertThat(redmineSettings.getHost()).isEqualTo(URL);
@@ -55,22 +55,22 @@ public class RedmineSettingsTest {
 
   @Test
   public void shouldGetApiAccessKey() {
-    assertThat(redmineSettings.getApiAccessKey()).isEqualTo(API_ACCESS_KEY);  
+    assertThat(redmineSettings.getApiAccessKey()).isEqualTo(API_ACCESS_KEY);
   }
 
   @Test
   public void shouldtGetProjectKey() {
-    assertThat(redmineSettings.getProjectKey()).isEqualTo(PROJECT_KEY);  
+    assertThat(redmineSettings.getProjectKey()).isEqualTo(PROJECT_KEY);
   }
 
   @Test
   public void shouldGetPriorityID() {
-    assertThat(redmineSettings.getPriorityID()).isEqualTo(PRIORITY_ID);  
+    assertThat(redmineSettings.getPriorityID()).isEqualTo(PRIORITY_ID);
   }
 
   @Test
   public void shouldGetTrackerID() {
-    assertThat(redmineSettings.getTrackerID()).isEqualTo(TRACKER_ID);  
+    assertThat(redmineSettings.getTrackerID()).isEqualTo(TRACKER_ID);
   }
 
   @Test
@@ -84,28 +84,28 @@ public class RedmineSettingsTest {
   public void shouldSetApiAccessKey() {
     redmineSettings.setApiAccessKey(API_ACCESS_KEY);
     verify(spiedSettings).setProperty(RedmineSettings.API_ACCESS_KEY,API_ACCESS_KEY);
-    assertThat(redmineSettings.getApiAccessKey()).isEqualTo(API_ACCESS_KEY);  
+    assertThat(redmineSettings.getApiAccessKey()).isEqualTo(API_ACCESS_KEY);
   }
 
   @Test
   public void shouldtSetProjectKey() {
     redmineSettings.setProjectKey(PROJECT_KEY);
     verify(spiedSettings).setProperty(RedmineSettings.PROJECT_KEY,PROJECT_KEY);
-    assertThat(redmineSettings.getProjectKey()).isEqualTo(PROJECT_KEY);  
+    assertThat(redmineSettings.getProjectKey()).isEqualTo(PROJECT_KEY);
   }
 
   @Test
   public void shouldSetPriorityID() {
     redmineSettings.setPriorityID(PRIORITY_ID);
     verify(spiedSettings).setProperty(RedmineSettings.PRIORITY_ID,PRIORITY_ID);
-    assertThat(redmineSettings.getPriorityID()).isEqualTo(PRIORITY_ID);  
+    assertThat(redmineSettings.getPriorityID()).isEqualTo(PRIORITY_ID);
   }
 
   @Test
   public void shouldSetTrackerID() {
     redmineSettings.setTrackerID(TRACKER_ID);
     verify(spiedSettings).setProperty(RedmineSettings.TRACKER_ID,TRACKER_ID);
-    assertThat(redmineSettings.getTrackerID()).isEqualTo(TRACKER_ID);  
+    assertThat(redmineSettings.getTrackerID()).isEqualTo(TRACKER_ID);
   }
 
   @Test
@@ -130,5 +130,5 @@ public class RedmineSettingsTest {
   public void allParametersAreSet() {
     assertThat(redmineSettings.missingMandatoryParameters()).isFalse();
   }
-  
+
 }

@@ -55,26 +55,26 @@ public class RedmineIssueFactoryTest {
   private static final String ISSUE_URL = "http://baseurl/issue/show/ISSUE_KEY";
   private static final Integer PRIORITY_ID = 10;
   private static final Integer TRACKER_ID = 1;
-  
+
   @Before
   public void setUpMocks() {
     i18n = mock(I18n.class);
     settings = mock(Settings.class);
     redmineSettings = mock(RedmineSettings.class);
     ruleFinder = mock(RuleFinder.class);
-    
+
     when(issue.key()).thenReturn(ISSUE_KEY);
-    
+
     when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, "", ISSUE_KEY)).thenReturn(SUBJECT_NO_RULE);
     when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "", ISSUE_URL)).thenReturn(DESCRIPTION_NO_RULE);
 
     when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(rule);
-    
+
     when(redmineSettings.getTrackerID()).thenReturn(TRACKER_ID);
     when(redmineSettings.getPriorityID()).thenReturn(PRIORITY_ID);
-    
+
     when(settings.getString(CoreProperties.SERVER_BASE_URL)).thenReturn(SERVER_BASE_URL);
-    
+
     redmineIssueFactory = new RedmineIssueFactory(i18n, settings, ruleFinder);
   }
 
@@ -82,7 +82,7 @@ public class RedmineIssueFactoryTest {
   public void shouldCreateRedmineIssueWithNoRule() {
     when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(null);
     com.taskadapter.redmineapi.bean.Issue redmineIssue = redmineIssueFactory.createRedmineIssue(issue, redmineSettings);
-    
+
     assertThat(redmineIssue.getSubject()).isEqualTo(SUBJECT_NO_RULE);
     assertThat(redmineIssue.getDescription()).isEqualTo(DESCRIPTION_NO_RULE);
     assertThat(redmineIssue.getPriorityId()).isEqualTo(PRIORITY_ID);
@@ -93,7 +93,7 @@ public class RedmineIssueFactoryTest {
   public void shouldCreateRedmineIssueWithRule() {
     rule.setKey(RULE_KEY);
     rule.setName(RULE_NAME);
-    
+
     when(ruleFinder.findByKey(issue.ruleKey())).thenReturn(rule);
     when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "", ISSUE_KEY, RULE_NAME)).thenReturn(SUBJECT_WITH_RULE);
     when(i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, "", RULE_KEY + " - " + RULE_NAME, ISSUE_URL)).thenReturn(DESCRIPTION_WITH_RULE);
