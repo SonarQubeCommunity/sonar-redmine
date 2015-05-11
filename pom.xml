@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -66,7 +67,7 @@
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
     <jacoco.version>0.6.3.201306030806</jacoco.version>
-   
+
   </properties>
 
   <dependencies>
@@ -86,6 +87,12 @@
           <groupId>commons-logging</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <!-- jsoup HTML parser library @ http://jsoup.org/ -->
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.8.2</version>
     </dependency>
     <!-- unit tests -->
     <dependency>
@@ -111,27 +118,27 @@
       <artifactId>powermock-api-mockito</artifactId>
       <version>${powermock.version}</version>
       <scope>test</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
       <version>${jacoco.version}</version>
       <scope>test</scope>
-    </dependency>      
+    </dependency>
     <dependency>
       <groupId>org.easytesting</groupId>
       <artifactId>fest-assert-core</artifactId>
       <version>2.0M10</version>
       <scope>test</scope>
-    </dependency>   
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <!-- UTF-8 bundles are not supported by Java, so they must be converted
-        during build -->
+          during build -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>native2ascii-maven-plugin</artifactId>
         <executions>
@@ -169,7 +176,7 @@
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
         </configuration>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
 </project>

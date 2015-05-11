@@ -1,0 +1,65 @@
+<p>The Cyclomatic Complexity is measured by the number of
+  (&amp;&amp;, ||) operators and (if, while, do, for, ?:, catch, switch,
+  case, return, throw) statements in the body of a class plus one <a
+    href="http://en.wikipedia.org/wiki/Single_responsibility_principle">Single
+    Responsibility Principle</a> for
+  each constructor, method (but not getter/setter), static initializer,
+  or instance initializer in the class. The last return stament in
+  method, if exists, is not taken into account.</p>
+<p>
+  Even when the Cyclomatic Complexity of a class is very high, this
+  complexity might be well distributed among all methods. Nevertheless,
+  most of the time, a very complex class is a class which breaks the <a
+    href="http://en.wikipedia.org/wiki/Single_responsibility_principle">Single
+    Responsibility Principle</a> and which should be re-factored to be split
+  in several classes.
+</p>
+
+
+<ul>
+  <li><code>private</code>: Never be accessible outside of its parent class. If another class needs to log something, it should instantiate its own logger.</li>
+  <li><code>static</code>: Not dependent on an instance of a class (an object). When logging something, contextual information can of course be provided in the messages but the logger should be created at class level to prevent creating a logger along with each object.</li>
+  <li><code>final</code>: Be created once and only once per class.</li>
+  <li><code>final</code>: <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle">Single
+    Responsibility Principle</a></li>
+</ul>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Foo {
+  public Logger logger = LoggerFactory.getLogger(Foo.class);         // Noncompliant
+
+  public void doSomething() {
+    /* ... */
+  }
+}
+
+public class Bar {
+  public static void main(String[] args) {
+    Foo foo = new Foo();
+    foo.logger.info("Program started");
+    foo.doSomething();
+  }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Foo {
+  private static Logger LOGGER = LoggerFactory.getLogger(Foo.class); // Compliant
+
+  public void doSomething() {
+    /* ... */
+  }
+}
+
+public class Bar {
+  private static Log LOGGER = LogFactory.getLogger(Bar.class);       // Compliant
+
+  public static void main(String[] args) {
+    LOGGER.info("Program started");
+    Foo foo = new Foo();
+    foo.run();
+  }
+}
+</pre>
