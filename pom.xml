@@ -47,8 +47,8 @@
   </scm>
 
   <issueManagement>
-    <system>JIRA</system>
-    <url>http://jira.codehaus.org/browse/SONARPLUGINS/component/15780</url>
+    <system>GitHub</system>
+    <url>https://github.com/SonarCommunity/sonar-redmine/issues</url>
   </issueManagement>
   <ciManagement>
     <system>Jeninks</system>
