@@ -19,6 +19,8 @@
  */
 package org.sonar.plugins.redmine.reviews;
 
+import org.sonar.plugins.redmine.textile.formatter.UtilsFormat;
+
 import com.taskadapter.redmineapi.bean.Tracker;
 import org.sonar.api.CoreProperties;
 import org.sonar.api.ServerExtension;
@@ -59,23 +61,24 @@ public class RedmineIssueFactory implements ServerExtension {
 
   private String createIssueSubject(Issue issue) {
     if (rule == null) {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, "", issue.key());
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE_NO_RULE, "");
     } else {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "", issue.key(), (rule.getName() == null) ? "" :rule.getName());
+      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_SUBJECT_TEMPLATE, "", (rule.getName() == null) ? "" : rule.getName());
     }
   }
 
   private String createIssueDescription(Issue issue, String baseUrl) {
     StringBuilder sb = new StringBuilder();
+    if (rule != null) {
+      sb.append(UtilsFormat.generateFormatToTextile(rule.getDescription()));
+      sb.append("\n\n");
+    }
+
+    sb.append("\"Check it on SonarQube\":");
     sb.append(baseUrl);
     sb.append("/issue/show/");
     sb.append(issue.key());
-
-    if (rule == null) {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITHOUT_MESSAGE, "", sb.toString());
-    } else {
-      return i18n.message(Locale.getDefault(), RedmineConstants.LINKED_ISSUE_DESCRIPTION_TEMPLATE_WITH_MESSAGE, "",
-          rule.getKey() + (rule.getName() == null ? "" : " - " + rule.getName()), sb.toString());
-    }
+    return sb.toString();
   }
+
 }

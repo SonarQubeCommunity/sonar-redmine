@@ -1,0 +1,34 @@
+Utility classes, which are a collection of static members, are not meant to be instantiated. They should therefore not have public constructors.
+
+Java adds an implicit public constructor to every class which does not define at least one explicitly. Hence, at least one non-public constructor should be defined.
+
+The following code:
+
+<pre>
+class StringUtils { // Non-Compliant
+
+  public static String concatenate(String s1, String s2) {
+    return s1 + s2;
+  }
+
+}
+</pre>
+
+should be refactored into:
+
+<pre>
+class StringUtils { // Compliant
+
+  private StringUtils() {
+  }
+
+  public static String concatenate(String s1, String s2) {
+    return s1 + s2;
+  }
+
+}
+</pre>
+
+
+
+"Check it on SonarQube":http://baseurl/issue/show/ISSUE_KEY

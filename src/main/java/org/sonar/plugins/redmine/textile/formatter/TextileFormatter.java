@@ -17,18 +17,30 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine.exceptions;
+package org.sonar.plugins.redmine.textile.formatter;
 
-import org.sonar.api.ServerExtension;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
-public class RedmineGeneralException extends RedmineException implements ServerExtension {
-  private static final long serialVersionUID = 8068468246601427775L;
+/**
+ * Abstract class, parent of the all formatter class.
+ */
+public abstract class TextileFormatter {
 
-  public RedmineGeneralException() {
-    super("");
-  }
+  protected Element element;
 
-  public RedmineGeneralException(String message) {
-    super(message);
+  protected abstract String toTextile();
+
+  /**
+   * Return true if the element don't have other element like children.
+   */
+  protected boolean isBaseCase(Element e) {
+    boolean res = true;
+    for (Node n : e.childNodes()) {
+      if (n instanceof Element) {
+        res = false;
+      }
+    }
+    return res;
   }
 }

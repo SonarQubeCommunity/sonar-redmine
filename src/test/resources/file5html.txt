@@ -1,0 +1,36 @@
+<p>
+Using such generic exception prevents calling methods from handling differently each kind of error.
+</p>
+
+<h2>
+Noncompliant Code Example
+</h2>
+
+<pre>
+public void foo(String bar) throws Throwable { // Noncompliant
+  throw new RuntimeException("My Message");    // Noncompliant
+}
+</pre>
+
+<h2>
+Compliant Solution
+</h2>
+
+<pre>
+public void foo(String bar) {
+  throw new MyOwnRuntimeException("My Message");
+}
+</pre>
+
+<h2>
+Exceptions
+</h2>
+
+<p>
+Generic exceptions in signature of overriding methods are excluded
+</p>
+
+<pre>
+@Override
+public void myMethod() throws Exception {...}
+</pre>

@@ -1,0 +1,20 @@
+It is preferable to place string literals on the left-hand side of an @equals()@ or @equalsIgnoreCase()@ method call. This prevents null pointer exceptions from being raised, as a string literal can never be null by definition.
+
+The following code:
+
+<pre>
+String myString = null;
+
+System.out.println("Equal? " + myString.equals("foo"));                        // Non-Compliant - will raise a NPE
+System.out.println("Equal? " + (myString != null && myString.equals("foo")));  // Non-Compliant - null check could be removed
+</pre>
+
+should be refactored into:
+
+<pre>
+System.out.println("Equal?" + "foo".equals(myString));                         // Compliant - properly deals with the null case
+</pre>
+
+
+
+"Check it on SonarQube":http://baseurl/issue/show/ISSUE_KEY

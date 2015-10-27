@@ -26,9 +26,9 @@ import com.taskadapter.redmineapi.RedmineException;
 import org.junit.Test;
 import static org.fest.assertions.api.Assertions.assertThat;
 public class ExceptionUtilTest {
-  
+
   private static final String MESSAGE = "message";
-  
+
   @Test
   public void shouldWrapRedmineAuthenticationException() {
     Exception ex = ExceptionUtil.wrapException(new com.taskadapter.redmineapi.RedmineAuthenticationException(MESSAGE));
@@ -40,13 +40,13 @@ public class ExceptionUtilTest {
     Exception ex = ExceptionUtil.wrapException(new com.taskadapter.redmineapi.RedmineTransportException(MESSAGE));
     assertThat(ex).isInstanceOf(org.sonar.plugins.redmine.exceptions.RedmineTransportException.class).hasMessage(MESSAGE);
   }
-  
+
   @Test
   public void shouldWrapNotFoundException() {
     Exception ex = ExceptionUtil.wrapException(new NotFoundException(MESSAGE));
     assertThat(ex).isInstanceOf(org.sonar.plugins.redmine.exceptions.RedmineNotFoundException.class).hasMessage(MESSAGE);
   }
-  
+
   @Test
   public void shouldWrapNotAuthorizedException() {
     Exception ex = ExceptionUtil.wrapException(new NotAuthorizedException(MESSAGE));

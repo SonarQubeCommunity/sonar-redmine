@@ -32,7 +32,7 @@ public class RedmineWorkflowBuilderTest {
   private RedmineLinkFunction linkFunction;
   private final Actions actions = new Actions();
 
-  
+
   @Before
   public void setUp() throws Exception {
     linkFunction = mock(RedmineLinkFunction.class);
@@ -42,12 +42,12 @@ public class RedmineWorkflowBuilderTest {
   @Test
   public void shouldStart() {
     workflowBuilder.start();
-    
+
     Action action = actions.list().get(0);
     assertThat(action.key()).isEqualTo("link-to-redmine");
     assertThat(action.functions().get(0)).isEqualTo(linkFunction);
-    assertThat(action.conditions()).isNotEmpty();    
-    
+    assertThat(action.conditions()).isNotEmpty();
+
   }
 
 }

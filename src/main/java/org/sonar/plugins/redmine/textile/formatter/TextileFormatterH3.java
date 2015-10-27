@@ -17,18 +17,31 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine.exceptions;
+package org.sonar.plugins.redmine.textile.formatter;
 
-import org.sonar.api.ServerExtension;
+import org.jsoup.nodes.Element;
 
-public class RedmineGeneralException extends RedmineException implements ServerExtension {
-  private static final long serialVersionUID = 8068468246601427775L;
+/**
+ * Parse this:
+ * <h3>Noncompliant Code Example</h3>
+ *
+ * To:
+ * h3. Noncompliant Code Example/n/n
+ */
+public class TextileFormatterH3 extends TextileFormatter {
 
-  public RedmineGeneralException() {
-    super("");
+  public TextileFormatterH3(Element e) {
+    this.element = e;
   }
 
-  public RedmineGeneralException(String message) {
-    super(message);
+  @Override
+  protected String toTextile() {
+    StringBuilder res = new StringBuilder();
+    res.append("h3. ");
+    res.append(element.ownText());
+    res.append("\n\n");
+
+    return res.toString();
   }
+
 }

@@ -17,18 +17,32 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine.exceptions;
+package org.sonar.plugins.redmine.textile.formatter;
 
-import org.sonar.api.ServerExtension;
+import org.jsoup.nodes.Element;
 
-public class RedmineGeneralException extends RedmineException implements ServerExtension {
-  private static final long serialVersionUID = 8068468246601427775L;
+/**
+ * Parse this:
+ * <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle">Single Responsibility Principle</a>
+ *
+ * To:
+ * "Single Responsibility Principle":http://en.wikipedia.org/wiki/Single_responsibility_principle
+ */
+public class TextileFormatterA extends TextileFormatter {
 
-  public RedmineGeneralException() {
-    super("");
+  public TextileFormatterA(Element e) {
+    this.element = e;
   }
 
-  public RedmineGeneralException(String message) {
-    super(message);
+  @Override
+  protected String toTextile() {
+    StringBuilder res = new StringBuilder();
+    res.append("\"");
+    res.append(element.ownText());
+    res.append("\":");
+    res.append(element.absUrl("href"));
+
+    return res.toString();
   }
+
 }

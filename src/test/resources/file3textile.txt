@@ -1,0 +1,33 @@
+Early classes of the Java API, such as @Vector@, @Hashtable@ and @StringBuffer@, were synchronized to make them thread-safe. Unfortunately, synchronization has a big negative impact on performance, even when using these collections from a single thread.
+
+It is better to use their new unsynchronized replacements:
+
+* @ArrayList@ or @LinkedList@ instead of @Vector@
+* @Deque@ instead of @Stack@
+* @HashMap@ instead of @Hashtable@
+* @StringBuilder@ instead of @StringBuffer@
+
+h2. Noncompliant Code Example
+
+<pre>
+Vector cats = new Vector();
+</pre>
+
+h2. Compliant Solution
+
+<pre>
+ArrayList cats = new ArrayList();
+</pre>
+
+h2. Exceptions
+
+Use of those synchronized classes is allowed in method signatures when overriding an existing method.
+
+<pre>
+@Override
+public Vector getCats() {...}
+</pre>
+
+
+
+"Check it on SonarQube":http://baseurl/issue/show/ISSUE_KEY

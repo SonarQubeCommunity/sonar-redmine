@@ -37,7 +37,7 @@ public class RedmineWorkflowBuilder implements ServerExtension {
   }
 
   public void start() {
-    
+
     actions
         .add(RedmineConstants.LINK_TO_REDMINE_ID)
         .setConditions(new NotCondition(new HasIssuePropertyCondition(RedmineConstants.ISSUE_ID)), new IsUnResolved())

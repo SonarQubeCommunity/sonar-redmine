@@ -17,18 +17,30 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.redmine.exceptions;
+package org.sonar.plugins.redmine.textile.formatter;
 
-import org.sonar.api.ServerExtension;
+import org.jsoup.nodes.Element;
 
-public class RedmineGeneralException extends RedmineException implements ServerExtension {
-  private static final long serialVersionUID = 8068468246601427775L;
+/**
+ * Parse this:
+ * <code>private</code>
+ *
+ * To:
+ * @private@
+ */
+public class TextileFormatterCode extends TextileFormatter {
 
-  public RedmineGeneralException() {
-    super("");
+  public TextileFormatterCode(Element e) {
+    this.element = e;
   }
 
-  public RedmineGeneralException(String message) {
-    super(message);
+  @Override
+  protected String toTextile() {
+    StringBuilder res = new StringBuilder();
+    res.append("@");
+    res.append(element.ownText());
+    res.append("@");
+    return res.toString();
   }
+
 }

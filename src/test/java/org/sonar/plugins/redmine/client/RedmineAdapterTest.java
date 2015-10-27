@@ -196,26 +196,26 @@ public class RedmineAdapterTest {
     redmineAdapter.connectToHost(HOST, APIKEY);
     assertThat(redmineAdapter.createIssue(PROJECT_KEY, issue)).isEqualTo(createdIssue);
   }
-  
+
   @Test
   public void should_collect_project_issues_by_priority() throws RedmineException {
     Issue issue1 = mock(Issue.class);
     Issue issue2 = mock(Issue.class);
     Issue issue3 = mock(Issue.class);
-    
+
     when(issue1.getPriorityText()).thenReturn("P1");
     when(issue2.getPriorityText()).thenReturn("P2");
     when(issue3.getPriorityText()).thenReturn("P1");
-    
+
     List<Issue> issues = ImmutableList.of(issue1, issue2, issue3);
 
     when(redmineManager.getIssues(argThat(hasEntry("project_id", PROJECT_KEY)))).thenReturn(issues);
     redmineAdapter.connectToHost(HOST, APIKEY);
     Map<String,Integer> issuesPerPriority = redmineAdapter.collectProjectIssuesByPriority(PROJECT_KEY, null);
-    
+
     assertThat(issuesPerPriority).hasSize(2).contains(MapEntry.entry("P1", 2)).contains(MapEntry.entry("P2", 1));
   }
-  
+
 
   private void assertWrappedException(RedmineException ex) {
     assertThat(ex).isInstanceOf(RedmineException.class);
