@@ -1,7 +1,7 @@
 /*
  * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,7 @@
 package org.sonar.plugins.redmine.reviews;
 
 import com.taskadapter.redmineapi.bean.Tracker;
+import com.taskadapter.redmineapi.bean.TrackerFactory;
 import org.sonar.api.CoreProperties;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.config.Settings;
@@ -48,8 +49,8 @@ public class RedmineIssueFactory implements ServerExtension {
     com.taskadapter.redmineapi.bean.Issue redmineIssue = new com.taskadapter.redmineapi.bean.Issue();
 
     rule = ruleFinder.findByKey(issue.ruleKey());
-
-    redmineIssue.setTracker(new Tracker(rSettings.getTrackerID(), null));
+    Tracker tracker = TrackerFactory.create(rSettings.getTrackerID());
+    redmineIssue.setTracker(tracker);
     redmineIssue.setPriorityId(rSettings.getPriorityID());
     redmineIssue.setSubject(createIssueSubject(issue));
     redmineIssue.setDescription(createIssueDescription(issue, settings.getString(CoreProperties.SERVER_BASE_URL)));
@@ -68,7 +69,7 @@ public class RedmineIssueFactory implements ServerExtension {
   private String createIssueDescription(Issue issue, String baseUrl) {
     StringBuilder sb = new StringBuilder();
     sb.append(baseUrl);
-    sb.append("/issue/show/");
+    sb.append("/issues/show");
     sb.append(issue.key());
 
     if (rule == null) {

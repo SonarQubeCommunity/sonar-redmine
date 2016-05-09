@@ -189,7 +189,7 @@
                      :before => "$j('#submit_save').prop('disabled', true);",
            :complete => "finishedSave(request); $j('#submit_save').prop('disabled', false);",
                      :script => false do -%>
-  <input type="hidden" name="resource" value="<%= params[:resource] -%>"/>
+  <input type="hidden" name="id" value="<%= params[:id] -%>"/>
 
   <table class="data form marginbottom10">
     <thead>

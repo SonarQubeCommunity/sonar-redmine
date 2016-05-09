@@ -1,7 +1,7 @@
 /*
  * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,11 @@
  */
 package org.sonar.plugins.redmine.config;
 
-import org.apache.commons.lang.StringUtils;
+
 import org.sonar.api.BatchExtension;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.config.Settings;
+import org.sonar.api.internal.apachecommons.lang.StringUtils;
 
 public class RedmineSettings implements BatchExtension, ServerExtension {
   public static final String URL = "sonar.redmine.url";

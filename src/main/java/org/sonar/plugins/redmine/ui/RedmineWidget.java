@@ -1,7 +1,7 @@
 /*
  * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

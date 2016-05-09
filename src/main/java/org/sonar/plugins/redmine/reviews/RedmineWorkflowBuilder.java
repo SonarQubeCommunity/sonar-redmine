@@ -1,7 +1,7 @@
 /*
  * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@ public class RedmineWorkflowBuilder implements ServerExtension {
   private final RedmineLinkFunction linkFunction;
   private Actions actions;
 
-  public RedmineWorkflowBuilder(Actions actions, RedmineLinkFunction linkFunction) {
+  public RedmineWorkflowBuilder(ActioRns actions, RedmineLinkFunction linkFunction) {
     this.actions = actions;
     this.linkFunction = linkFunction;
   }

@@ -3,9 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.codehaus.sonar-plugins</groupId>
+    <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>17</version>
+    <version>24</version>
   </parent>
 
   <artifactId>sonar-redmine-plugin</artifactId>
@@ -38,6 +38,10 @@
       <id>cschulz</id>
       <name>Christian Schulz</name>
     </developer>
+    <developer>
+      <id>vad1mo</id>
+      <name>Vadim Bauer</name>
+    </developer>
   </developers>
   <scm>
     <connection>scm:git:git@github.com:SonarCommunity/sonar-redmine.git</connection>
@@ -55,7 +59,7 @@
     <url>https://sonarplugins.ci.cloudbees.com/job/redmine</url>
   </ciManagement>
   <properties>
-    <sonar.buildVersion>3.6</sonar.buildVersion>
+    <sonar.buildVersion>5.5</sonar.buildVersion>
     <sonar.pluginClass>org.sonar.plugins.redmine.RedminePlugin</sonar.pluginClass>
     <sonar.pluginName>Redmine</sonar.pluginName>
 
@@ -71,7 +75,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.codehaus.sonar</groupId>
+      <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <version>${sonar.buildVersion}</version>
       <scope>provided</scope>
@@ -79,7 +83,7 @@
     <dependency>
       <groupId>com.taskadapter</groupId>
       <artifactId>redmine-java-api</artifactId>
-      <version>1.19</version>
+      <version>2.6.0</version>
       <exclusions>
         <exclusion>
           <artifactId>commons-logging</artifactId>
@@ -89,7 +93,7 @@
     </dependency>
     <!-- unit tests -->
     <dependency>
-      <groupId>org.codehaus.sonar</groupId>
+      <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-testing-harness</artifactId>
       <version>${sonar.buildVersion}</version>
       <scope>test</scope>
@@ -124,7 +128,12 @@
       <artifactId>fest-assert-core</artifactId>
       <version>2.0M10</version>
       <scope>test</scope>
-    </dependency>   
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
   </dependencies>
 
   <build>
