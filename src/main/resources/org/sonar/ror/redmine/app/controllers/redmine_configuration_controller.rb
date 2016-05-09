@@ -192,9 +192,9 @@ class RedmineConfigurationController < ApplicationController
   end
 
   def load_resource
-    require_parameters :resource
+    require_parameters :id
 
-    init_resource_for_role(:admin, :resource)
+    init_resource_for_role(:admin, :id)
 
     access_denied unless is_admin?(@resource)
   end

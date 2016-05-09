@@ -1,7 +1,7 @@
 /*
  * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,9 +21,10 @@ package org.sonar.plugins.redmine.reviews;
 
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.bean.Issue;
+import org.sonar.api.Plugin;
 import org.sonar.api.ServerExtension;
 import org.sonar.api.i18n.I18n;
-import org.sonar.api.issue.action.Function;
+import org.sonar.api.issue.batch.action.Function;
 import org.sonar.plugins.redmine.RedmineConstants;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 
@@ -42,7 +43,7 @@ public class RedmineLinkFunction implements Function, ServerExtension {
   }
 
   @Override
-  public void execute(Context context) {
+  public void execute(Plugin.Context context) {
     try {
       RedmineSettings redmineSettings = new RedmineSettings(context.projectSettings());
 

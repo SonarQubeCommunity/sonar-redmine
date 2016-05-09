@@ -1,7 +1,7 @@
 /*
  * SonarQube Redmine Plugin
  * Copyright (C) 2013 Patroklos PAPAPETROU and Christian Schulz
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,11 @@
  */
 package org.sonar.plugins.redmine;
 
-import com.google.common.collect.ImmutableList;
+
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
+import org.sonar.api.internal.google.common.collect.ImmutableList;
 import org.sonar.plugins.redmine.config.RedmineSettings;
 import org.sonar.plugins.redmine.exceptions.RedmineGeneralException;
 import org.sonar.plugins.redmine.exceptions.RedmineNotAuthorizedException;
