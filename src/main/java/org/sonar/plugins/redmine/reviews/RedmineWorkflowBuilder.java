@@ -31,7 +31,7 @@ public class RedmineWorkflowBuilder implements ServerExtension {
   private final RedmineLinkFunction linkFunction;
   private Actions actions;
 
-  public RedmineWorkflowBuilder(Actions actions, RedmineLinkFunction linkFunction) {
+  public RedmineWorkflowBuilder(ActioRns actions, RedmineLinkFunction linkFunction) {
     this.actions = actions;
     this.linkFunction = linkFunction;
   }

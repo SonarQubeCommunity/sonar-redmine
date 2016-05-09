@@ -23,7 +23,7 @@ import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.bean.Issue;
 import org.sonar.api.Plugin;
 import org.sonar.api.ServerExtension;
-import org.sonar.api.i18n.I18n;
+import org.sonar.api.i18n.I18n; 
 import org.sonar.api.issue.batch.action.Function;
 import org.sonar.plugins.redmine.RedmineConstants;
 import org.sonar.plugins.redmine.config.RedmineSettings;
